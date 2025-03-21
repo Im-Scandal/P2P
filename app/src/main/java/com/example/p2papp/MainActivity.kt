@@ -1,5 +1,4 @@
 package com.example.p2papp
-
 import android.Manifest
 import android.content.BroadcastReceiver
 import android.content.Context
@@ -7,11 +6,14 @@ import android.content.IntentFilter
 import android.content.pm.PackageManager
 import android.net.wifi.p2p.WifiP2pConfig
 import android.net.wifi.p2p.WifiP2pDevice
+import android.net.wifi.p2p.WifiP2pInfo
 import android.net.wifi.p2p.WifiP2pManager
+import android.nfc.Tag
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
@@ -22,9 +24,11 @@ import java.io.InputStream
 import java.io.OutputStream
 import java.net.InetAddress
 import java.net.InetSocketAddress
+import java.net.ServerSocket
 import java.net.Socket
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
+import kotlin.math.log
 
 class MainActivity : AppCompatActivity()
 {
@@ -34,7 +38,7 @@ class MainActivity : AppCompatActivity()
     private lateinit var btnDiscover: Button
     private lateinit var listView: ListView
     lateinit var readMsgBox: TextView
-    private lateinit var connectionStatus: TextView
+    lateinit var connectionStatus: TextView
     private lateinit var writeMsg: EditText
     private lateinit var recyclerView: RecyclerView
 
@@ -48,6 +52,14 @@ class MainActivity : AppCompatActivity()
     private val peers = mutableListOf<WifiP2pDevice>()
     private lateinit var deviceNameArray: Array<String>
     private lateinit var deviceArray: Array<WifiP2pDevice>
+
+    lateinit var serverClass: ServerClass
+    lateinit var clientClass: ClientClass
+
+    var isHost: Boolean = false
+
+
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -101,9 +113,28 @@ class MainActivity : AppCompatActivity()
                 }
             }
 
+        btnSend.setOnClickListener {
+            val executor: ExecutorService = Executors.newSingleThreadExecutor()
+            val msg: String = writeMsg.text.toString()
+
+            executor.execute {
+                if (msg.isNotEmpty() && isHost) {
+                    serverClass.write(msg.toByteArray())
+
+                } else if(msg.isNotEmpty() && !isHost) {
+                    if (::clientClass.isInitialized) {
+                        clientClass.write(msg.toByteArray())
+                    } else {
+                        connectionStatus.setText("ClientClassNoInicializado")
+                    }
+
+                }
+            }
+        }
+
     }
 
-    private fun initialWork() {
+    fun initialWork() {
         connectionStatus = findViewById(R.id.connectionStatus)
         recyclerView = findViewById(R.id.messageRecyclerView)
         btnDiscover = findViewById(R.id.discover)
@@ -142,6 +173,27 @@ class MainActivity : AppCompatActivity()
         listView.adapter = adapter
     }
 
+    val connectionInfoListener = WifiP2pManager.ConnectionInfoListener { wifiP2pInfo ->
+        val groupOwnerAddress: InetAddress = wifiP2pInfo.groupOwnerAddress
+        if (wifiP2pInfo.groupFormed && wifiP2pInfo.isGroupOwner) {
+            connectionStatus.text = "Host"
+            isHost = true
+            Log.e("Client", "falla aquí 3")
+            serverClass = ServerClass(readMsgBox)
+            Log.e("Client", "falla aquí 4")
+            serverClass.start()
+        } else if (wifiP2pInfo.groupFormed) {
+            connectionStatus.text = "Client"
+            isHost = false
+            Log.e("Client", "falla aquí 1")
+            clientClass = ClientClass(groupOwnerAddress, readMsgBox) // Aquí se inicializa correctamente
+            Log.e("Client", "falla aquí 2")
+            clientClass.start()
+        }
+    }
+
+
+
     override fun onResume() {
         super.onResume()
         registerReceiver(receiver, intentFilter)
@@ -151,4 +203,105 @@ class MainActivity : AppCompatActivity()
         super.onPause()
         unregisterReceiver(receiver)
     }
+
+    class ServerClass(private val readMsgBox: TextView) : Thread() {
+        private lateinit var serverSocket: ServerSocket
+        private lateinit var inputStream: InputStream
+        private lateinit var outputStream: OutputStream
+        private lateinit var socket: Socket
+
+        fun write(bytes: ByteArray) {
+            try {
+                outputStream.write(bytes)
+            } catch (e: IOException) {
+                e.printStackTrace()
+            }
+        }
+
+        override fun run() {
+            try {
+                serverSocket = ServerSocket(8888)
+                socket = serverSocket.accept() // Aquí se inicializa correctamente el socket
+                inputStream = socket.getInputStream()
+                outputStream = socket.getOutputStream()
+            } catch (e: IOException) {
+                e.printStackTrace()
+            }
+
+            val executor = Executors.newSingleThreadExecutor()
+            val handler = Handler(Looper.getMainLooper())
+            executor.execute {
+                val buffer = ByteArray(1024)
+                var bytes: Int
+                while (!socket.isClosed) {
+                    try {
+                        bytes = inputStream.read(buffer)
+                        if (bytes > 0) {
+                            val finalBytes = bytes
+                            handler.post {
+                                val tempMsg = String(buffer, 0, finalBytes)
+                                readMsgBox.text = tempMsg
+                            }
+                        }
+                    } catch (e: IOException) {
+                        e.printStackTrace()
+                    }
+                }
+            }
+        }
+    }
+
+    class ClientClass(private val hostAddress: InetAddress, private val readMsgBox: TextView) : Thread() {
+        private lateinit var inputStream: InputStream
+        private lateinit var outputStream: OutputStream
+        private val hostAdd: String = hostAddress.hostAddress
+        private lateinit var socket: Socket
+
+        fun write(bytes: ByteArray) {
+            try {
+                outputStream.write(bytes)
+            } catch (e: IOException) {
+                e.printStackTrace()
+            }
+        }
+
+
+        override fun run() {
+            try {
+                socket = Socket()
+                socket.connect(InetSocketAddress(hostAddress, 8888), 500)
+                inputStream = socket.getInputStream()
+                outputStream = socket.getOutputStream()
+            } catch (e: IOException) {
+                e.printStackTrace()
+            }
+
+        val executor = Executors.newSingleThreadExecutor()
+            val handler = Handler(Looper.getMainLooper())
+
+            executor.execute {
+                val buffer = ByteArray(1024)
+                var bytes: Int
+
+                while (socket.isConnected) {
+                    try {
+                        bytes = inputStream.read(buffer)
+                        if (bytes > 0) {
+                            val finalBytes = bytes
+                            handler.post {
+                                val tempMSG = String(buffer, 0, finalBytes)
+                                readMsgBox.setText(tempMSG)
+                            }
+                        }
+                    } catch (e: IOException) {
+                        e.printStackTrace()
+                    }
+                }
+            }
+        }
+    }
+
 }
+
+
+
