@@ -27,11 +27,11 @@
         </DialogSelection>
       </SelectionState>
       <SelectionState runConfigName="MainActivity">
-        <option name="selectionMode" value="DIALOG" />
-        <DropdownSelection timestamp="2025-03-21T07:21:46.138400900Z">
+        <option name="selectionMode" value="DROPDOWN" />
+        <DropdownSelection timestamp="2025-03-26T19:53:20.263550700Z">
           <Target type="DEFAULT_BOOT">
             <handle>
-              <DeviceId pluginId="PhysicalDevice" identifier="serial=259983c" />
+              <DeviceId pluginId="LocalEmulator" identifier="path=C:\Users\USER\.android\avd\AVD_34.avd" />
             </handle>
           </Target>
         </DropdownSelection>
@@ -39,12 +39,12 @@
           <targets>
             <Target type="DEFAULT_BOOT">
               <handle>
-                <DeviceId pluginId="PhysicalDevice" identifier="serial=259983c" />
+                <DeviceId pluginId="PhysicalDevice" identifier="serial=R52M80YQG4M" />
               </handle>
             </Target>
             <Target type="DEFAULT_BOOT">
               <handle>
-                <DeviceId pluginId="PhysicalDevice" identifier="serial=R52M80YQG4M" />
+                <DeviceId pluginId="PhysicalDevice" identifier="serial=259983c" />
               </handle>
             </Target>
           </targets>

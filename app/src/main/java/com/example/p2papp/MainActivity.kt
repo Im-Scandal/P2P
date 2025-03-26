@@ -16,8 +16,11 @@ import android.os.Looper
 import android.util.Log
 import android.view.View
 import android.widget.*
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import java.io.IOException
 import java.io.InputStream
@@ -63,10 +66,43 @@ class MainActivity : AppCompatActivity()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        requestPermissions()
         setContentView(R.layout.activity_main)
         initialWork()
         exqListener()
     }
+
+
+
+    private fun requestPermissions() {
+        val permissionsToRequest = mutableListOf<String>()
+
+        // Agregar permisos según la versión del SDK
+        permissionsToRequest.add(Manifest.permission.ACCESS_FINE_LOCATION)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) { // API 33
+            permissionsToRequest.add(Manifest.permission.NEARBY_WIFI_DEVICES)
+        }
+
+        requestMultiplePermissionsLauncher.launch(permissionsToRequest.toTypedArray())
+    }
+
+    // Registro del callback para múltiples permisos
+    private val requestMultiplePermissionsLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestMultiplePermissions()
+    ) { permissions ->
+        permissions.entries.forEach { entry ->
+            val permission = entry.key
+            val isGranted = entry.value
+            if (isGranted) {
+                // El permiso ha sido concedido
+                println("$permission concedido.")
+            } else {
+                // El permiso ha sido denegado
+                println("$permission denegado.")
+            }
+        }
+    }
+
 
     private fun exqListener() {
         btnDiscover.setOnClickListener {
@@ -81,6 +117,8 @@ class MainActivity : AppCompatActivity()
             ) {
 
                 Toast.makeText(this, "Faltan pemisos 1", Toast.LENGTH_SHORT).show()
+                requestPermissions()
+
                 return@setOnClickListener
             }
             manager.discoverPeers(channel, object : WifiP2pManager.ActionListener {
@@ -178,16 +216,12 @@ class MainActivity : AppCompatActivity()
         if (wifiP2pInfo.groupFormed && wifiP2pInfo.isGroupOwner) {
             connectionStatus.text = "Host"
             isHost = true
-            Log.e("Client", "falla aquí 3")
             serverClass = ServerClass(readMsgBox)
-            Log.e("Client", "falla aquí 4")
             serverClass.start()
         } else if (wifiP2pInfo.groupFormed) {
             connectionStatus.text = "Client"
             isHost = false
-            Log.e("Client", "falla aquí 1")
             clientClass = ClientClass(groupOwnerAddress, readMsgBox) // Aquí se inicializa correctamente
-            Log.e("Client", "falla aquí 2")
             clientClass.start()
         }
     }
