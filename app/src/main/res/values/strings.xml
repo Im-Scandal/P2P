@@ -1,3 +1,11 @@
 <resources>
-    <string name="app_name">P2Papp</string>
+    <string name="app_name">WiFi-Discover</string>
+    <string name="welcome">"Bienvenido a multisaltos"</string>
+    <string name="resgister">"Registrarse "</string>
+    <string name="Prepare">¡Prepara tu comunicación en momentos criticos!</string>
+    <string name="name_register">"Nombre completo "</string>
+    <string name="Complete">Completa tú información</string>
+    <string name="one">Una vez y la app hará el resto</string>
+    <string name="Imagesig">"Aparece un signo de pregunta "</string>
+    <string name="dispositivosImgane">"Se puede observar dos telefonos que se conectan "</string>
 </resources>

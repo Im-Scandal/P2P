@@ -64,6 +64,7 @@
         android:layout_alignParentStart="true"
         android:layout_marginTop="10dp"
         android:background="#f07d35"
+        android:textColor="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/discover" />
@@ -80,11 +81,9 @@
             android:id="@+id/msgSend"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/peerListView"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentEnd="true"
             android:layout_marginTop="30dp"
             android:textStyle="italic"
+            android:textColor="@color/white"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/peerListView" />
@@ -99,6 +98,7 @@
         android:layout_height="0dp"
         android:layout_marginTop="30dp"
         android:layout_marginBottom="20dp"
+        android:textColor="@color/white"
         android:background="#f07d35"
         android:orientation="vertical"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
