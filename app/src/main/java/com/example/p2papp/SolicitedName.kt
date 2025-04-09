@@ -26,6 +26,9 @@ class SolicitedName: AppCompatActivity()
         nextButton.setOnClickListener{
             if (nameText.text.isNotEmpty()){
                 nameUser = nameText.text.toString()
+                val sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE)
+                sharedPreferences.edit().putString("userName", nameUser).apply()
+
                 val intent = Intent(this, MainActivity::class.java)
                 startActivity(intent)
             }else {
