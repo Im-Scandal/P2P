@@ -1,9 +1,6 @@
 package com.example.p2papp
 
 import android.Manifest
-import android.content.BroadcastReceiver
-import android.content.Context
-import android.content.IntentFilter
 import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.net.wifi.WifiManager
@@ -27,7 +24,7 @@ import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
 
 
-class MainActivity : AppCompatActivity()
+class MainChat : AppCompatActivity()
 {
     private lateinit var sharedPreferences: SharedPreferences
 
@@ -269,7 +266,7 @@ class MainActivity : AppCompatActivity()
 
             override fun onFailure(arg0: Int) {
                 // Command failed.  Check for P2P_UNSUPPORTED, ERROR, or BUSY
-                Toast.makeText(this@MainActivity, "Fail local service", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@MainChat, "Fail local service", Toast.LENGTH_SHORT).show()
             }
         })
     }
@@ -289,7 +286,7 @@ class MainActivity : AppCompatActivity()
                 }
 
                 override fun onFailure(code: Int) {
-                    Toast.makeText(this@MainActivity, "Failure addService", Toast.LENGTH_SHORT)
+                    Toast.makeText(this@MainChat, "Failure addService", Toast.LENGTH_SHORT)
                         .show()
                     Log.e(TAG_WIFI, "Add service request has failed. $code")
                 }
@@ -332,11 +329,11 @@ class MainActivity : AppCompatActivity()
             channel,
             object : WifiP2pManager.ActionListener {
                 override fun onSuccess() {
-                    Toast.makeText(this@MainActivity, "success discover", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@MainChat, "success discover", Toast.LENGTH_SHORT).show()
                 }
 
                 override fun onFailure(code: Int) {
-                    Toast.makeText(this@MainActivity, "Failure discover", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@MainChat, "Failure discover", Toast.LENGTH_SHORT).show()
                     Log.e(TAG_WIFI, "Discover services has failed. $code")
                 }
             }
@@ -392,7 +389,7 @@ class MainActivity : AppCompatActivity()
                 override fun onSuccess() {
                     Log.d("success", "clearLocalServices result: Success")
                     Toast.makeText(
-                        this@MainActivity,
+                        this@MainChat,
                         "Success clear local services",
                         Toast.LENGTH_SHORT
                     ).show()
@@ -402,7 +399,7 @@ class MainActivity : AppCompatActivity()
                 override fun onFailure(code: Int) {
                     Log.e("Failed", "clearLocalServices result:  Failure with code $code")
                     Toast.makeText(
-                        this@MainActivity,
+                        this@MainChat,
                         "Failed to clear local services: $code",
                         Toast.LENGTH_SHORT
                     ).show()
@@ -485,7 +482,7 @@ class MainActivity : AppCompatActivity()
 
             override fun onFailure(arg0: Int) {
                 // Command failed.  Check for P2P_UNSUPPORTED, ERROR, or BUSY
-                Toast.makeText(this@MainActivity, "Fail local service", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@MainChat, "Fail local service", Toast.LENGTH_SHORT).show()
             }
         })
     }

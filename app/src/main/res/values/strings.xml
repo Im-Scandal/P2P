@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">WiFi-Discover</string>
+    <string name="multisaltos">Multisaltos</string>
     <string name="welcome">"Bienvenido a Multisaltos"</string>
     <string name="resgister">"REGISTRARSE"</string>
     <string name="Prepare">¡Prepara tu comunicación en momentos críticos!</string>
@@ -8,4 +9,31 @@
     <string name="one">una vez y la app hará el resto!</string>
     <string name="Imagesig">"Aparece un signo de pregunta "</string>
     <string name="dispositivosImgane">"Se puede observar dos telefonos que se conectan "</string>
+
+    Términos y condiciones
+    <string name="Terminos_Condiciones">"Términos y Condiciones"</string>
+    <string name="aceptar_Checkbox">"Al aceptar estos Términos y Condiciones, reconoces que has leído, entendido y aceptas las condiciones detalladas en este documento."</string>
+    <string name="aceptar_boton_TC">"ACEPTO"</string>
+    <string name="introduccion_TC">"Bienvenido a Multisalto, una aplicación diseñada para permitir la comunicación en situaciones de emergencia a través de la red AdHoc, sin la necesidad de conexión a Internet. Al utilizar nuestra aplicación, aceptas los siguientes términos y condiciones.
+
+Te recomendamos leerlos atentamente."</string>
+    <string name="requisitos_titulo">"Requisitos de Acceso a la Información"</string>
+    <string name="requisitos_texto">"Para utilizar Multisalto de manera efectiva, se requiere que la aplicación acceda a ciertos datos de tu dispositivo, que incluyen:
+Ubicación: La aplicación necesita acceder a la ubicación en tiempo real de tu dispositivo para poder conectar con otras personas cercanas en situaciones de emergencia. Esta información solo se utilizará dentro del contexto de la aplicación y no se compartirá con terceros fuera de la red de emergencia.
+Datos del Usuario: Se solicitarán ciertos datos personales, como tu nombre y número de teléfono, para facilitar la identificación y la conexión con otros usuarios en momentos críticos. Esta información se almacenará de manera segura en tu dispositivo y no será utilizada para fines distintos a la funcionalidad de la app.
+Es importante tener en cuenta que Multisalto necesita acceso a estos datos para garantizar una comunicación efectiva y rápida durante una emergencia. Puedes desactivar el acceso a la ubicación o modificar los permisos en cualquier momento desde la configuración de tu dispositivo, pero esto puede afectar el funcionamiento adecuado de la aplicación."</string>
+    <string name="limitaciones_titulo">"Limitaciones de Responsabilidad"</string>
+    <string name="limitaciones_texto">"Multisalto no se hace responsable por los daños o pérdidas que puedan surgir debido al uso de la aplicación, incluyendo pero no limitado a la falta de cobertura, problemas técnicos o fallos de la red AdHoc. La app depende de la red de usuarios cercanos, lo que puede afectar su funcionamiento en ciertos contextos."</string>
+    <string name="modificaciones_titulo">"Modificaciones de los Términos"</string>
+    <string name="modificaciones_texto">"Nos reservamos el derecho de modificar estos términos en cualquier momento. Las actualizaciones serán notificadas a través de la aplicación o mediante otros medios apropiados. Es responsabilidad del usuario revisar periódicamente los Términos y Condiciones para estar al tanto de cualquier cambio."</string>
+    <string name="a">""</string>
+
+    MainMenu
+    <string name="companero_ideal">"Tu acompañante ideal
+En momentos de Post Desastre"</string>
+    <string name="mantente_salvo">"Mantente a salvo"</string>
+    <string name="pedir_ayuda">"PEDIR AYUDA"</string>
+
+
+
 </resources>

@@ -47,8 +47,9 @@ class SolicitedName: AppCompatActivity() {
                 val sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE)
                 sharedPreferences.edit().putString("userName", nameUser).apply()
 
-                val intent = Intent(this, MainActivity::class.java)
+                val intent = Intent(this, TerminosCondiciones::class.java)
                 startActivity(intent)
+                finish()
             } else {
                 // Mostrar estado de error si el campo está vacío
                 Toast.makeText(this, "Por favor ingrese su nombre", Toast.LENGTH_LONG).show()

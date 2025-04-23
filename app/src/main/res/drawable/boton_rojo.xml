@@ -2,7 +2,7 @@
     android:shape="rectangle">
 
     <!-- Color de fondo del botón -->
-    <solid android:color="#2F2F2F" />
+    <solid android:color="#FF2330" />
 
     <!-- Esquinas redondeadas -->
     <corners android:radius="10dp" />

@@ -2,14 +2,14 @@
     android:shape="rectangle">
 
     <!-- Color de fondo del botón -->
-    <solid android:color="#2F2F2F" />
+    <solid android:color="@color/verde" />
 
     <!-- Esquinas redondeadas -->
     <corners android:radius="10dp" />
 
     <!-- Borde del botón -->
     <stroke
-        android:width="2dp"
+        android:width="5dp"
         android:color="@color/blanco_boton" />
 
 </shape>
