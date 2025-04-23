@@ -69,7 +69,6 @@ class MainActivity : AppCompatActivity()
         sharedPreferences = getSharedPreferences(Constants.PREFERENCES_KEY, MODE_PRIVATE)
 
         initialWork()
-        requestPermissions()
         addServiceRequest()
         startDiscover()
 

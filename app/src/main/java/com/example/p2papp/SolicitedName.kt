@@ -1,20 +1,24 @@
 package com.example.p2papp
 
+import android.Manifest
+import android.app.AlertDialog
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ImageButton
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 
-class SolicitedName: AppCompatActivity()
-{
+class SolicitedName: AppCompatActivity() {
     private lateinit var nextButton: Button
     private lateinit var nameText: EditText
-    private lateinit var infoButton: Button
+    private lateinit var infoButton: ImageButton
 
-    companion object{
+    companion object {
         var nameUser: String = ""
     }
 
@@ -22,35 +26,80 @@ class SolicitedName: AppCompatActivity()
         super.onCreate(savedInstanceState)
         setContentView(R.layout.registro_inicio)
 
+        requestPermissions()
+
         nextButton = findViewById(R.id.nextButton)
         nameText = findViewById(R.id.nameWText)
         infoButton = findViewById(R.id.infoView)
 
-        nameText.setOnClickListener{
-            nameText.setBackgroundResource(R.drawable.registro_nombre)
-            nameText.setHintTextColor(
-                ContextCompat.getColor(this, R.color.hint))
-            nameText.setHint(R.string.name_register)
+        nameText.setOnFocusChangeListener { _, hasFocus ->
+            if (hasFocus) {
+                // Restaurar el estado del EditText al obtener el foco
+                nameText.setBackgroundResource(R.drawable.registro_nombre)
+                nameText.setHintTextColor(ContextCompat.getColor(this, R.color.hint))
+                nameText.setHint(R.string.name_register)
+            }
         }
-        nextButton.setOnClickListener{
-            if (nameText.text.isNotEmpty()){
-                nameUser = nameText.text.toString()
+
+        nextButton.setOnClickListener {
+            if (nameText.text.isNotEmpty()) {
+                val nameUser = nameText.text.toString()
                 val sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE)
                 sharedPreferences.edit().putString("userName", nameUser).apply()
 
                 val intent = Intent(this, MainActivity::class.java)
                 startActivity(intent)
-            }else {
+            } else {
+                // Mostrar estado de error si el campo está vacío
                 Toast.makeText(this, "Por favor ingrese su nombre", Toast.LENGTH_LONG).show()
                 nameText.setBackgroundResource(R.drawable.registro_nombre_empty)
-                nameText.setHintTextColor(
-                    ContextCompat.getColor(this, R.color.rojo_falla))
+                nameText.setHintTextColor(ContextCompat.getColor(this, R.color.rojo_falla))
                 nameText.setHint("Por favor completa la casilla")
             }
         }
-        infoButton.setOnClickListener{
-            
+
+        infoButton.setOnClickListener {
+            val dialog = AlertDialog.Builder(this)
+                .setTitle("¡Atención!")
+                .setMessage("Ingresa tu información personal en el cuadro de texto.\nPaso necesario una vez ya que la app guardará tus datos, para ayudarte en situaciones de emergencia.")
+                .setPositiveButton("Cerrar") { dialogInterface, _ ->
+                    dialogInterface.dismiss() // Cierra el diálogo cuando el usuario pulsa "Cerrar"
+                }
+                .setCancelable(true) // Permite cerrar el diálogo tocando fuera de él
+                .create()
+
+            dialog.show()
         }
 
     }
+
+    private fun requestPermissions() {
+        val permissionsToRequest = mutableListOf<String>()
+
+        // Agregar permisos según la versión del SDK
+        permissionsToRequest.add(Manifest.permission.ACCESS_FINE_LOCATION)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) { // API 33
+            permissionsToRequest.add(Manifest.permission.NEARBY_WIFI_DEVICES)
+        }
+
+        requestMultiplePermissionsLauncher.launch(permissionsToRequest.toTypedArray())
+    }
+
+    // Registro del callback para múltiples permisos
+    private val requestMultiplePermissionsLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestMultiplePermissions()
+    ) { permissions ->
+        permissions.entries.forEach { entry ->
+            val permission = entry.key
+            val isGranted = entry.value
+            if (isGranted) {
+                // El permiso ha sido concedido
+                println("$permission concedido.")
+            } else {
+                // El permiso ha sido denegado
+                println("$permission denegado.")
+            }
+        }
+    }
+
 }
