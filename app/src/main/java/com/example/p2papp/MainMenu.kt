@@ -27,11 +27,12 @@ class MainMenu : AppCompatActivity() {
 
     private fun setOnListener() {
         ayudaButton.setOnClickListener{
-            val intentChat = Intent(this, MainChat::class.java)
-            startActivity(intentChat)
+            val intent = Intent(this, MainChat::class.java)
+            startActivity(intent)
         }
         perfilButton.setOnClickListener{
-            Toast.makeText(this, "Funciona Perfil", Toast.LENGTH_SHORT).show()
+            val intent = Intent(this, ConfigPerfil::class.java)
+            startActivity(intent)
         }
         bibliotecaButton.setOnClickListener{
             Toast.makeText(this, "Funciona Biblio", Toast.LENGTH_SHORT).show()

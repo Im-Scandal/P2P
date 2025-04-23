@@ -43,9 +43,10 @@ class SolicitedName: AppCompatActivity() {
 
         nextButton.setOnClickListener {
             if (nameText.text.isNotEmpty()) {
-                val nameUser = nameText.text.toString()
+                val userName = nameText.text.toString()
+                nameUser = nameText.text.toString()
                 val sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE)
-                sharedPreferences.edit().putString("userName", nameUser).apply()
+                sharedPreferences.edit().putString("userName", userName).apply()
 
                 val intent = Intent(this, TerminosCondiciones::class.java)
                 startActivity(intent)

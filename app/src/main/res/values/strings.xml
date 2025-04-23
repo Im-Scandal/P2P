@@ -34,6 +34,12 @@ En momentos de Post Desastre"</string>
     <string name="mantente_salvo">"Mantente a salvo"</string>
     <string name="pedir_ayuda">"PEDIR AYUDA"</string>
 
+    Configuración de Perfil
+    <string name="datos_Personales">"DATOS PERSONALES"</string>
+    <string name="nombre_Apellido">"Nombre y Apellido"</string>
+    <string name="numero_celular">"Número de celular"</string>
+    <string name="datos_CEmergencia">"DATOS CONTACTO EMERGENCIA"</string>
+    <string name="editar_datos">"EDITAR DATOS"</string>
 
 
 </resources>

@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ConfigPerfil"
+    android:padding="30dp">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/textView14"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/datos_Personales"
+                android:textColor="@color/blanco_texto"
+                android:textSize="20sp"
+                android:fontFamily="@font/verdana"
+                android:textStyle="bold"
+                android:textAlignment="center"
+                android:layout_marginTop="30sp"
+                android:layout_marginBottom="30sp"/>
+
+            <TextView
+                android:id="@+id/nameUserText"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:hint="@string/nombre_Apellido"
+                android:textColorHint="@color/hint"
+                android:background="@drawable/campo_perfil_lleno"
+                android:textColor="@color/blanco_texto"
+                android:fontFamily="@font/roboto"
+                android:textSize="18sp"
+                android:padding="5dp"
+                android:layout_marginBottom="20sp"/>
+
+            <TextView
+                android:id="@+id/phoneUserText"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:hint="@string/numero_celular"
+                android:textColorHint="@color/hint"
+                android:background="@drawable/campo_perfil_lleno"
+                android:textColor="@color/blanco_texto"
+                android:fontFamily="@font/roboto"
+                android:textSize="18sp"
+                android:padding="5dp"
+                android:layout_marginBottom="20sp"/>
+
+            <Button
+                android:id="@+id/button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/editar_datos"
+                android:background="@drawable/rounded_button"
+                android:textColor="@color/blanco_texto"
+                android:fontFamily="@font/verdana"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="50sp"/>
+
+            <TextView
+                android:id="@+id/textView15"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/datos_CEmergencia"
+                android:textColor="@color/blanco_texto"
+                android:textSize="20sp"
+                android:fontFamily="@font/verdana"
+                android:textStyle="bold"
+                android:textAlignment="center"
+                android:layout_marginBottom="30sp"/>
+
+            <TextView
+                android:id="@+id/nameCEUserText"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:hint="@string/nombre_Apellido"
+                android:textColorHint="@color/hint"
+                android:background="@drawable/campo_perfil_lleno"
+                android:textColor="@color/blanco_texto"
+                android:fontFamily="@font/roboto"
+                android:textSize="18sp"
+                android:padding="5dp"
+                android:layout_marginBottom="20sp"/>
+
+            <TextView
+                android:id="@+id/phoneCEUserText"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:hint="@string/numero_celular"
+                android:textColorHint="@color/hint"
+                android:background="@drawable/campo_perfil_lleno"
+                android:textColor="@color/blanco_texto"
+                android:fontFamily="@font/roboto"
+                android:textSize="18sp"
+                android:padding="5dp"
+                android:layout_marginBottom="20sp"/>
+
+            <Button
+                android:id="@+id/button2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/editar_datos"
+                android:textColor="@color/blanco_texto"
+                android:fontFamily="@font/verdana"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:background="@drawable/rounded_button"
+                android:layout_marginBottom="10sp"/>
+        </LinearLayout>
+    </ScrollView>
+
+    <Button
+        android:id="@+id/helpButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/boton_rojo"
+        android:fontFamily="@font/verdana"
+        android:text="@string/pedir_ayuda"
+        android:textColor="@color/blanco_texto"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="15sp"
+        android:layout_marginHorizontal="22dp"
+        android:layout_marginTop="15dp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/rounded_button"
+        android:orientation="horizontal"
+        android:layout_marginHorizontal="22dp">
+
+        <ImageButton
+            android:id="@+id/bibliotecaButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="#00777777"
+            android:contentDescription="Botón de biblioteca"
+            android:paddingHorizontal="9dp"
+            android:paddingVertical="8dp"
+            app:srcCompat="@drawable/icono_biblioteca" />
+
+        <ImageButton
+            android:id="@+id/radarButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="#00777777"
+            android:contentDescription="Botón de radar"
+            android:paddingHorizontal="9dp"
+            android:paddingVertical="8dp"
+            app:srcCompat="@drawable/icono_radar" />
+
+    </LinearLayout>
+
+</LinearLayout>

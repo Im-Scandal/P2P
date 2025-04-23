@@ -35,8 +35,11 @@
         android:theme="@style/P2Papp"
         tools:targetApi="31">
         <activity
+            android:name=".ConfigPerfil"
+            android:exported="true" />
+        <activity
             android:name=".MainMenu"
-            android:exported="false" />
+            android:exported="true" />
         <activity
             android:name=".TerminosCondiciones"
             android:exported="true" />

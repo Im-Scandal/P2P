@@ -21,6 +21,8 @@ class TerminosCondiciones : AppCompatActivity() {
 
         acceptButton.setOnClickListener{
             if (acceptCheck.isChecked){
+
+
                 val intent = Intent(this, MainMenu::class.java)
                 startActivity(intent)
                 finish()
