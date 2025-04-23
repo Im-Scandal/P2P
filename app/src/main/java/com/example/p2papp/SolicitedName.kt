@@ -12,11 +12,17 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+
 
 class SolicitedName: AppCompatActivity() {
     private lateinit var nextButton: Button
     private lateinit var nameText: EditText
     private lateinit var infoButton: ImageButton
+
+    private lateinit var userDao: UserDao
 
     companion object {
         var nameUser: String = ""
@@ -32,6 +38,9 @@ class SolicitedName: AppCompatActivity() {
         nameText = findViewById(R.id.nameWText)
         infoButton = findViewById(R.id.infoView)
 
+        val db = AppDatabase.getDatabase(applicationContext)
+        userDao = db.userDao()
+
         nameText.setOnFocusChangeListener { _, hasFocus ->
             if (hasFocus) {
                 // Restaurar el estado del EditText al obtener el foco
@@ -44,9 +53,25 @@ class SolicitedName: AppCompatActivity() {
         nextButton.setOnClickListener {
             if (nameText.text.isNotEmpty()) {
                 val userName = nameText.text.toString()
-                nameUser = nameText.text.toString()
                 val sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE)
                 sharedPreferences.edit().putString("userName", userName).apply()
+
+
+                // Llamar al insertUser desde una corrutina
+                CoroutineScope(Dispatchers.IO).launch {
+                    val user = User(id = 1, name = userName, phone = "", nameCE = "", phoneCE = "" )
+                    userDao.insertUser(user)
+                    // Verificamos que se haya guardado consultándolo
+                    val savedUser = userDao.getUser()
+
+                    if (savedUser != null) {
+                        if (savedUser.name.isNotEmpty()) {
+                            runOnUiThread {
+                                Toast.makeText(this@SolicitedName, "Usuario guardado: ${savedUser.name}", Toast.LENGTH_SHORT).show()
+                            }
+                        }
+                    }
+                }
 
                 val intent = Intent(this, TerminosCondiciones::class.java)
                 startActivity(intent)
