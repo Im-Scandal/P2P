@@ -12,7 +12,8 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="0dp"
+        android:layout_weight="1">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -42,7 +43,7 @@
                 android:textColor="@color/blanco_texto"
                 android:fontFamily="@font/roboto"
                 android:textSize="18sp"
-                android:padding="5dp"
+                android:padding="15dp"
                 android:layout_marginBottom="20sp"/>
 
             <TextView
@@ -55,11 +56,11 @@
                 android:textColor="@color/blanco_texto"
                 android:fontFamily="@font/roboto"
                 android:textSize="18sp"
-                android:padding="5dp"
+                android:padding="15dp"
                 android:layout_marginBottom="20sp"/>
 
             <Button
-                android:id="@+id/button"
+                android:id="@+id/personalButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/editar_datos"
@@ -92,7 +93,7 @@
                 android:textColor="@color/blanco_texto"
                 android:fontFamily="@font/roboto"
                 android:textSize="18sp"
-                android:padding="5dp"
+                android:padding="15dp"
                 android:layout_marginBottom="20sp"/>
 
             <TextView
@@ -105,11 +106,11 @@
                 android:textColor="@color/blanco_texto"
                 android:fontFamily="@font/roboto"
                 android:textSize="18sp"
-                android:padding="5dp"
+                android:padding="15dp"
                 android:layout_marginBottom="20sp"/>
 
             <Button
-                android:id="@+id/button2"
+                android:id="@+id/contactButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/editar_datos"
@@ -145,7 +146,7 @@
 
         <ImageButton
             android:id="@+id/bibliotecaButton"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:background="#00777777"
@@ -153,17 +154,6 @@
             android:paddingHorizontal="9dp"
             android:paddingVertical="8dp"
             app:srcCompat="@drawable/icono_biblioteca" />
-
-        <ImageButton
-            android:id="@+id/radarButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="#00777777"
-            android:contentDescription="Botón de radar"
-            android:paddingHorizontal="9dp"
-            android:paddingVertical="8dp"
-            app:srcCompat="@drawable/icono_radar" />
 
     </LinearLayout>
 

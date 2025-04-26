@@ -40,6 +40,8 @@ En momentos de Post Desastre"</string>
     <string name="numero_celular">"Número de celular"</string>
     <string name="datos_CEmergencia">"DATOS CONTACTO EMERGENCIA"</string>
     <string name="editar_datos">"EDITAR DATOS"</string>
+    <string name="guardar_datos">"GUARDAR DATOS"</string>
+
 
 
 </resources>

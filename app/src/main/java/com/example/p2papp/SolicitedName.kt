@@ -19,6 +19,7 @@ import kotlinx.coroutines.launch
 
 class SolicitedName: AppCompatActivity() {
     private lateinit var nextButton: Button
+    private lateinit var pruebaButton: Button
     private lateinit var nameText: EditText
     private lateinit var infoButton: ImageButton
 
@@ -35,6 +36,7 @@ class SolicitedName: AppCompatActivity() {
         requestPermissions()
 
         nextButton = findViewById(R.id.nextButton)
+        pruebaButton = findViewById(R.id.buttonPrueba)
         nameText = findViewById(R.id.nameWText)
         infoButton = findViewById(R.id.infoView)
 
@@ -59,7 +61,7 @@ class SolicitedName: AppCompatActivity() {
 
                 // Llamar al insertUser desde una corrutina
                 CoroutineScope(Dispatchers.IO).launch {
-                    val user = User(id = 1, name = userName, phone = "", nameCE = "", phoneCE = "" )
+                    val user = User(id = 1, name = userName, phone = "", nameCE = "", phoneCE = "")
                     userDao.insertUser(user)
                     // Verificamos que se haya guardado consultándolo
                     val savedUser = userDao.getUser()
@@ -98,6 +100,11 @@ class SolicitedName: AppCompatActivity() {
             dialog.show()
         }
 
+        pruebaButton.setOnClickListener{
+            val intent = Intent(this, MainMenu::class.java)
+            startActivity(intent)
+            finish()
+        }
     }
 
     private fun requestPermissions() {

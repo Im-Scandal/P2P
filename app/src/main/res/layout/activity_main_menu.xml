@@ -86,7 +86,7 @@
 
             <ImageButton
                 android:id="@+id/bibliotecaButton"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:contentDescription="Botón de biblioteca"
@@ -95,16 +95,6 @@
                 android:paddingHorizontal="9dp"
                 android:paddingVertical="8dp"/>
 
-            <ImageButton
-                android:id="@+id/radarButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:contentDescription="Botón de radar"
-                app:srcCompat="@drawable/icono_radar"
-                android:background="#00777777"
-                android:paddingHorizontal="9dp"
-                android:paddingVertical="8dp"/>
         </LinearLayout>
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
