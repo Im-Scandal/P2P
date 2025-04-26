@@ -21,7 +21,10 @@ class TerminosCondiciones : AppCompatActivity() {
 
         acceptButton.setOnClickListener{
             if (acceptCheck.isChecked){
-
+                val sharedPreferences = getSharedPreferences("AppPreferences", MODE_PRIVATE)
+                val editor = sharedPreferences.edit()
+                editor.putBoolean("CheckboxState", true) // true significa que el checkbox fue marcado.
+                editor.apply()
 
                 val intent = Intent(this, MainMenu::class.java)
                 startActivity(intent)
