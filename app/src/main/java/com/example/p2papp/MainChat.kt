@@ -11,21 +11,23 @@ import android.net.wifi.p2p.nsd.WifiP2pDnsSdServiceRequest
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
-import android.widget.*
+import android.widget.ArrayAdapter
+import android.widget.Button
+import android.widget.ListView
+import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.example.p2papp.Constants.TAG
 import com.example.p2papp.Constants.TAG_WIFI
-import com.example.wifidiscover.MessageAdapter
 import com.google.gson.Gson
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
 
 
-class MainChat : AppCompatActivity()
-{
+class MainChat : AppCompatActivity() {
     private lateinit var sharedPreferences: SharedPreferences
 
     //Inicialización de variables de la vista
@@ -33,9 +35,8 @@ class MainChat : AppCompatActivity()
     private lateinit var op1Button: Button
     private lateinit var op2Button: Button
     private lateinit var op3Button: Button
+    private lateinit var op4Button: Button
     private lateinit var listView: ListView
-    lateinit var msgSend: TextView
-    lateinit var connectionStatus: TextView
     private lateinit var recyclerView: RecyclerView
     var userName: String = SolicitedName.nameUser
 
@@ -53,11 +54,10 @@ class MainChat : AppCompatActivity()
     private var selectedDevice: WifiP2pDevice? = null
 
     //Variables para agregar mensajes a recyclerView
-    private var messages: MutableList<String> = mutableListOf()
+    private var messages: MutableList<ChatMessage> = mutableListOf()
     private lateinit var messageAdapter: MessageAdapter
 
     lateinit var nameUser: String
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -69,16 +69,15 @@ class MainChat : AppCompatActivity()
         addServiceRequest()
         startDiscover()
 
-        connectionStatus.setText(userName)
 
         messageAdapter = MessageAdapter(messages)
 
         recyclerView.adapter = messageAdapter
         exqListener()
-        listView.setOnItemClickListener { parent, viiew, pos, id ->
-            selectedDevice = deviceArray[pos].device
-            timer()
-        }
+//        listView.setOnItemClickListener { parent, viiew, pos, id ->
+//            selectedDevice = deviceArray[pos].device
+//            timer()
+//        }
     }
 
     private fun requestPermissions() {
@@ -108,62 +107,36 @@ class MainChat : AppCompatActivity()
         }
     }
 
-    private fun timer() {
-        executor.scheduleWithFixedDelay({
-            selectedDevice?.let { device ->
-                // Buscar el índice del dispositivo seleccionado en la lista
-                val index = deviceArray.indexOfFirst { it.device.deviceName == device.deviceName }
-                if (index != -1) {
-                    // Llamar a updateDescription con el índice del dispositivo seleccionado
-                    if (!devicesWithReceivedMessages.contains(device.deviceName)) {
-                        // Si es la primera vez que recibes un mensaje del dispositivo, procésalo
-                        runOnUiThread {
-                            // Actualiza la descripción o realiza las operaciones necesarias con el dispositivo
-                            updateDescription(index)
-                        }
-                        // Marca el dispositivo como uno del que ya has recibido un mensaje
-                        devicesWithReceivedMessages.add(device.deviceName)
-                    }
-                }
-            }
-        }, 0, interval, TimeUnit.MILLISECONDS)
-    }
-
-    private fun updateDescription(selectedDevice: Int) {
-
-        val selectedDeviceInfo = deviceArray[selectedDevice]
-        msgSend.text = selectedDeviceInfo.getAllMessage()
-
-    }
+//    private fun timer() {
+//        executor.scheduleWithFixedDelay({
+//            selectedDevice?.let { device ->
+//                // Buscar el índice del dispositivo seleccionado en la lista
+//                val index = deviceArray.indexOfFirst { it.device.deviceName == device.deviceName }
+//                if (index != -1) {
+//                    // Llamar a updateDescription con el índice del dispositivo seleccionado
+//                    if (!devicesWithReceivedMessages.contains(device.deviceName)) {
+//                        // Si es la primera vez que recibes un mensaje del dispositivo, procésalo
+//                        runOnUiThread {
+//                            // Actualiza la descripción o realiza las operaciones necesarias con el dispositivo
+//                            updateDescription(index)
+//                        }
+//                        // Marca el dispositivo como uno del que ya has recibido un mensaje
+//                        devicesWithReceivedMessages.add(device.deviceName)
+//                    }
+//                }
+//            }
+//        }, 0, interval, TimeUnit.MILLISECONDS)
+//    }
+//
+//    private fun updateDescription(selectedDevice: Int) {
+//
+//        val selectedDeviceInfo = deviceArray[selectedDevice]
+//        msgSend.text = selectedDeviceInfo.getAllMessage()
+//
+//
+//    }
 
     private fun exqListener() {
-        btnDiscover.setOnClickListener {
-            if (ActivityCompat.checkSelfPermission(
-                    this,
-                    Manifest.permission.ACCESS_FINE_LOCATION
-                ) != PackageManager.PERMISSION_GRANTED ||
-                (Build.VERSION.SDK_INT > Build.VERSION_CODES.S && ActivityCompat.checkSelfPermission(
-                    this,
-                    Manifest.permission.NEARBY_WIFI_DEVICES
-                ) != PackageManager.PERMISSION_GRANTED)
-            ) {
-
-                Toast.makeText(this, "Faltan pemisos 1", Toast.LENGTH_SHORT).show()
-                requestPermissions()
-
-                return@setOnClickListener
-            }
-            manager.discoverPeers(channel, object : WifiP2pManager.ActionListener {
-                override fun onSuccess() {
-                    connectionStatus.setText("Discovery funciona")
-                }
-
-                override fun onFailure(reason: Int) {
-                    connectionStatus.setText("Discovery no funciona")
-                }
-            })
-        } //Se va
-
         op1Button.setOnClickListener {
             msg = op1Button.text.toString()
 
@@ -173,7 +146,13 @@ class MainChat : AppCompatActivity()
                 Toast.LENGTH_LONG
             ).show()
 
-            messages.add(msg.trim() + " - Hora de envío: " + getFormattedDateTime())
+            messages.add(ChatMessage(
+                text = msg.trim(),
+                timeSend = "Hora de envío: " + getFormattedDateTime(),
+                timeReceived = "",
+                isSentByMe = true
+            ))
+
             saveMessage(msg)
             messageAdapter.notifyDataSetChanged()
             recyclerView.smoothScrollToPosition(messages.size - 1)
@@ -190,7 +169,13 @@ class MainChat : AppCompatActivity()
                 Toast.LENGTH_LONG
             ).show()
 
-            messages.add(msg.trim() + " - Hora de envío: " + getFormattedDateTime())
+            messages.add(ChatMessage(
+                text = msg.trim(),
+                timeSend = "Hora de envío: " + getFormattedDateTime(),
+                timeReceived = "",
+                isSentByMe = true
+            ))
+
             saveMessage(msg)
             messageAdapter.notifyDataSetChanged()
             recyclerView.smoothScrollToPosition(messages.size - 1)
@@ -207,7 +192,36 @@ class MainChat : AppCompatActivity()
                 Toast.LENGTH_LONG
             ).show()
 
-            messages.add(msg.trim() + " - Hora de envío: " + getFormattedDateTime())
+            messages.add(ChatMessage(
+                text = msg.trim(),
+                timeSend = "Hora de envío: " + getFormattedDateTime(),
+                timeReceived = "",
+                isSentByMe = true
+            ))
+
+            saveMessage(msg)
+            messageAdapter.notifyDataSetChanged()
+            recyclerView.smoothScrollToPosition(messages.size - 1)
+            clearLocalServices {
+                startRegistration()
+            }
+        }
+
+        op4Button.setOnClickListener {
+            msg = op4Button.text.toString()
+            Toast.makeText(
+                applicationContext,
+                "Mensaje enviado",
+                Toast.LENGTH_LONG
+            ).show()
+
+            messages.add(ChatMessage(
+                text = msg.trim(),
+                timeSend = "Hora de envío: " + getFormattedDateTime(),
+                timeReceived = "",
+                isSentByMe = true
+            ))
+
             saveMessage(msg)
             messageAdapter.notifyDataSetChanged()
             recyclerView.smoothScrollToPosition(messages.size - 1)
@@ -219,14 +233,12 @@ class MainChat : AppCompatActivity()
     }
 
     fun initialWork() {
-        connectionStatus = findViewById(R.id.connectionStatus)
         recyclerView = findViewById(R.id.messageRecyclerView)
-        btnDiscover = findViewById(R.id.discover)
-        listView = findViewById(R.id.peerListView)
+//        listView = findViewById(R.id.peerListView)
         op1Button = findViewById(R.id.op1Button)
         op2Button = findViewById(R.id.op2Button)
         op3Button = findViewById(R.id.op3Button)
-        msgSend = findViewById(R.id.msgSend)
+        op4Button = findViewById(R.id.op4Button)
 
         wifiManager = this.applicationContext.getSystemService(WIFI_SERVICE) as WifiManager
         manager = getSystemService(WIFI_P2P_SERVICE) as WifiP2pManager
@@ -345,7 +357,7 @@ class MainChat : AppCompatActivity()
         val txtListener = WifiP2pManager.DnsSdTxtRecordListener { fullDomain, record, srcDevice ->
             Log.d(TAG, "DnsSdTxtRecord available -$record")
             val wifiFrame = WifiFrameUtils.hashMapToWiFiFrame(record)
-            if (record.isEmpty() || srcDevice.deviceName == "" || WifiFrameUtils.deviceIdMultiHop == WifiFrameUtils.idDevice.toString() || wifiFrame.sendMessage.isEmpty()) return@DnsSdTxtRecordListener
+            if (record.isEmpty() || srcDevice.deviceName == "" || WifiFrameUtils.deviceIdMultiHop == WifiFrameUtils.idDevice || wifiFrame.sendMessage.isEmpty()) return@DnsSdTxtRecordListener
 
             if (WifiFrameUtils.deviceMultihop.isNotEmpty()) {
                 val deviceP2p = WifiP2pDevice().apply {
@@ -384,7 +396,7 @@ class MainChat : AppCompatActivity()
     }
 
     private fun clearLocalServices(onSuccessCallback: () -> Unit) {
-        manager?.clearLocalServices(channel,
+        manager.clearLocalServices(channel,
             object : WifiP2pManager.ActionListener {
                 override fun onSuccess() {
                     Log.d("success", "clearLocalServices result: Success")
@@ -423,29 +435,30 @@ class MainChat : AppCompatActivity()
                 it.dateSend == wifiFrame.dateSend
             }
 
-            if (!messageExist)
+            if (!messageExist){
                 deviceSame.message.add(wifiFrame)
+                addMessageToRecyclerView(wifiFrame)}
 
         } else {
-            var message =
-                MessageModel(record, mutableListOf(wifiFrame), WifiFrameUtils.deviceIdMultiHop)
-
+            val message = MessageModel(record, mutableListOf(wifiFrame), WifiFrameUtils.deviceIdMultiHop)
             deviceArray.add(message)
+
+            addMessageToRecyclerView(wifiFrame)
         }
 
-        val adapter = ArrayAdapter(
-            this,
-            android.R.layout.simple_list_item_1,
-            deviceArray
-
-        )
-        listView.adapter = adapter
-        multihop(WifiFrameUtils.deviceIdMultiHop)
+//        val adapter = ArrayAdapter(
+//            this,
+//            android.R.layout.simple_list_item_1,
+//            deviceArray
+//
+//        )
+//        listView.adapter = adapter
+//        multihop(WifiFrameUtils.deviceIdMultiHop)
     }
 
     private fun multihop(deviceId: String) {
 
-        var deviceMulti = deviceArray.first {
+        val deviceMulti = deviceArray.first {
             it.id == deviceId
         }
 
@@ -496,35 +509,41 @@ class MainChat : AppCompatActivity()
             }
 
             if (!messageExist) {
-                Toast.makeText(
-                    this,
-                    "Se ha agregado el mensaje retransmitido por " + record.deviceName,
-                    Toast.LENGTH_SHORT
-                ).show()
                 deviceSame.message.add(wifiFrame)
+                addMessageToRecyclerView(wifiFrame)
             }
 
         } else {
-            var device =
-                MessageModel(record, mutableListOf(wifiFrame), WifiFrameUtils.deviceIdMultiHop)
-
+            val device = MessageModel(record, mutableListOf(wifiFrame), WifiFrameUtils.deviceIdMultiHop)
             deviceArray.add(device)
-            Toast.makeText(
-                this,
-                "Se ha agregado el dispositivo retransmitido por " + record.deviceName,
-                Toast.LENGTH_SHORT
-            ).show()
+
+            addMessageToRecyclerView(wifiFrame)
         }
 
-        val adapter = ArrayAdapter(
-            this,
-            android.R.layout.simple_list_item_1,
-            deviceArray
-
-        )
-        listView.adapter = adapter
+//        val adapter = ArrayAdapter(
+//            this,
+//            android.R.layout.simple_list_item_1,
+//            deviceArray
+//
+//        )
+//        listView.adapter = adapter
 
     }
+
+    private fun addMessageToRecyclerView(wifiFrame: WifiFrame) {
+        val newChatMessage = ChatMessage(
+            text = wifiFrame.sendMessage,
+            timeSend = "Hora de envío: ${wifiFrame.dateSend}",
+            timeReceived = "Hora de recepción: ${wifiFrame.dateReceived}",
+            isSentByMe = false
+        )
+        runOnUiThread {
+            messages.add(newChatMessage)
+            messageAdapter.notifyItemInserted(messages.size - 1)
+            recyclerView.smoothScrollToPosition(messages.size - 1)
+        }
+    }
+
 
 }
 

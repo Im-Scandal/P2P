@@ -6,4 +6,6 @@
     <color name="rojo_falla">#FF2330</color>
     <color name="hint">#777777</color>
     <color name="verde">#0DB11B</color>
+    <color name="azul">#37B2FF</color>
+
 </resources>

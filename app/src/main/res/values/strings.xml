@@ -42,6 +42,15 @@ En momentos de Post Desastre"</string>
     <string name="editar_datos">"EDITAR DATOS"</string>
     <string name="guardar_datos">"GUARDAR DATOS"</string>
 
-
+    MainChat
+    <string name="activar_teclado">Activar teclado</string>
+    <string name="chat">CHAT</string>
+    <string name="default_rta">Respuestas Predeterminadas</string>
+    <string name="Si_ya_ra">Si ya recibiste ayuda</string>
+    <string name="estoy_salvado">ESTOY A SALVO</string>
+    <string name="boton_hola">Hola</string>
+    <string name="boton_ayuda">Necesito Ayuda</string>
+    <string name="boton_moverse">No puedo Moverme</string>
+    <string name="boton_atrapado">Estoy Atrapado</string>
 
 </resources>

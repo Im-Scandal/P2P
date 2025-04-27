@@ -1,17 +1,21 @@
-package com.example.wifidiscover
+package com.example.p2papp
 
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.example.p2papp.R
 
-class MessageAdapter(private val messages: MutableList<String>) :
+class MessageAdapter(private val messages: MutableList<ChatMessage>) :
     RecyclerView.Adapter<MessageAdapter.MessageViewHolder>() {
 
     class MessageViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val messageTextView: TextView = itemView.findViewById(R.id.messageT)
+        val messageTextView: TextView = itemView.findViewById(R.id.textMessage)
+        val timeSend: TextView = itemView.findViewById(R.id.timeSend)
+        val timeReceived: TextView = itemView.findViewById(R.id.timeReceived)
+        val spaceLeft: View = itemView.findViewById(R.id.spaceLeft)
+        val spaceRight: View = itemView.findViewById(R.id.spaceRight)
+        val nameSender: View = itemView.findViewById(R.id.textSenderName)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MessageViewHolder {
@@ -20,7 +24,28 @@ class MessageAdapter(private val messages: MutableList<String>) :
     }
 
     override fun onBindViewHolder(holder: MessageViewHolder, position: Int) {
-        holder.messageTextView.text = messages[position]
+        val message = messages[position]
+
+        holder.messageTextView.text = message.text
+        holder.timeSend.text = message.timeSend
+        holder.timeReceived.text = message.timeReceived
+
+        if (message.isSentByMe) {
+            holder.messageTextView.textAlignment = View.TEXT_ALIGNMENT_TEXT_END
+            holder.timeSend.textAlignment = View.TEXT_ALIGNMENT_TEXT_END
+            holder.timeReceived.visibility=View.GONE
+            holder.nameSender.visibility=View.GONE
+            holder.spaceLeft.visibility = View.VISIBLE
+            holder.spaceRight.visibility = View.GONE
+        } else {
+            holder.messageTextView.textAlignment = View.TEXT_ALIGNMENT_TEXT_START
+            holder.timeReceived.textAlignment = View.TEXT_ALIGNMENT_TEXT_START
+            holder.timeReceived.visibility=View.VISIBLE
+            holder.timeSend.textAlignment = View.TEXT_ALIGNMENT_TEXT_START
+            holder.spaceLeft.visibility = View.GONE
+            holder.spaceRight.visibility = View.VISIBLE
+            holder.nameSender.visibility = View.VISIBLE
+        }
     }
 
     override fun getItemCount(): Int = messages.size
