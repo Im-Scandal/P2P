@@ -11,18 +11,17 @@ import android.net.wifi.p2p.nsd.WifiP2pDnsSdServiceRequest
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
-import android.widget.ArrayAdapter
 import android.widget.Button
-import android.widget.ListView
-import android.widget.TextView
 import android.widget.Toast
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.example.p2papp.Constants.TAG
 import com.example.p2papp.Constants.TAG_WIFI
 import com.google.gson.Gson
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
 
@@ -31,14 +30,12 @@ class MainChat : AppCompatActivity() {
     private lateinit var sharedPreferences: SharedPreferences
 
     //Inicialización de variables de la vista
-    private lateinit var btnDiscover: Button
     private lateinit var op1Button: Button
     private lateinit var op2Button: Button
     private lateinit var op3Button: Button
     private lateinit var op4Button: Button
-    private lateinit var listView: ListView
     private lateinit var recyclerView: RecyclerView
-    var userName: String = SolicitedName.nameUser
+    private lateinit var userName: String
 
     //Selección de mensaje
     private var msg: String = ""
@@ -57,8 +54,6 @@ class MainChat : AppCompatActivity() {
     private var messages: MutableList<ChatMessage> = mutableListOf()
     private lateinit var messageAdapter: MessageAdapter
 
-    lateinit var nameUser: String
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -66,6 +61,8 @@ class MainChat : AppCompatActivity() {
         sharedPreferences = getSharedPreferences(Constants.PREFERENCES_KEY, MODE_PRIVATE)
 
         initialWork()
+        loadUserNameFromDatabase()
+
         addServiceRequest()
         startDiscover()
 
@@ -74,67 +71,19 @@ class MainChat : AppCompatActivity() {
 
         recyclerView.adapter = messageAdapter
         exqListener()
-//        listView.setOnItemClickListener { parent, viiew, pos, id ->
-//            selectedDevice = deviceArray[pos].device
-//            timer()
-//        }
     }
 
-    private fun requestPermissions() {
-        val permissionsToRequest = mutableListOf<String>()
-
-        // Agregar permisos según la versión del SDK
-        permissionsToRequest.add(Manifest.permission.ACCESS_FINE_LOCATION)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) { // API 33
-            permissionsToRequest.add(Manifest.permission.NEARBY_WIFI_DEVICES)
-        }
-
-        requestMultiplePermissionsLauncher.launch(permissionsToRequest.toTypedArray())
-    }
-    // Registro del callback para múltiples permisos
-    private val requestMultiplePermissionsLauncher = registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) {
-        permissions ->
-        permissions.entries.forEach { entry ->
-            val permission = entry.key
-            val isGranted = entry.value
-            if (isGranted) {
-                // El permiso ha sido concedido
-                println("$permission concedido.")
-            } else {
-                // El permiso ha sido denegado
-                println("$permission denegado.")
+    private fun loadUserNameFromDatabase() {
+        val db = AppDatabase.getDatabase(this) // Asumiendo que tienes un singleton de Room
+        val userDao = db.userDao()
+        CoroutineScope(Dispatchers.IO).launch {
+            val savedUser = userDao.getUser()
+            if (savedUser != null) {
+                userName = savedUser.name
             }
         }
     }
 
-//    private fun timer() {
-//        executor.scheduleWithFixedDelay({
-//            selectedDevice?.let { device ->
-//                // Buscar el índice del dispositivo seleccionado en la lista
-//                val index = deviceArray.indexOfFirst { it.device.deviceName == device.deviceName }
-//                if (index != -1) {
-//                    // Llamar a updateDescription con el índice del dispositivo seleccionado
-//                    if (!devicesWithReceivedMessages.contains(device.deviceName)) {
-//                        // Si es la primera vez que recibes un mensaje del dispositivo, procésalo
-//                        runOnUiThread {
-//                            // Actualiza la descripción o realiza las operaciones necesarias con el dispositivo
-//                            updateDescription(index)
-//                        }
-//                        // Marca el dispositivo como uno del que ya has recibido un mensaje
-//                        devicesWithReceivedMessages.add(device.deviceName)
-//                    }
-//                }
-//            }
-//        }, 0, interval, TimeUnit.MILLISECONDS)
-//    }
-//
-//    private fun updateDescription(selectedDevice: Int) {
-//
-//        val selectedDeviceInfo = deviceArray[selectedDevice]
-//        msgSend.text = selectedDeviceInfo.getAllMessage()
-//
-//
-//    }
 
     private fun exqListener() {
         op1Button.setOnClickListener {
@@ -147,6 +96,7 @@ class MainChat : AppCompatActivity() {
             ).show()
 
             messages.add(ChatMessage(
+                nameUser = userName,
                 text = msg.trim(),
                 timeSend = "Hora de envío: " + getFormattedDateTime(),
                 timeReceived = "",
@@ -170,6 +120,7 @@ class MainChat : AppCompatActivity() {
             ).show()
 
             messages.add(ChatMessage(
+                nameUser = userName,
                 text = msg.trim(),
                 timeSend = "Hora de envío: " + getFormattedDateTime(),
                 timeReceived = "",
@@ -193,6 +144,7 @@ class MainChat : AppCompatActivity() {
             ).show()
 
             messages.add(ChatMessage(
+                nameUser = userName,
                 text = msg.trim(),
                 timeSend = "Hora de envío: " + getFormattedDateTime(),
                 timeReceived = "",
@@ -216,6 +168,7 @@ class MainChat : AppCompatActivity() {
             ).show()
 
             messages.add(ChatMessage(
+                nameUser = userName,
                 text = msg.trim(),
                 timeSend = "Hora de envío: " + getFormattedDateTime(),
                 timeReceived = "",
@@ -249,7 +202,7 @@ class MainChat : AppCompatActivity() {
 
     private fun startRegistration() {
 
-        info = WifiFrameUtils.buildMyWiFiFrame(this)
+        info = WifiFrameUtils.buildMyWiFiFrame(this, userName)
 
         val record = WifiFrameUtils.wifiFrameToHashMap(info)
 
@@ -446,14 +399,7 @@ class MainChat : AppCompatActivity() {
             addMessageToRecyclerView(wifiFrame)
         }
 
-//        val adapter = ArrayAdapter(
-//            this,
-//            android.R.layout.simple_list_item_1,
-//            deviceArray
-//
-//        )
-//        listView.adapter = adapter
-//        multihop(WifiFrameUtils.deviceIdMultiHop)
+        multihop(WifiFrameUtils.deviceIdMultiHop)
     }
 
     private fun multihop(deviceId: String) {
@@ -520,18 +466,11 @@ class MainChat : AppCompatActivity() {
             addMessageToRecyclerView(wifiFrame)
         }
 
-//        val adapter = ArrayAdapter(
-//            this,
-//            android.R.layout.simple_list_item_1,
-//            deviceArray
-//
-//        )
-//        listView.adapter = adapter
-
     }
 
     private fun addMessageToRecyclerView(wifiFrame: WifiFrame) {
         val newChatMessage = ChatMessage(
+            nameUser = wifiFrame.nameUser,
             text = wifiFrame.sendMessage,
             timeSend = "Hora de envío: ${wifiFrame.dateSend}",
             timeReceived = "Hora de recepción: ${wifiFrame.dateReceived}",

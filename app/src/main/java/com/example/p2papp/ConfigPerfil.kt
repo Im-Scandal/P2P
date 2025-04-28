@@ -38,8 +38,6 @@ class ConfigPerfil : AppCompatActivity() {
         val db = AppDatabase.getDatabase(applicationContext)
         userDao = db.userDao()
 
-
-
         initial_work()
         dataBase_EditText()
 

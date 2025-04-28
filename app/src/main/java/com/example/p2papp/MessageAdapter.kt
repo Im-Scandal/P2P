@@ -10,12 +10,12 @@ class MessageAdapter(private val messages: MutableList<ChatMessage>) :
     RecyclerView.Adapter<MessageAdapter.MessageViewHolder>() {
 
     class MessageViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        val nameUser: TextView = itemView.findViewById(R.id.textSenderName)
         val messageTextView: TextView = itemView.findViewById(R.id.textMessage)
         val timeSend: TextView = itemView.findViewById(R.id.timeSend)
         val timeReceived: TextView = itemView.findViewById(R.id.timeReceived)
         val spaceLeft: View = itemView.findViewById(R.id.spaceLeft)
         val spaceRight: View = itemView.findViewById(R.id.spaceRight)
-        val nameSender: View = itemView.findViewById(R.id.textSenderName)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MessageViewHolder {
@@ -26,6 +26,7 @@ class MessageAdapter(private val messages: MutableList<ChatMessage>) :
     override fun onBindViewHolder(holder: MessageViewHolder, position: Int) {
         val message = messages[position]
 
+        holder.nameUser.text = message.nameUser
         holder.messageTextView.text = message.text
         holder.timeSend.text = message.timeSend
         holder.timeReceived.text = message.timeReceived
@@ -34,7 +35,7 @@ class MessageAdapter(private val messages: MutableList<ChatMessage>) :
             holder.messageTextView.textAlignment = View.TEXT_ALIGNMENT_TEXT_END
             holder.timeSend.textAlignment = View.TEXT_ALIGNMENT_TEXT_END
             holder.timeReceived.visibility=View.GONE
-            holder.nameSender.visibility=View.GONE
+            holder.nameUser.visibility=View.GONE
             holder.spaceLeft.visibility = View.VISIBLE
             holder.spaceRight.visibility = View.GONE
         } else {
@@ -44,7 +45,7 @@ class MessageAdapter(private val messages: MutableList<ChatMessage>) :
             holder.timeSend.textAlignment = View.TEXT_ALIGNMENT_TEXT_START
             holder.spaceLeft.visibility = View.GONE
             holder.spaceRight.visibility = View.VISIBLE
-            holder.nameSender.visibility = View.VISIBLE
+            holder.nameUser.visibility = View.VISIBLE
         }
     }
 
