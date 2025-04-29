@@ -67,16 +67,6 @@ class SolicitedName: AppCompatActivity() {
                     CoroutineScope(Dispatchers.IO).launch {
                         val user = User(id = 1, name = userName, phone = "", nameCE = "", phoneCE = "")
                         userDao.insertUser(user)
-                        // Verificamos que se haya guardado consultándolo
-                        val savedUser = userDao.getUser()
-
-                        if (savedUser != null) {
-                            if (savedUser.name.isNotEmpty()) {
-                                runOnUiThread {
-                                    Toast.makeText(this@SolicitedName, "Usuario guardado: ${savedUser.name}", Toast.LENGTH_SHORT).show()
-                                }
-                            }
-                        }
                     }
 
                     val intent = Intent(this, TerminosCondiciones::class.java)

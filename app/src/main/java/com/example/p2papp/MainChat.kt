@@ -38,6 +38,7 @@ class MainChat : AppCompatActivity() {
     private lateinit var op4Button: Button
     private lateinit var recyclerView: RecyclerView
     private lateinit var userName: String
+    private lateinit var aSalvoButton: Button
 
     //Selección de mensaje
     private var msg: String = ""
@@ -83,6 +84,22 @@ class MainChat : AppCompatActivity() {
             if (savedUser != null) {
                 userName = savedUser.name
             }
+            val savedMessages = db.chatMessageDao().getAllMessages()
+            val chatMessages = savedMessages.map {
+                ChatMessage(
+                    nameUser = it.nameUser,
+                    text = it.text,
+                    timeSend = it.timeSend,
+                    timeReceived = it.timeReceived,
+                    isSentByMe = it.isSentByMe
+                )
+            }
+
+            runOnUiThread {
+                messages.addAll(chatMessages)
+                messageAdapter.notifyDataSetChanged()
+                recyclerView.scrollToPosition(messages.size - 1)
+            }
         }
     }
 
@@ -94,6 +111,10 @@ class MainChat : AppCompatActivity() {
                 startActivity(intent)
             }
         })
+        aSalvoButton.setOnClickListener{
+            val intent = Intent(this@MainChat, MainMenu::class.java)
+            startActivity(intent)
+        }
         op1Button.setOnClickListener {
             msg = op1Button.text.toString()
 
@@ -110,6 +131,20 @@ class MainChat : AppCompatActivity() {
                 timeReceived = "",
                 isSentByMe = true
             ))
+
+            CoroutineScope(Dispatchers.IO).launch {
+                val db = AppDatabase.getDatabase(applicationContext)
+                db.chatMessageDao().insertMessage(
+                    ChatMessageEntity(
+                        nameUser = userName,
+                        text = msg.trim(),
+                        timeSend = "Hora de envío: " + getFormattedDateTime(),
+                        timeReceived = "",
+                        isSentByMe = true
+                    )
+                )
+            }
+
 
             saveMessage(msg)
             messageAdapter.notifyDataSetChanged()
@@ -135,6 +170,19 @@ class MainChat : AppCompatActivity() {
                 isSentByMe = true
             ))
 
+            CoroutineScope(Dispatchers.IO).launch {
+                val db = AppDatabase.getDatabase(applicationContext)
+                db.chatMessageDao().insertMessage(
+                    ChatMessageEntity(
+                        nameUser = userName,
+                        text = msg.trim(),
+                        timeSend = "Hora de envío: " + getFormattedDateTime(),
+                        timeReceived = "",
+                        isSentByMe = true
+                    )
+                )
+            }
+
             saveMessage(msg)
             messageAdapter.notifyDataSetChanged()
             recyclerView.smoothScrollToPosition(messages.size - 1)
@@ -158,6 +206,19 @@ class MainChat : AppCompatActivity() {
                 timeReceived = "",
                 isSentByMe = true
             ))
+
+            CoroutineScope(Dispatchers.IO).launch {
+                val db = AppDatabase.getDatabase(applicationContext)
+                db.chatMessageDao().insertMessage(
+                    ChatMessageEntity(
+                        nameUser = userName,
+                        text = msg.trim(),
+                        timeSend = "Hora de envío: " + getFormattedDateTime(),
+                        timeReceived = "",
+                        isSentByMe = true
+                    )
+                )
+            }
 
             saveMessage(msg)
             messageAdapter.notifyDataSetChanged()
@@ -183,6 +244,19 @@ class MainChat : AppCompatActivity() {
                 isSentByMe = true
             ))
 
+            CoroutineScope(Dispatchers.IO).launch {
+                val db = AppDatabase.getDatabase(applicationContext)
+                db.chatMessageDao().insertMessage(
+                    ChatMessageEntity(
+                        nameUser = userName,
+                        text = msg.trim(),
+                        timeSend = "Hora de envío: " + getFormattedDateTime(),
+                        timeReceived = "",
+                        isSentByMe = true
+                    )
+                )
+            }
+
             saveMessage(msg)
             messageAdapter.notifyDataSetChanged()
             recyclerView.smoothScrollToPosition(messages.size - 1)
@@ -200,6 +274,7 @@ class MainChat : AppCompatActivity() {
         op2Button = findViewById(R.id.op2Button)
         op3Button = findViewById(R.id.op3Button)
         op4Button = findViewById(R.id.op4Button)
+        aSalvoButton = findViewById(R.id.estoyASalvoButton)
 
         wifiManager = this.applicationContext.getSystemService(WIFI_SERVICE) as WifiManager
         manager = getSystemService(WIFI_P2P_SERVICE) as WifiP2pManager
@@ -487,6 +562,19 @@ class MainChat : AppCompatActivity() {
             messages.add(newChatMessage)
             messageAdapter.notifyItemInserted(messages.size - 1)
             recyclerView.smoothScrollToPosition(messages.size - 1)
+
+            CoroutineScope(Dispatchers.IO).launch {
+                val db = AppDatabase.getDatabase(applicationContext)
+                db.chatMessageDao().insertMessage(
+                    ChatMessageEntity(
+                        nameUser = wifiFrame.nameUser,
+                        text = wifiFrame.sendMessage,
+                        timeSend = "Hora enviada: ${wifiFrame.dateSend}",
+                        timeReceived = "Hora recibido: ${wifiFrame.dateReceived}",
+                        isSentByMe = false
+                    )
+                )
+            }
         }
     }
 
