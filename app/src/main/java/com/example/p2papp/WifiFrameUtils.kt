@@ -36,11 +36,12 @@ class WifiFrameUtils {
             deviceName: WifiP2pDevice,
             messageMulti: String = "",
             id: String,
-            dateSend: String
+            dateSend: String,
+            nameUser: String // Nuevo parámetro
         ): HashMap<String, String> {
             val message = HashMap<String, String>()
 
-
+            message["n"] = nameUser // Muy importante enviar el nombre aquí
             message["d"] = dateSend
             message["g"] = deviceName.deviceName
             message["o"] = messageMulti
@@ -57,8 +58,6 @@ class WifiFrameUtils {
                 dateReceived =  getFormattedDateTime()
                 deviceMultihop = message["g"]?: ""
                 deviceIdMultiHop = message["h"]?: ""
-
-
             }
         }
 

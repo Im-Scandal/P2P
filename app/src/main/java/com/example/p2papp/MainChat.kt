@@ -332,8 +332,6 @@ class MainChat : AppCompatActivity() {
                 addDeviceList(srcDevice, wifiFrame)
             }
 
-
-            //Toast.makeText(this, "Servicio encontrado : mensaje ${wifiFrame.sendMessage}" , Toast.LENGTH_SHORT ).show()
         }
 
         val servListener =
@@ -420,7 +418,8 @@ class MainChat : AppCompatActivity() {
             deviceMulti.device,
             deviceMulti.message.last().sendMessage,
             deviceMulti.id,
-            deviceMulti.message.last().dateSend
+            deviceMulti.message.last().dateSend,
+            deviceMulti.message.last().nameUser // Aquí pasas el nombre del emisor original
         )
 
 
