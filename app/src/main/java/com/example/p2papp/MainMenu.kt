@@ -2,6 +2,8 @@ package com.example.p2papp
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageButton
 import android.widget.Toast
@@ -26,33 +28,51 @@ class MainMenu : AppCompatActivity() {
 
         onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-                // Mostrar un diálogo de confirmación antes de regresar
-                val builder = AlertDialog.Builder(this@MainMenu)
-                builder.setTitle("Confirmación")
-                builder.setMessage("¿Estás seguro de que quieres salir de la aplicación?")
-                builder.setPositiveButton("Sí") { _, _ ->
-                    // Si el usuario confirma, permitir la acción de regresar
+                val overlayView = LayoutInflater.from(this@MainMenu).inflate(R.layout.confirmar_salida, null)
+
+                val rootView = findViewById<ViewGroup>(android.R.id.content)
+                rootView.addView(overlayView)
+
+                val closeApp = overlayView.findViewById<Button>(R.id.closeAppButton)
+                closeApp.setOnClickListener{
                     finishAffinity()
                 }
-                builder.setNegativeButton("No") { dialog, _ ->
-                    dialog.dismiss() // Cancelar y permanecer en la actividad
+
+                val closeButton = overlayView.findViewById<Button>(R.id.closeWarningButton)
+                closeButton.setOnClickListener {
+                    rootView.removeView(overlayView)
                 }
-                builder.show()
             }
         })
     }
 
     private fun setOnListener() {
         ayudaButton.setOnClickListener{
-            val intent = Intent(this, MainChat::class.java)
-            startActivity(intent)
+            val overlayView = LayoutInflater.from(this@MainMenu).inflate(R.layout.confirmacion_chat, null)
+
+            val rootView = findViewById<ViewGroup>(android.R.id.content)
+            rootView.addView(overlayView)
+
+            val closeApp = overlayView.findViewById<Button>(R.id.siButton)
+            closeApp.setOnClickListener{
+                rootView.removeView(overlayView)
+                val intent = Intent(this, MainChat::class.java)
+                startActivity(intent)
+            }
+
+            val closeButton = overlayView.findViewById<Button>(R.id.noButton)
+            closeButton.setOnClickListener {
+                rootView.removeView(overlayView)
+            }
+
         }
         perfilButton.setOnClickListener{
             val intent = Intent(this, ConfigPerfil::class.java)
             startActivity(intent)
         }
         bibliotecaButton.setOnClickListener{
-            Toast.makeText(this, "Funciona Biblio", Toast.LENGTH_SHORT).show()
+            val intent = Intent(this, Biblioteca::class.java)
+            startActivity(intent)
         }
     }
 }

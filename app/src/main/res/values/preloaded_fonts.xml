@@ -2,6 +2,6 @@
 <resources>
     <array name="preloaded_fonts" translatable="false">
         <item>@font/roboto</item>
-        <item>@font/verdana</item>
+        <item>@font/verdanabold</item>
     </array>
 </resources>

@@ -5,6 +5,8 @@ import android.app.AlertDialog
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageButton
@@ -19,19 +21,14 @@ import kotlinx.coroutines.launch
 
 class SolicitedName: AppCompatActivity() {
     private lateinit var nextButton: Button
-    private lateinit var pruebaButton: Button
     private lateinit var nameText: EditText
     private lateinit var infoButton: ImageButton
 
     private lateinit var userDao: UserDao
 
-    companion object {
-        var nameUser: String = ""
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.registro_inicio)
+        setContentView(R.layout.activity_registro_inicio)
 
         val sharedPreferences = getSharedPreferences("AppPreferences", MODE_PRIVATE)
         val checkboxState = sharedPreferences.getBoolean("CheckboxState", false)
@@ -45,7 +42,6 @@ class SolicitedName: AppCompatActivity() {
             finish()
         } else {
             nextButton = findViewById(R.id.nextButton)
-            pruebaButton = findViewById(R.id.buttonPrueba)
             nameText = findViewById(R.id.nameWText)
             infoButton = findViewById(R.id.infoView)
 
@@ -96,23 +92,15 @@ class SolicitedName: AppCompatActivity() {
             }
 
             infoButton.setOnClickListener {
-                val dialog = AlertDialog.Builder(this)
-                    .setTitle("¡Atención!")
-                    .setMessage("Ingresa tu información personal en el cuadro de texto.\nPaso necesario una vez ya que la app guardará tus datos, para ayudarte en situaciones de emergencia.")
-                    .setPositiveButton("Cerrar") { dialogInterface, _ ->
-                        dialogInterface.dismiss() // Cierra el diálogo cuando el usuario pulsa "Cerrar"
-                    }
-                    .setCancelable(true) // Permite cerrar el diálogo tocando fuera de él
-                    .create()
+                val overlayView = LayoutInflater.from(this).inflate(R.layout.ingresa_info, null)
 
-                dialog.show()
-            }
+                val rootView = findViewById<ViewGroup>(android.R.id.content)
+                rootView.addView(overlayView)
 
-            pruebaButton.setOnClickListener{
-                val intent = Intent(this, MainMenu::class.java)
-                startActivity(intent)
-                finish()
-            }
+                val closeButton = overlayView.findViewById<ImageButton>(R.id.closeButton)
+                closeButton.setOnClickListener {
+                    rootView.removeView(overlayView)
+            }}
         }
     }
 

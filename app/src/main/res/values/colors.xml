@@ -4,8 +4,13 @@
     <color name="blanco_texto">#F7F7F7</color>
     <color name="blanco_boton">#F6F6F6</color>
     <color name="rojo_falla">#FF2330</color>
+    <color name="rojo_texto">#FF000E</color>
     <color name="hint">#777777</color>
     <color name="verde">#0DB11B</color>
     <color name="azul">#37B2FF</color>
+    <color name="boton_next">#2F2F2F</color>
+    <color name="pag_Nseleccionada">#888888</color>
+    <color name="fondo_biblioteca">#CC000000</color>
+    <color name="rojo_fondo">#80FF000E</color>
 
 </resources>

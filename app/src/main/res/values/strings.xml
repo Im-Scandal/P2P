@@ -26,7 +26,6 @@ Es importante tener en cuenta que Multisalto necesita acceso a estos datos para 
     <string name="limitaciones_texto">"Multisalto no se hace responsable por los daños o pérdidas que puedan surgir debido al uso de la aplicación, incluyendo pero no limitado a la falta de cobertura, problemas técnicos o fallos de la red AdHoc. La app depende de la red de usuarios cercanos, lo que puede afectar su funcionamiento en ciertos contextos."</string>
     <string name="modificaciones_titulo">"Modificaciones de los Términos"</string>
     <string name="modificaciones_texto">"Nos reservamos el derecho de modificar estos términos en cualquier momento. Las actualizaciones serán notificadas a través de la aplicación o mediante otros medios apropiados. Es responsabilidad del usuario revisar periódicamente los Términos y Condiciones para estar al tanto de cualquier cambio."</string>
-    <string name="a">""</string>
 
     MainMenu
     <string name="companero_ideal">"Tu acompañante ideal
@@ -52,5 +51,169 @@ En momentos de Post Desastre"</string>
     <string name="boton_ayuda">Necesito Ayuda</string>
     <string name="boton_moverse">No puedo Moverme</string>
     <string name="boton_atrapado">Estoy Atrapado</string>
+
+    Biblioteca
+    <string name="Biblioteca">BIBLIOTECA</string>
+    <string name="Kit_Emergencia">KIT PARA EMERGENCIAS</string>
+    <string name="Alimentos_agua">ALIMENTOS\nY AGUA</string>
+    <string name="Primeros_auxilios">PRIMEROS\nAUXILIOS</string>
+    <string name="Equipos">EQUIPOS\nÚTILES</string>
+    <string name="Ropa">ROPA</string>
+    <string name="Docs">DOCUMENTOS</string>
+    <string name="Otros">OTROS\nSUMINISTROS</string>
+    <string name="Guia_Proc">GUÍA DE PROCEDIMIENTOS</string>
+    <string name="Que_hacer">¿QUÉ HACER?</string>
+    <string name="Sabias">¿SABÍAS QUE?</string>
+    <string name="Cat_sismos">CATEGORIAS\nDE SISMOS</string>
+    <string name="finalizar">FINALIZAR</string>
+
+    Alimentos y Agua
+    <string name="Alimentos_agua_over">Alimentos y agua</string>
+    Pag1
+    <string name="es_clave_contar">Es clave contar con suficiente agua y alimentos, ya que en muchos terremotos el colapso de estructuras puede bloquear las salidas y dejarte atrapad@, haciendo necesario sobrevivir hasta que llegue el equipo de rescate. A continuación te dejamos una lista de lo primordial:</string>
+    Pag2
+    <string name="Alimentos">Alimentos no perecederos, como enlatados</string>
+    <string name="Al_ser_enlatados">Al ser enlatados, duran más y no necesitan refrigeración, así que no tendrás que preocuparte por que se echen a perder</string>
+    <string name="Agua_botella">Agua en botellas</string>
+    <string name="es_esencial">es esencial porque el cuerpo necesita agua para funcionar correctamente, y la deshidratación puede afectar tu energía, concentración y salud</string>
+    Pag3
+    <string name="Abrelatas_manual">Abrelatas manual</string>
+    <string name="Abrelatas_necesario">Necesario para abrir los ya mencionados enlatados y evitar cortes al intentar abrirlos con las manos</string>
+    <string name="Parrilla">Parrilla de carbón o gas</string>
+    <string name="Parrilla_contenido">permite cocinar alimentos si no hay electricidad o gas en casa tras un terremoto, asegurando que puedas comer de forma segura</string>
+    Pag4
+    <string name="En_resumen">En resumen, contar con estos elementos te permitirá mantenerte alimentad@, hidratad@ y segur@ en caso de quedar atrapad@ o sin servicios básicos tras un terremoto. Estar preparad@ puede marcar la diferencia mientras esperas ayuda.</string>
+
+    Primeros Auxilios
+    <string name="Primeros_over">"Primeros auxilios"</string>
+    Pag1
+    <string name="kit_pa">"Tener un kit de primeros auxilios en un terremoto es crucial porque puedes sufrir cortes, golpes o heridas mientras esperas ayuda. Si quedas atrapad@ o los servicios médicos tardan en llegar, podrás atender lesiones básicas y evitar que empeoren."</string>
+    Pag2
+    <string name="Vendas">"Vendas, gasas, esparadrapo"</string>
+    <string name="para_tapas">"para tapar heridas y evitar una futura infección"</string>
+    <string name="mascarillas">"Mascarillas"</string>
+    <string name="mascarilla_content">"ya que el aire puede llenarse de polvo y escombros, te ayudarán a proteger tus vías respiratorias"</string>
+    Pag3
+    <string name="agua_ox">Agua oxigenada</string>
+    <string name="agua_content">para limpiar y desinfectar heridas en caso de cortes o raspaduras previniendo infecciones</string>
+    <string name="crema_top">Crema tópica</string>
+    <string name="crema_content">para aliviar irritaciones, quemaduras leves o picaduras que puedan ocurrir durante un terremoto, protegiendo la piel y evitando infecciones</string>
+    Pag4
+    <string name="analgesico">Analgésicos, antibióticos</string>
+    <string name="analgesico_content">Analgésicos para aliviar dolor causado por golpes o lesiones y  antibióticos para combatir infecciones en heridas</string>
+
+    Equipos Utiles
+    <string name="Equipos_utiles">Equipos útiles</string>
+    Pag1
+    <string name="linterna">Linterna, pilas extra y un radio portátil</string>
+    <string name="linterna_content">La linterna te permite ver en la oscuridad si se va la luz, el radio portátil te mantiene informad@ sobre la situación y las pilas extra aseguran que ambos sigan funcionando el tiempo necesario</string>
+    <string name="tijeras">Tijeras, Cinta adhesiva, Llave inglesa o Navajas</string>
+    <string name="tijeras_content">Estos objetos te ayudan a atender emergencias básicas como cortar, reparar o cerrar el paso de gas o agua tras un terremoto</string>
+
+    Ropa
+    <string name="ropa">Ropa</string>
+    Pag1
+    <string name="muda">Muda de ropa completa</string>
+    <string name="muda_content">Es clave para mantenerte seco, limpi@ y cómod@ si tu ropa se daña o moja durante el terremoto, ayudando a prevenir enfermedades y malestar</string>
+    <string name="guantes">Guantes</string>
+    <string name="guantes_content">protegen tus manos al mover escombros, objetos cortantes o realizar tareas de emergencia, reduciendo el riesgo de heridas o infecciones</string>
+    Pag2
+    <string name="impermeable">Impermeable</string>
+    <string name="impermeable_content">Te protege de la lluvia y la humedad si debes estar al aire libre, ayudando a mantenerte seco y evitar enfermedades por frío</string>
+
+    Documentos
+    <string name="Documentos">Documentos</string>
+    Pag1
+    <string name="copias">Copia de documentos, así como la póliza de seguros</string>
+    <string name="copias_content">facilita trámites, identificaciones y reclamaciones tras un terremoto, especialmente si pierdes los originales</string>
+    <string name="llaves">Copia de tus llaves</string>
+    <string name="llaves_content">Útiles en caso de perder las originales durante un terremoto, permitiéndote acceder a tu hogar, vehículo o espacios seguros sin contratiempos</string>
+    Pag2
+    <string name="propios">Copia de tus documentos de identidad de forma física y también en la web</string>
+    <string name="propios_content">asegura que puedas identificarte y acceder a servicios esenciales si los originales se pierden o dañan durante un terremoto</string>
+
+    Otros
+    <string name="Otros_suministros">Otros suministros</string>
+    Pag1
+    <string name="silbato">Silbato</string>
+    <string name="silbato_content">Te permite pedir ayuda y alertar a los rescatistas si estás atrapad@ o incomunicad@, sin gastar tanta energía como al gritar</string>
+    <string name="repelente">Repelente de insectos</string>
+    <string name="repelente_content">evita picaduras si debes estar al aire libre, protegiéndote de molestias o enfermedades</string>
+    Pag2
+    <string name="toallas">Toallitas húmedas</string>
+    <string name="toallas_content">Te permiten mantener la higiene personal cuando no hay acceso a agua, ayudando a prevenir infecciones y malestar</string>
+    <string name="bolsas">Bolsas de basura</string>
+    <string name="bolsas_content">Útiles para manejar desechos, mantener el área limpia o incluso como protección improvisada contra lluvia o frío</string>
+    Pag3
+    <string name="ataduras">Ataduras de plástico</string>
+    <string name="ataduras_content">Son prácticas para asegurar objetos, cerrar bolsas o hacer reparaciones rápidas en situaciones de emergencia</string>
+    <string name="elementos">Elementos básicos de aseo personal</string>
+    <string name="elementos_content">Te ayudan a mantener la higiene y el bienestar en situaciones donde no hay acceso regular a servicios sanitarios</string>
+
+    Que hacer?
+    <string name="guia_pratica">Guía práctica sobre\nqué hacer en caso de\nemergencia?</string>
+    Pag1
+    <string name="manten">Mantén la calma</string>
+    <string name="manten_content">evitando el pánico o histeria colectiva y trata
+de ubicarte en lugares seguros, lejos de cosas que puedan caer y golpearte</string>
+    <string name="desarrolla">Desarrolla
+un plan de emergencias</string>
+    <string name="desarrolla_content">para protección, seguridad y evacuación en caso que ocurra una emergencia todos los miembros de tu hogar sepan que hacer.</string>
+
+    Sabías que
+    <string name="sabias">Sabías que…</string>
+    <string name="sabias_content">Los sismos se categorizan en una escala llamada “La escala de Richter” dependiendo de su magnitud o gravedad de la siguiente manera</string>
+    Pag1
+    <string name="no_sensible">No Sensible</string>
+    <string name="no_sensible_content">para tapar heridas y evitar una futura infección</string>
+    <string name="sentido">Sentido Levemente</string>
+    <string name="sentido_content">Sentido solamente por muy pocas personas en reposo, en viviendas.</string>
+    Pag2
+    <string name="debil">Débil</string>
+    <string name="debil_content">Sentido por pocas personas en el interior de viviendas. Las personas en reposo sienten una oscilación o temblor leve.</string>
+    <string name="observado">Observado Ampliamente</string>
+    <string name="observado_content">Sentido por muchas personas en el interior de edificaciones y por pocas en el exterior. Las ventanas puertas y platos vibran.</string>
+    Pag3
+    <string name="fuerte">Fuerte</string>
+    <string name="fuerte_content">Sentido por casi todos en el interior de edificaciones y por pocos fuera. Muchas personas se despiertan. Objetos pequeños se desplazan y los colgantes se balancean. Las puertas y ventanas se abren y se cierran. Se pueden presentar leves grietas en edificaciones altamente vulnerables.</string>
+    <string name="danos_leves">Causa Daños Leves</string>
+    <string name="leves_content">Muchas personas se asustan y corren a la calle, algunas pierden el equilibrio. Algunos objetos caen. Muchas viviendas sufren daños leves no estructurales, como grietas en muros y caída de partes del recubrimiento.</string>
+    Pag4
+    <string name="danos">Causa Daños</string>
+    <string name="danos_content">La mayoría de las personas se asusta y corre al exterior. Muchos edificios bien construidos sufren daños moderados: grietas en muros, caída de recubrimiento y de partes de chimeneas. Los edificios antiguos pueden mostrar grandes grietas en los muros y fallas en las paredes y muros divisorios.</string>
+    <string name="danos_severos">Causa Daños Severos</string>
+    <string name="severos_content">A muchas personas les cuesta mantenerse de pie, se pueden desplazar o volcar los muebles pesados, pocos edificios construídos presentan daños graves en los muros, las estructuras antiguas y débiles pueden colapsar.</string>
+    Pag5
+    <string name="destructivo">Destructivo</string>
+    <string name="destructivo_content">Pánico general, muchas construcciones débiles colapsan, incluso los edificios construídos muestran daños: fallas graves en los muros y fallas estructurales parciales.</string>
+    <string name="muy_destructivo">Muy Destructivo</string>
+    <string name="muy_destructivo_content">Muchos edificios bien construidos colapsan</string>
+    Pag6
+    <string name="devastador">Devastador</string>
+    <string name="devastador_content">La mayoría de los edificios bien construidos colapsan, incluso algunos con buen diseño sismoresistente son destruidos</string>
+    <string name="completo">Completamente Devastador</string>
+    <string name="completo_content">Casi todos los edificios son destruídos.</string>
+
+    Información
+    <string name="atencion">¡Atención!</string>
+    <string name="ingresa">Ingresa tu información personal en el\ncuadro de texto</string>
+    <string name="paso_necesario">Paso necesario una vez ya que\n
+la app guardará tus datos, para\n
+ayudarte en situaciones\n
+de emergencia.</string>
+
+    Confirmación Chat
+    <string name="cancelar">Cancelar podría ponerte en peligro.</string>
+    <string name="zona_chat">¡Estas a punto de entrar a la zona\n
+        chat de emergencia!\n\n
+        ¿deseas continuar?</string>
+    <string name="no">NO</string>
+    <string name="yes">SI</string>
+
+    Confirmación salida
+    <string name="salida">¿Realmente deseas salir de la aplicacion?</string>
+
+
+    <string name="a">""</string>
 
 </resources>

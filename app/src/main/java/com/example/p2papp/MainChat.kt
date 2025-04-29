@@ -1,6 +1,7 @@
 package com.example.p2papp
 
 import android.Manifest
+import android.content.Intent
 import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.net.wifi.WifiManager
@@ -13,6 +14,7 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Button
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.recyclerview.widget.RecyclerView
@@ -86,6 +88,12 @@ class MainChat : AppCompatActivity() {
 
 
     private fun exqListener() {
+        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                val intent = Intent(this@MainChat, MainMenu::class.java)
+                startActivity(intent)
+            }
+        })
         op1Button.setOnClickListener {
             msg = op1Button.text.toString()
 

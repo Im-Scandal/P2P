@@ -13,7 +13,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:fontFamily="@font/verdana"
+            android:fontFamily="@font/verdanabold"
             android:text="@string/Terminos_Condiciones"
             android:textAlignment="center"
             android:textColor="@color/verde"
@@ -38,7 +38,7 @@
             android:text="@string/requisitos_titulo"
             android:textColor="@color/verde"
             android:textSize="18sp"
-            android:fontFamily="@font/verdana"
+            android:fontFamily="@font/verdanabold"
             android:textStyle="bold"
             android:layout_marginBottom="16sp"/>
 
@@ -59,7 +59,7 @@
             android:text="@string/limitaciones_titulo"
             android:textColor="@color/verde"
             android:textSize="18sp"
-            android:fontFamily="@font/verdana"
+            android:fontFamily="@font/verdanabold"
             android:textStyle="bold"
             android:layout_marginBottom="16sp"/>
 
@@ -80,7 +80,7 @@
             android:text="@string/modificaciones_titulo"
             android:textColor="@color/verde"
             android:textSize="18sp"
-            android:fontFamily="@font/verdana"
+            android:fontFamily="@font/verdanabold"
             android:textStyle="bold"
             android:layout_marginBottom="16sp"/>
 
