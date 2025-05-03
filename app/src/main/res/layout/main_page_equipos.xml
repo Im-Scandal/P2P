@@ -25,12 +25,13 @@
             android:orientation="horizontal">
 
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:gravity="start"
                 android:text="@string/Equipos_utiles"
                 android:textColor="@color/blanco_texto"
                 android:textSize="20sp"
+                android:layout_weight="1"
                 android:fontFamily="@font/verdanabold"
                 android:textStyle="bold"
                 />
@@ -40,7 +41,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="#00777777"
-                android:layout_marginStart="140dp"
                 app:srcCompat="@drawable/closebutton"
                 android:visibility="gone"/>
 

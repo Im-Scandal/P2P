@@ -6,7 +6,8 @@
     android:layout_height="match_parent"
     android:background="@color/fondo_biblioteca"
     android:clickable="true"
-    android:padding="20dp">
+    android:padding="20dp"
+    android:layout_gravity="center">
 
     <!-- Contenido del superposición -->
     <LinearLayout
@@ -25,12 +26,13 @@
             android:orientation="horizontal">
 
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:gravity="start"
                 android:text="@string/Alimentos_agua_over"
                 android:textColor="@color/blanco_texto"
                 android:textSize="20sp"
+                android:layout_weight="1"
                 android:fontFamily="@font/verdanabold"
                 android:textStyle="bold"
                 />
@@ -40,8 +42,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="#00777777"
-                android:layout_marginStart="100dp"
-                app:srcCompat="@drawable/closebutton" />
+                app:srcCompat="@drawable/closebutton"/>
 
         </LinearLayout>
 
@@ -75,14 +76,16 @@
                 android:layout_height="wrap_content"
                 app:srcCompat="@drawable/barra_autoproteccion"
                 android:layout_marginStart="20dp"
-                android:layout_marginEnd="20sp"/>
+                android:layout_marginEnd="20sp"
+                android:visibility="visible"/>
 
             <ImageButton
                 android:id="@+id/nextButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="#00777777"
-                app:srcCompat="@drawable/boton_pop_up"/>
+                app:srcCompat="@drawable/boton_pop_up"
+                android:visibility="visible"/>
 
             <Button
                 android:id="@+id/finalizarButton"

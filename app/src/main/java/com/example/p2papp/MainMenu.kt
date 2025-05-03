@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageButton
+import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AlertDialog
@@ -49,14 +50,15 @@ class MainMenu : AppCompatActivity() {
     private fun setOnListener() {
         ayudaButton.setOnClickListener{
             val overlayView = LayoutInflater.from(this@MainMenu).inflate(R.layout.confirmacion_chat, null)
-
+            val texto = overlayView.findViewById<TextView>(R.id.texto)
+            texto.text = getString(R.string.zona_chat)
             val rootView = findViewById<ViewGroup>(android.R.id.content)
             rootView.addView(overlayView)
 
             val closeApp = overlayView.findViewById<Button>(R.id.siButton)
             closeApp.setOnClickListener{
                 rootView.removeView(overlayView)
-                val intent = Intent(this, MainChat::class.java)
+                val intent = Intent(this, animacionChat::class.java)
                 startActivity(intent)
             }
 

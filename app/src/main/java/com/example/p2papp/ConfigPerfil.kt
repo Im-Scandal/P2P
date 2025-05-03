@@ -58,6 +58,7 @@ class ConfigPerfil : AppCompatActivity() {
             override fun handleOnBackPressed() {
                 val intent = Intent(this@ConfigPerfil, MainMenu::class.java)
                 startActivity(intent)
+                finish()
             }
         })
     }
@@ -86,7 +87,7 @@ class ConfigPerfil : AppCompatActivity() {
             val closeApp = overlayView.findViewById<Button>(R.id.siButton)
             closeApp.setOnClickListener{
                 rootView.removeView(overlayView)
-                val intent = Intent(this, MainChat::class.java)
+                val intent = Intent(this, animacionChat::class.java)
                 startActivity(intent)
             }
 

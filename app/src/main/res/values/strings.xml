@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">WiFi-Discover</string>
+    <string name="app_name">Multisalto</string>
     <string name="multisaltos">Multisaltos</string>
     <string name="welcome">"Bienvenido a Multisaltos"</string>
     <string name="resgister">"REGISTRARSE"</string>
@@ -207,6 +207,9 @@ de emergencia.</string>
     <string name="zona_chat">¡Estas a punto de entrar a la zona\n
         chat de emergencia!\n\n
         ¿deseas continuar?</string>
+    <string name="salir_chat">¡Estas a punto de salir de la zona\n
+        chat de emergencia!\n\n
+        ¿deseas continuar?</string>
     <string name="no">NO</string>
     <string name="yes">SI</string>
 
@@ -215,5 +218,7 @@ de emergencia.</string>
 
 
     <string name="a">""</string>
+    <string name="mensaje">Mensaje</string>
+    <string name="CEmergencia">CONTACTO EMERGENCIA</string>
 
 </resources>

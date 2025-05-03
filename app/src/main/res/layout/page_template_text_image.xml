@@ -29,10 +29,9 @@
 
     <ImageView
         android:id="@+id/image1View"
-        android:layout_width="310dp"
-        android:layout_height="290dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:background="@drawable/fondo_contenido"
         app:srcCompat="@android:drawable/ic_menu_report_image"
         android:layout_marginTop="20dp"
         android:layout_marginBottom="20dp" />

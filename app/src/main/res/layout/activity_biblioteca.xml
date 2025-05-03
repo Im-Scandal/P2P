@@ -7,11 +7,12 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".Biblioteca"
+    android:gravity="center"
     android:padding="20dp">
 
 
     <LinearLayout
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:gravity="center">
@@ -83,7 +84,15 @@
                     <FrameLayout
                         android:id="@+id/alimentoButton"
                         style="@style/CustomButtonFrame">
-
+                        
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:contentDescription="@string/Alimentos_agua"
+                            android:src="@drawable/alimentosyagua"
+                            android:layout_gravity="center"
+                            android:layout_marginBottom="15dp"/>
+                        
                         <TextView
                             style="@style/CustomButtonText"
                             android:text="@string/Alimentos_agua"/>
@@ -92,6 +101,14 @@
                     <FrameLayout
                         android:id="@+id/auxilioButton"
                         style="@style/CustomButtonFrame">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:contentDescription="@string/Primeros_auxilios"
+                            android:src="@drawable/primerosaauxilios"
+                            android:layout_gravity="center"
+                            android:layout_marginBottom="15dp"/>
 
                         <TextView
                             style="@style/CustomButtonText"
@@ -102,6 +119,14 @@
                         android:id="@+id/equiposButton"
                         style="@style/CustomButtonFrame">
 
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:contentDescription="@string/Equipos"
+                            android:src="@drawable/equiposutiles"
+                            android:layout_gravity="center"
+                            android:layout_marginBottom="15dp"/>
+
                         <TextView
                             style="@style/CustomButtonText"
                             android:text="@string/Equipos"/>
@@ -110,6 +135,14 @@
                     <FrameLayout
                         android:id="@+id/ropaButton"
                         style="@style/CustomButtonFrame">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:contentDescription="@string/Ropa"
+                            android:src="@drawable/ropa"
+                            android:layout_gravity="center"
+                            android:layout_marginBottom="15dp"/>
 
                         <TextView
                             style="@style/CustomButtonText"
@@ -120,6 +153,14 @@
                         style="@style/CustomButtonFrame"
                         android:id="@+id/docsButton">
 
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:contentDescription="@string/Documentos"
+                            android:src="@drawable/documentos"
+                            android:layout_gravity="center"
+                            android:layout_marginBottom="15dp"/>
+
                         <TextView
                             style="@style/CustomButtonText"
                             android:text="@string/Docs"/>
@@ -128,6 +169,14 @@
                     <FrameLayout
                         android:id="@+id/otrosButton"
                         style="@style/CustomButtonFrame">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:contentDescription="@string/Otros"
+                            android:src="@drawable/otros"
+                            android:layout_gravity="center"
+                            android:layout_marginBottom="15dp"/>
 
                         <TextView
                             style="@style/CustomButtonText"
@@ -161,6 +210,14 @@
                         style="@style/CustomButtonFrame"
                         android:id="@+id/qhButton">
 
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:contentDescription="@string/Que_hacer"
+                            android:src="@drawable/quehacer"
+                            android:layout_gravity="center"
+                            android:layout_marginBottom="15dp"/>
+
                         <TextView
                             style="@style/CustomButtonText"
                             android:text="@string/Que_hacer"/>
@@ -192,6 +249,14 @@
                     <FrameLayout
                         android:id="@+id/catButton"
                         style="@style/CustomButtonFrame">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:contentDescription="@string/Cat_sismos"
+                            android:src="@drawable/curiosidades"
+                            android:layout_gravity="center"
+                            android:layout_marginBottom="15dp"/>
 
                         <TextView
                             style="@style/CustomButtonText"

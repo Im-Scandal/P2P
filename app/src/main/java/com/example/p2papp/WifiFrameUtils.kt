@@ -37,11 +37,11 @@ class WifiFrameUtils {
             messageMulti: String = "",
             id: String,
             dateSend: String,
-            nameUser: String // Nuevo parámetro
+            nameUser: String
         ): HashMap<String, String> {
             val message = HashMap<String, String>()
 
-            message["n"] = nameUser // Muy importante enviar el nombre aquí
+            message["n"] = nameUser
             message["d"] = dateSend
             message["g"] = deviceName.deviceName
             message["o"] = messageMulti

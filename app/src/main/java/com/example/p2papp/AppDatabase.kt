@@ -22,7 +22,7 @@ abstract class AppDatabase : RoomDatabase() {
                     AppDatabase::class.java,
                     "app_database"
                 )
-                    .fallbackToDestructiveMigration() // esta línea es clave
+                    .fallbackToDestructiveMigration() // Destruye la base de datos si no encuentra portabilidad
                     .build()
                 INSTANCE = instance
                 instance

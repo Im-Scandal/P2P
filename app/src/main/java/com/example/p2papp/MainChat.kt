@@ -12,7 +12,14 @@ import android.net.wifi.p2p.nsd.WifiP2pDnsSdServiceRequest
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.view.inputmethod.EditorInfo
 import android.widget.Button
+import android.widget.EditText
+import android.widget.ImageButton
+import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
@@ -36,9 +43,16 @@ class MainChat : AppCompatActivity() {
     private lateinit var op2Button: Button
     private lateinit var op3Button: Button
     private lateinit var op4Button: Button
+    private lateinit var ceButton: Button
     private lateinit var recyclerView: RecyclerView
     private lateinit var userName: String
+    private lateinit var ceName: String
+    private lateinit var cePhone: String
     private lateinit var aSalvoButton: Button
+    private lateinit var puntosButton: ImageButton
+    private lateinit var tecladoButton: ImageButton
+    private lateinit var messageEditText: EditText
+    private lateinit var sendButton: ImageButton
 
     //Selección de mensaje
     private var msg: String = ""
@@ -83,6 +97,8 @@ class MainChat : AppCompatActivity() {
             val savedUser = userDao.getUser()
             if (savedUser != null) {
                 userName = savedUser.name
+                ceName = savedUser.nameCE
+                cePhone = savedUser.phoneCE
             }
             val savedMessages = db.chatMessageDao().getAllMessages()
             val chatMessages = savedMessages.map {
@@ -107,147 +123,79 @@ class MainChat : AppCompatActivity() {
     private fun exqListener() {
         onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-                val intent = Intent(this@MainChat, MainMenu::class.java)
-                startActivity(intent)
+                val overlayView = LayoutInflater.from(this@MainChat).inflate(R.layout.confirmacion_chat, null)
+                val texto = overlayView.findViewById<TextView>(R.id.texto)
+                texto.text = getString(R.string.salir_chat)
+                val rootView = findViewById<ViewGroup>(android.R.id.content)
+                rootView.addView(overlayView)
+
+                val closeApp = overlayView.findViewById<Button>(R.id.siButton)
+                closeApp.setOnClickListener{
+                    rootView.removeView(overlayView)
+                    val intent = Intent(this@MainChat, MainMenu::class.java)
+                    startActivity(intent)
+                }
+
+                val closeButton = overlayView.findViewById<Button>(R.id.noButton)
+                closeButton.setOnClickListener {
+                    rootView.removeView(overlayView)
+                }
             }
         })
         aSalvoButton.setOnClickListener{
-            val intent = Intent(this@MainChat, MainMenu::class.java)
-            startActivity(intent)
+            val overlayView = LayoutInflater.from(this@MainChat).inflate(R.layout.confirmacion_chat, null)
+            val texto = overlayView.findViewById<TextView>(R.id.texto)
+            texto.text = getString(R.string.salir_chat)
+            val rootView = findViewById<ViewGroup>(android.R.id.content)
+            rootView.addView(overlayView)
+
+            val closeApp = overlayView.findViewById<Button>(R.id.siButton)
+            closeApp.setOnClickListener{
+                rootView.removeView(overlayView)
+                val intent = Intent(this, MainMenu::class.java)
+                startActivity(intent)
+            }
+
+            val closeButton = overlayView.findViewById<Button>(R.id.noButton)
+            closeButton.setOnClickListener {
+                rootView.removeView(overlayView)
+            }
         }
         op1Button.setOnClickListener {
-            msg = op1Button.text.toString()
-
-            Toast.makeText(
-                applicationContext,
-                "Mensaje enviado",
-                Toast.LENGTH_LONG
-            ).show()
-
-            messages.add(ChatMessage(
-                nameUser = userName,
-                text = msg.trim(),
-                timeSend = "Hora de envío: " + getFormattedDateTime(),
-                timeReceived = "",
-                isSentByMe = true
-            ))
-
-            CoroutineScope(Dispatchers.IO).launch {
-                val db = AppDatabase.getDatabase(applicationContext)
-                db.chatMessageDao().insertMessage(
-                    ChatMessageEntity(
-                        nameUser = userName,
-                        text = msg.trim(),
-                        timeSend = "Hora de envío: " + getFormattedDateTime(),
-                        timeReceived = "",
-                        isSentByMe = true
-                    )
-                )
-            }
-
-
-            saveMessage(msg)
-            messageAdapter.notifyDataSetChanged()
-            recyclerView.smoothScrollToPosition(messages.size - 1)
-            clearLocalServices {
-                startRegistration()
-            }
+            sendMessageButtons(op1Button)
         }
 
         op2Button.setOnClickListener {
-            msg = op2Button.text.toString()
-            Toast.makeText(
-                applicationContext,
-                "Mensaje enviado",
-                Toast.LENGTH_LONG
-            ).show()
-
-            messages.add(ChatMessage(
-                nameUser = userName,
-                text = msg.trim(),
-                timeSend = "Hora de envío: " + getFormattedDateTime(),
-                timeReceived = "",
-                isSentByMe = true
-            ))
-
-            CoroutineScope(Dispatchers.IO).launch {
-                val db = AppDatabase.getDatabase(applicationContext)
-                db.chatMessageDao().insertMessage(
-                    ChatMessageEntity(
-                        nameUser = userName,
-                        text = msg.trim(),
-                        timeSend = "Hora de envío: " + getFormattedDateTime(),
-                        timeReceived = "",
-                        isSentByMe = true
-                    )
-                )
-            }
-
-            saveMessage(msg)
-            messageAdapter.notifyDataSetChanged()
-            recyclerView.smoothScrollToPosition(messages.size - 1)
-            clearLocalServices {
-                startRegistration()
-            }
+            sendMessageButtons(op2Button)
         }
 
         op3Button.setOnClickListener {
-            msg = op3Button.text.toString()
-            Toast.makeText(
-                applicationContext,
-                "Mensaje enviado",
-                Toast.LENGTH_LONG
-            ).show()
-
-            messages.add(ChatMessage(
-                nameUser = userName,
-                text = msg.trim(),
-                timeSend = "Hora de envío: " + getFormattedDateTime(),
-                timeReceived = "",
-                isSentByMe = true
-            ))
-
-            CoroutineScope(Dispatchers.IO).launch {
-                val db = AppDatabase.getDatabase(applicationContext)
-                db.chatMessageDao().insertMessage(
-                    ChatMessageEntity(
-                        nameUser = userName,
-                        text = msg.trim(),
-                        timeSend = "Hora de envío: " + getFormattedDateTime(),
-                        timeReceived = "",
-                        isSentByMe = true
-                    )
-                )
-            }
-
-            saveMessage(msg)
-            messageAdapter.notifyDataSetChanged()
-            recyclerView.smoothScrollToPosition(messages.size - 1)
-            clearLocalServices {
-                startRegistration()
-            }
+            sendMessageButtons(op3Button)
         }
 
         op4Button.setOnClickListener {
-            msg = op4Button.text.toString()
-            Toast.makeText(
-                applicationContext,
-                "Mensaje enviado",
-                Toast.LENGTH_LONG
-            ).show()
+            sendMessageButtons(op4Button)
+        }
 
-            messages.add(ChatMessage(
-                nameUser = userName,
-                text = msg.trim(),
-                timeSend = "Hora de envío: " + getFormattedDateTime(),
-                timeReceived = "",
-                isSentByMe = true
-            ))
+        ceButton.setOnClickListener {
+            if (ceName.isEmpty() || cePhone.isEmpty()) {
+                Toast.makeText(
+                    applicationContext,
+                    "Necesitas configurar tu\ncontacto de emergencia",
+                    Toast.LENGTH_LONG
+                ).show()
 
-            CoroutineScope(Dispatchers.IO).launch {
-                val db = AppDatabase.getDatabase(applicationContext)
-                db.chatMessageDao().insertMessage(
-                    ChatMessageEntity(
+            }else {
+                val msg = "Contacto de emergencia: $ceName\nTeléfono: $cePhone"
+
+                Toast.makeText(
+                    applicationContext,
+                    "Mensaje enviado",
+                    Toast.LENGTH_LONG
+                ).show()
+
+                messages.add(
+                    ChatMessage(
                         nameUser = userName,
                         text = msg.trim(),
                         timeSend = "Hora de envío: " + getFormattedDateTime(),
@@ -255,17 +203,152 @@ class MainChat : AppCompatActivity() {
                         isSentByMe = true
                     )
                 )
-            }
 
-            saveMessage(msg)
-            messageAdapter.notifyDataSetChanged()
-            recyclerView.smoothScrollToPosition(messages.size - 1)
-            clearLocalServices {
-                startRegistration()
+                CoroutineScope(Dispatchers.IO).launch {
+                    val db = AppDatabase.getDatabase(applicationContext)
+                    db.chatMessageDao().insertMessage(
+                        ChatMessageEntity(
+                            nameUser = userName,
+                            text = msg.trim(),
+                            timeSend = "Hora de envío: " + getFormattedDateTime(),
+                            timeReceived = "",
+                            isSentByMe = true
+                        )
+                    )
+                }
+
+                saveMessage(msg)
+                messageAdapter.notifyDataSetChanged()
+                recyclerView.smoothScrollToPosition(messages.size - 1)
+                clearLocalServices {
+                    startRegistration()
+                }
+            }
+        }
+
+        puntosButton.setOnClickListener {
+            tecladoButton.visibility = if (tecladoButton.visibility == View.VISIBLE){
+                View.GONE
+            } else {
+                View.VISIBLE
+            }
+        }
+
+        tecladoButton.setOnClickListener{
+            if (op1Button.visibility == View.VISIBLE) {
+                op1Button.visibility = View.GONE
+                op2Button.visibility = View.GONE
+                op3Button.visibility = View.GONE
+                op4Button.visibility = View.GONE
+                ceButton.visibility = View.GONE
+                messageEditText.visibility = View.VISIBLE
+                sendButton.visibility = View.VISIBLE
+                tecladoButton.setImageResource(R.drawable.group_72)
+            }else{
+                op1Button.visibility = View.VISIBLE
+                op2Button.visibility = View.VISIBLE
+                op3Button.visibility = View.VISIBLE
+                op4Button.visibility = View.VISIBLE
+                ceButton.visibility = View.VISIBLE
+                messageEditText.visibility = View.GONE
+                sendButton.visibility = View.GONE
+                tecladoButton.setImageResource(R.drawable.group_72__1_)
+            }
+        }
+
+        sendButton.setOnClickListener {
+           sendMessageEditText()
+        }
+
+        messageEditText.setOnEditorActionListener { _, actionId, _ ->
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                sendMessageEditText()
+                true
+            } else {
+                false
             }
         }
 
     }
+
+    private fun sendMessageButtons(opButton: Button) {
+        val msg = opButton.text.toString()
+
+        Toast.makeText(
+            applicationContext,
+            "Mensaje enviado",
+            Toast.LENGTH_LONG
+        ).show()
+
+        messages.add(ChatMessage(
+            nameUser = userName,
+            text = msg.trim(),
+            timeSend = "Hora de envío: " + getFormattedDateTime(),
+            timeReceived = "",
+            isSentByMe = true
+        ))
+
+        CoroutineScope(Dispatchers.IO).launch {
+            val db = AppDatabase.getDatabase(applicationContext)
+            db.chatMessageDao().insertMessage(
+                ChatMessageEntity(
+                    nameUser = userName,
+                    text = msg.trim(),
+                    timeSend = "Hora de envío: " + getFormattedDateTime(),
+                    timeReceived = "",
+                    isSentByMe = true
+                )
+            )
+        }
+
+        saveMessage(msg)
+        messageAdapter.notifyDataSetChanged()
+        recyclerView.smoothScrollToPosition(messages.size - 1)
+        clearLocalServices {
+            startRegistration()
+        }
+    }
+
+    private fun sendMessageEditText() {
+        val msg = messageEditText.text.toString()
+        if (msg.isEmpty()) {
+            Toast.makeText(applicationContext, "Escribe un mensaje", Toast.LENGTH_LONG).show()
+        } else {
+            messageEditText.text.clear()
+            Toast.makeText(applicationContext, "Mensaje enviado", Toast.LENGTH_LONG).show()
+
+            messages.add(
+                ChatMessage(
+                    nameUser = userName,
+                    text = msg.trim(),
+                    timeSend = "Hora de envío: " + getFormattedDateTime(),
+                    timeReceived = "",
+                    isSentByMe = true
+                )
+            )
+
+            CoroutineScope(Dispatchers.IO).launch {
+                val db = AppDatabase.getDatabase(applicationContext)
+                db.chatMessageDao().insertMessage(
+                    ChatMessageEntity(
+                        nameUser = userName,
+                        text = msg.trim(),
+                        timeSend = "Hora de envío: " + getFormattedDateTime(),
+                        timeReceived = "",
+                        isSentByMe = true
+                    )
+                )
+            }
+
+            saveMessage(msg)
+            messageAdapter.notifyDataSetChanged()
+            recyclerView.smoothScrollToPosition(messages.size - 1)
+            clearLocalServices {
+                startRegistration()
+            }
+        }
+    }
+
 
     fun initialWork() {
         recyclerView = findViewById(R.id.messageRecyclerView)
@@ -274,7 +357,14 @@ class MainChat : AppCompatActivity() {
         op2Button = findViewById(R.id.op2Button)
         op3Button = findViewById(R.id.op3Button)
         op4Button = findViewById(R.id.op4Button)
+        ceButton = findViewById(R.id.emergenciaButton)
         aSalvoButton = findViewById(R.id.estoyASalvoButton)
+        messageEditText = findViewById(R.id.editTextText)
+        sendButton = findViewById(R.id.sendButton)
+
+
+        puntosButton = findViewById(R.id.trespuntosButton)
+        tecladoButton = findViewById(R.id.tecladoButton)
 
         wifiManager = this.applicationContext.getSystemService(WIFI_SERVICE) as WifiManager
         manager = getSystemService(WIFI_P2P_SERVICE) as WifiP2pManager
@@ -377,11 +467,11 @@ class MainChat : AppCompatActivity() {
             channel,
             object : WifiP2pManager.ActionListener {
                 override fun onSuccess() {
-                    Toast.makeText(this@MainChat, "success discover", Toast.LENGTH_SHORT).show()
+//                    Toast.makeText(this@MainChat, "success discover", Toast.LENGTH_SHORT).show()
                 }
 
                 override fun onFailure(code: Int) {
-                    Toast.makeText(this@MainChat, "Failure discover", Toast.LENGTH_SHORT).show()
+//                    Toast.makeText(this@MainChat, "Failure discover", Toast.LENGTH_SHORT).show()
                     Log.e(TAG_WIFI, "Discover services has failed. $code")
                 }
             }
@@ -434,11 +524,11 @@ class MainChat : AppCompatActivity() {
             object : WifiP2pManager.ActionListener {
                 override fun onSuccess() {
                     Log.d("success", "clearLocalServices result: Success")
-                    Toast.makeText(
-                        this@MainChat,
-                        "Success clear local services",
-                        Toast.LENGTH_SHORT
-                    ).show()
+//                    Toast.makeText(
+//                        this@MainChat,
+//                        "Success clear local services",
+//                        Toast.LENGTH_SHORT
+//                    ).show()
                     onSuccessCallback.invoke()
                 }
 
