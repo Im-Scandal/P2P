@@ -29,7 +29,7 @@ Es importante tener en cuenta que Multisalto necesita acceso a estos datos para 
 
     MainMenu
     <string name="companero_ideal">"Tu acompañante ideal
-En momentos de Post Desastre"</string>
+en momentos de postdesastre"</string>
     <string name="mantente_salvo">"Mantente a salvo"</string>
     <string name="pedir_ayuda">"PEDIR AYUDA"</string>
 

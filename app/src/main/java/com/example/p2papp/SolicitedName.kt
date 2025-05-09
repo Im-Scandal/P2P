@@ -1,7 +1,6 @@
 package com.example.p2papp
 
 import android.Manifest
-import android.app.AlertDialog
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
@@ -59,19 +58,23 @@ class SolicitedName: AppCompatActivity() {
 
             nextButton.setOnClickListener {
                 if (nameText.text.isNotEmpty()) {
-                    val userName = nameText.text.toString()
-                    sharedPreferences.edit().putString("userName", userName).apply()
+                    if (esNombreValido(nameText.text.toString())) {
+                        val userName = nameText.text.toString()
+                        sharedPreferences.edit().putString("userName", userName).apply()
 
 
-                    // Llamar al insertUser desde una corrutina
-                    CoroutineScope(Dispatchers.IO).launch {
-                        val user = User(id = 1, name = userName, phone = "", nameCE = "", phoneCE = "")
-                        userDao.insertUser(user)
+                        // Llamar al insertUser desde una corrutina
+                        CoroutineScope(Dispatchers.IO).launch {
+                            val user = User(id = 1, name = userName, phone = "", nameCE = "", phoneCE = "")
+                            userDao.insertUser(user)
+                        }
+
+                        val intent = Intent(this, TerminosCondiciones::class.java)
+                        startActivity(intent)
+                        finish()
+                    }else{
+                        Toast.makeText(this, "Por favor introduzca un nombre valido, no utilice simbolos especiales", Toast.LENGTH_SHORT).show()
                     }
-
-                    val intent = Intent(this, TerminosCondiciones::class.java)
-                    startActivity(intent)
-                    finish()
                 } else {
                     // Mostrar estado de error si el campo está vacío
                     Toast.makeText(this, "Por favor ingrese su nombre", Toast.LENGTH_LONG).show()
@@ -92,6 +95,12 @@ class SolicitedName: AppCompatActivity() {
                     rootView.removeView(overlayView)
             }}
         }
+    }
+
+    fun esNombreValido(nombre: String): Boolean {
+        // Solo letras y espacios, mínimo 1 carácter
+        val regex = Regex("^[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+\$")
+        return regex.matches(nombre)
     }
 
     private fun requestPermissions() {

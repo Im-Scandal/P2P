@@ -11,7 +11,6 @@ import android.widget.FrameLayout
 import android.widget.ImageButton
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.util.rangeTo
 
 class Biblioteca : AppCompatActivity() {
 

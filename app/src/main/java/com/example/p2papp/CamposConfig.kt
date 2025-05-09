@@ -87,19 +87,27 @@ class CamposConfig : AppCompatActivity() {
                     }
                     Toast.makeText(this, "Por favor complete los campos solicitados", Toast.LENGTH_SHORT).show()
                 }else{
-                    CoroutineScope(Dispatchers.IO).launch {
-                        val user = User(
-                            id = 1,
-                            name = nameEditText.text.toString(),
-                            phone = phoneEditText.text.toString(),
-                            nameCE = nombreCEUser,
-                            phoneCE = telefonoCEUser
-                        )
-                        userDao.insertUser(user)}
+                    if(esTelefonoValido(phoneEditText.text.toString()) && esNombreValido(nameEditText.text.toString())){
+                        CoroutineScope(Dispatchers.IO).launch {
+                            val user = User(
+                                id = 1,
+                                name = nameEditText.text.toString(),
+                                phone = phoneEditText.text.toString(),
+                                nameCE = nombreCEUser,
+                                phoneCE = telefonoCEUser
+                            )
+                            userDao.insertUser(user)}
                         Toast.makeText(this, "Datos Guardados", Toast.LENGTH_SHORT).show()
-                    val intent = Intent(this, ConfigPerfil::class.java)
-                    startActivity(intent)
-                    finish()
+                        val intent = Intent(this, ConfigPerfil::class.java)
+                        startActivity(intent)
+                        finish()
+                    }else{
+                        if (!esTelefonoValido(phoneEditText.text.toString())){
+                            Toast.makeText(this, "Por favor introduzca un número de telefono valido", Toast.LENGTH_SHORT).show()
+                        }else{
+                            Toast.makeText(this, "Por favor introduzca un nombre valido, no utilice simbolos especiales", Toast.LENGTH_SHORT).show()
+                        }
+                    }
                 }
             }
 
@@ -131,23 +139,43 @@ class CamposConfig : AppCompatActivity() {
                     }
                     Toast.makeText(this, "Por favor complete los campos solicitados", Toast.LENGTH_SHORT).show()
                 }else{
-                    CoroutineScope(Dispatchers.IO).launch {
-                        val user = User(
-                            id = 1,
-                            name = nombreUser,
-                            phone =telefonoUser,
-                            nameCE = nameEditText.text.toString(),
-                            phoneCE = phoneEditText.text.toString()
-                        )
-                        userDao.insertUser(user)}
-                    Toast.makeText(this, "Datos Guardados", Toast.LENGTH_SHORT).show()
-                    val intent = Intent(this, ConfigPerfil::class.java)
-                    startActivity(intent)
-                    finish()
+                    if(esTelefonoValido(phoneEditText.text.toString()) && esNombreValido(nameEditText.text.toString())){
+                        CoroutineScope(Dispatchers.IO).launch {
+                            val user = User(
+                                id = 1,
+                                name = nombreUser,
+                                phone =telefonoUser,
+                                nameCE = nameEditText.text.toString(),
+                                phoneCE = phoneEditText.text.toString()
+                            )
+                            userDao.insertUser(user)}
+                        Toast.makeText(this, "Datos Guardados", Toast.LENGTH_SHORT).show()
+                        val intent = Intent(this, ConfigPerfil::class.java)
+                        startActivity(intent)
+                        finish()
+                    }else{
+                        if (!esTelefonoValido(phoneEditText.text.toString())){
+                            Toast.makeText(this, "Por favor introduzca un número de telefono valido", Toast.LENGTH_SHORT).show()
+                        }else{
+                            Toast.makeText(this, "Por favor introduzca un nombre valido, no utilice simbolos especiales", Toast.LENGTH_SHORT).show()
+                        }
+                    }
                 }
             }
 
         }
 
     }
+
+    fun esTelefonoValido(numero: String): Boolean {
+        val regex = Regex("^3[0-9]{9}\$") // Verifica que el número que ingrese el usuario empiece por 3 y tenga 10 digitos
+        return regex.matches(numero)
+    }
+
+    fun esNombreValido(nombre: String): Boolean {
+        // Solo letras y espacios, mínimo 1 carácter
+        val regex = Regex("^[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+\$")
+        return regex.matches(nombre)
+    }
+
 }

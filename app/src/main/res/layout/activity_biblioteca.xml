@@ -28,14 +28,15 @@
 
         <TextView
             android:id="@+id/textView17"
-            android:layout_width="262dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/Biblioteca"
             android:textColor="@color/azul"
             android:textAlignment="center"
             android:fontFamily="@font/verdanabold"
             android:textSize="16sp"
-            android:textStyle="bold"/>
+            android:textStyle="bold"
+            android:layout_marginHorizontal="40dp"/>
 
         <ImageButton
             android:id="@+id/perfilButton"

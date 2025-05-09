@@ -3,7 +3,6 @@ package com.example.p2papp
 import android.content.Context
 import android.net.wifi.p2p.WifiP2pDevice
 import androidx.appcompat.app.AppCompatActivity
-import java.util.HashMap
 import java.util.UUID
 
 class WifiFrameUtils {
