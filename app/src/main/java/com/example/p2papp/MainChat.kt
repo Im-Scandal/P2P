@@ -1,6 +1,7 @@
 package com.example.p2papp
 
 import android.Manifest
+import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.content.pm.PackageManager
@@ -16,6 +17,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
+import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageButton
@@ -54,9 +56,6 @@ class MainChat : AppCompatActivity() {
     private lateinit var messageEditText: EditText
     private lateinit var sendButton: ImageButton
 
-    //Selección de mensaje
-    private var msg: String = ""
-
     //Variables para WiFi Direct
     private lateinit var wifiManager: WifiManager
     private lateinit var manager: WifiP2pManager
@@ -65,7 +64,6 @@ class MainChat : AppCompatActivity() {
     //Variables para agregar los dispositivos (peers) al listview
     private var deviceArray: MutableList<MessageModel> = mutableListOf()
     private var info: WifiFrame = WifiFrame()
-    private var selectedDevice: WifiP2pDevice? = null
 
     //Variables para agregar mensajes a recyclerView
     private var messages: MutableList<ChatMessage> = mutableListOf()
@@ -75,13 +73,13 @@ class MainChat : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        sharedPreferences = getSharedPreferences(Constants.PREFERENCES_KEY, MODE_PRIVATE)
-
         initialWork()
-        loadUserNameFromDatabase()
+        loadUserNameFromDatabase{
+            addServiceRequest()
+            startDiscover()
+        }
 
-        addServiceRequest()
-        startDiscover()
+        sharedPreferences = getSharedPreferences(Constants.PREFERENCES_KEY, MODE_PRIVATE)
 
 
         messageAdapter = MessageAdapter(messages)
@@ -90,16 +88,17 @@ class MainChat : AppCompatActivity() {
         exqListener()
     }
 
-    private fun loadUserNameFromDatabase() {
-        val db = AppDatabase.getDatabase(this) // Asumiendo que tienes un singleton de Room
+    private fun loadUserNameFromDatabase(onLoaded: () -> Unit) {
+        val db = AppDatabase.getDatabase(this)
         val userDao = db.userDao()
         CoroutineScope(Dispatchers.IO).launch {
             val savedUser = userDao.getUser()
             if (savedUser != null) {
-                userName = savedUser.name
+                userName = savedUser.name.trim()
                 ceName = savedUser.nameCE
                 cePhone = savedUser.phoneCE
             }
+
             val savedMessages = db.chatMessageDao().getAllMessages()
             val chatMessages = savedMessages.map {
                 ChatMessage(
@@ -115,6 +114,7 @@ class MainChat : AppCompatActivity() {
                 messages.addAll(chatMessages)
                 messageAdapter.notifyDataSetChanged()
                 recyclerView.scrollToPosition(messages.size - 1)
+                onLoaded()
             }
         }
     }
@@ -253,6 +253,9 @@ class MainChat : AppCompatActivity() {
                 messageEditText.visibility = View.GONE
                 sendButton.visibility = View.GONE
                 tecladoButton.setImageResource(R.drawable.group_72__1_)
+
+                val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager  // Oculta el teclado
+                imm.hideSoftInputFromWindow(messageEditText.windowToken, 0)
             }
         }
 
@@ -311,7 +314,7 @@ class MainChat : AppCompatActivity() {
 
     private fun sendMessageEditText() {
         val msg = messageEditText.text.toString()
-        if (msg.isEmpty()) {
+        if (msg.isBlank()) {
             Toast.makeText(applicationContext, "Escribe un mensaje", Toast.LENGTH_LONG).show()
         } else {
             messageEditText.text.clear()
@@ -641,13 +644,16 @@ class MainChat : AppCompatActivity() {
     }
 
     private fun addMessageToRecyclerView(wifiFrame: WifiFrame) {
+        val enviadoPorMi = wifiFrame.nameUser == userName
+
         val newChatMessage = ChatMessage(
             nameUser = wifiFrame.nameUser,
             text = wifiFrame.sendMessage,
             timeSend = "Hora de envío: ${wifiFrame.dateSend}",
             timeReceived = "Hora de recepción: ${wifiFrame.dateReceived}",
-            isSentByMe = false
+            isSentByMe = enviadoPorMi
         )
+
         runOnUiThread {
             messages.add(newChatMessage)
             messageAdapter.notifyItemInserted(messages.size - 1)
@@ -661,12 +667,13 @@ class MainChat : AppCompatActivity() {
                         text = wifiFrame.sendMessage,
                         timeSend = "Hora enviada: ${wifiFrame.dateSend}",
                         timeReceived = "Hora recibido: ${wifiFrame.dateReceived}",
-                        isSentByMe = false
+                        isSentByMe = enviadoPorMi
                     )
                 )
             }
         }
     }
+
 
 
 }

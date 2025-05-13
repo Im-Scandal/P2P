@@ -76,6 +76,7 @@
             android:id="@+id/trespuntosButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:contentDescription="@string/habilitar_teclado"
             app:srcCompat="@drawable/_puntos"
             android:layout_gravity="center"
             android:background="#00777777"
@@ -87,14 +88,15 @@
 
     <HorizontalScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_gravity="center">
 
         <LinearLayout
             style="?android:attr/buttonBarStyle"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:orientation="horizontal"
-            android:layout_marginBottom="15sp">
+            android:layout_marginBottom="10dp">
 
             <Button
                 android:id="@+id/emergenciaButton"
@@ -192,7 +194,7 @@
                 android:id="@+id/sendButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:contentDescription="Boton de enviar"
+                android:contentDescription="@string/boton_de_enviar"
                 android:src="@drawable/send"
                 android:layout_gravity="end|center"
                 android:visibility="gone"/>

@@ -162,8 +162,8 @@ class Biblioteca : AppCompatActivity() {
                     getString(R.string.linterna_content),
                     getString(R.string.tijeras),
                     getString(R.string.tijeras_content),
-                    imageRes1Id = R.drawable.bibliotecageneral,
-                    imageRes2Id = R.drawable.bibliotecageneral))
+                    imageRes1Id = R.drawable.herramientas1,
+                    imageRes2Id = R.drawable.herramientas2))
             overlayManager.showOverlay(R.layout.main_page_equipos, R.id.close_button, pages)
         }
         ropaButton.setOnClickListener{
@@ -174,13 +174,13 @@ class Biblioteca : AppCompatActivity() {
                     getString(R.string.muda_content),
                     getString(R.string.guantes),
                     getString(R.string.guantes_content),
-                    imageRes1Id = R.drawable.bibliotecageneral,
-                    imageRes2Id = R.drawable.bibliotecageneral),
+                    imageRes1Id = R.drawable.ropa1,
+                    imageRes2Id = R.drawable.ropa2),
                 PageContent(
                     PageType.NORMAL,
                     getString(R.string.impermeable),
                     getString(R.string.impermeable_content),
-                    imageRes1Id = R.drawable.bibliotecageneral))
+                    imageRes1Id = R.drawable.ropa3))
             overlayManager.showOverlay2b(R.layout.main_page_ropa, R.id.close_button, pages)
         }
         docsButton.setOnClickListener{
@@ -191,13 +191,13 @@ class Biblioteca : AppCompatActivity() {
                     getString(R.string.copias_content),
                     getString(R.string.llaves),
                     getString(R.string.llaves_content),
-                    imageRes1Id = R.drawable.bibliotecageneral,
-                    imageRes2Id = R.drawable.bibliotecageneral),
+                    imageRes1Id = R.drawable.documentos1,
+                    imageRes2Id = R.drawable.documentos2),
                 PageContent(
                     PageType.NORMAL,
                     getString(R.string.propios),
                     getString(R.string.propios_content),
-                    imageRes1Id = R.drawable.bibliotecageneral))
+                    imageRes1Id = R.drawable.documentos3))
             overlayManager.showOverlay2b(R.layout.main_page_documentos, R.id.close_button, pages)
         }
         otrosButton.setOnClickListener{
@@ -208,24 +208,24 @@ class Biblioteca : AppCompatActivity() {
                     getString(R.string.silbato_content),
                     getString(R.string.repelente),
                     getString(R.string.repelente_content),
-                    imageRes1Id = R.drawable.bibliotecageneral,
-                    imageRes2Id = R.drawable.bibliotecageneral),
+                    imageRes1Id = R.drawable.otros1,
+                    imageRes2Id = R.drawable.otros2),
                 PageContent(
                     PageType.NORMAL,
                     getString(R.string.toallas),
                     getString(R.string.toallas_content),
                     getString(R.string.bolsas),
                     getString(R.string.bolsas_content),
-                    imageRes1Id = R.drawable.bibliotecageneral,
-                    imageRes2Id = R.drawable.bibliotecageneral),
+                    imageRes1Id = R.drawable.otros3,
+                    imageRes2Id = R.drawable.otros4),
                 PageContent(
                     PageType.NORMAL,
                     getString(R.string.ataduras),
                     getString(R.string.ataduras_content),
                     getString(R.string.elementos),
                     getString(R.string.elementos_content),
-                    imageRes1Id = R.drawable.bibliotecageneral,
-                    imageRes2Id = R.drawable.bibliotecageneral))
+                    imageRes1Id = R.drawable.otros5,
+                    imageRes2Id = R.drawable.otros6))
             overlayManager.showOverlay3b(R.layout.main_page_otros, R.id.close_button, pages)
         }
         queHacerButton.setOnClickListener{
@@ -234,15 +234,15 @@ class Biblioteca : AppCompatActivity() {
                     PageType.TEXT_IMAGE,
                     getString(R.string.guia_pratica),
                     "",
-                    imageRes1Id = R.drawable.bibliotecageneral),
+                    imageRes1Id = R.drawable.quehacer1),
                 PageContent(
                     PageType.NORMAL,
                     getString(R.string.manten),
                     getString(R.string.manten_content),
                     getString(R.string.desarrolla),
                     getString(R.string.desarrolla_content),
-                    imageRes1Id = R.drawable.bibliotecageneral,
-                    imageRes2Id = R.drawable.bibliotecageneral),)
+                    imageRes1Id = R.drawable.quehacer2,
+                    imageRes2Id = R.drawable.quehacer3),)
             overlayManager.showOverlay2b(R.layout.main_page_quehacer, R.id.close_button, pages)
         }
         categorySismoButton.setOnClickListener{
@@ -251,30 +251,30 @@ class Biblioteca : AppCompatActivity() {
                     PageType.TEXT_IMAGE,
                     getString(R.string.sabias_content),
                     "",
-                    imageRes1Id = R.drawable.bibliotecageneral),
+                    imageRes1Id = R.drawable.curiosidades1),
                 PageContent(
                     PageType.NORMAL,
                     getString(R.string.no_sensible),
                     getString(R.string.no_sensible_content),
                     getString(R.string.sentido),
                     getString(R.string.sentido_content),
-                    imageRes1Id = R.drawable.bibliotecageneral,
-                    imageRes2Id = R.drawable.bibliotecageneral),
+                    imageRes1Id = R.drawable.curiosidades2,
+                    imageRes2Id = R.drawable.curiosidades3),
                 PageContent(
                     PageType.NORMAL,
                     getString(R.string.debil),
                     getString(R.string.debil_content),
                     getString(R.string.observado),
                     getString(R.string.observado_content),
-                    imageRes1Id = R.drawable.bibliotecageneral,
-                    imageRes2Id = R.drawable.bibliotecageneral),
+                    imageRes1Id = R.drawable.curiosidades4,
+                    imageRes2Id = R.drawable.curiosidades5),
                 PageContent(
                     PageType.NORMAL,
                     getString(R.string.fuerte),
                     getString(R.string.fuerte_content),
                     getString(R.string.danos_leves),
                     getString(R.string.leves_content),
-                    imageRes1Id = R.drawable.bibliotecageneral,
+                    imageRes1Id = R.drawable.curiosidades6,
                     imageRes2Id = R.drawable.bibliotecageneral),
                 PageContent(
                     PageType.NORMAL,

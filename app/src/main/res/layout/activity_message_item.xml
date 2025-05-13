@@ -2,24 +2,72 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:baselineAligned="false"
     android:orientation="horizontal"
     android:padding="8dp">
 
     <!-- Espacio para alinear a derecha o izquierda -->
-    <View
-        android:id="@+id/spaceLeft"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1" />
-
-    <!-- Contenedor del mensaje -->
     <LinearLayout
-        android:id="@+id/messageContent"
-        android:layout_width="match_parent"
+        android:id="@+id/messageContentLeft"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:background="@drawable/msg"
-        android:padding="10dp">
+        android:layout_weight="1"
+        android:padding="10dp"
+        android:visibility="visible">
+
+        <!-- Nombre del remitente (solo si es recibido) -->
+        <TextView
+            android:id="@+id/textRecieveName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/azul"
+            android:textStyle="bold"
+            android:textSize="12sp"
+            android:text="@string/ejemplo"/>
+
+        <!-- Mensaje principal -->
+        <TextView
+            android:id="@+id/textRecieveMessage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/blanco_texto"
+            android:fontFamily="@font/roboto"
+            android:textSize="18sp"
+            android:layout_marginBottom="4dp"
+            android:maxWidth="250dp"
+            android:text="@string/ejemplo"/>
+
+        <!-- Tiempos de enviado/recibido -->
+        <TextView
+            android:id="@+id/timeRecieveSend"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/blanco_texto"
+            android:textSize="11sp"
+            android:layout_marginTop="4dp"
+            android:text="@string/ejemplo"/>
+        <TextView
+            android:id="@+id/timeReceived"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/blanco_texto"
+            android:textSize="11sp"
+            android:text="@string/ejemplo"/>
+    </LinearLayout>
+
+    <!-- Espacio para alinear a derecha o izquierda -->
+    <LinearLayout
+        android:id="@+id/messageContentRight"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@drawable/msg"
+        android:layout_weight="1"
+        android:padding="10dp"
+        android:layout_gravity="end"
+        android:visibility="visible">
 
         <!-- Nombre del remitente (solo si es recibido) -->
         <TextView
@@ -29,7 +77,8 @@
             android:textColor="@color/azul"
             android:textStyle="bold"
             android:textSize="12sp"
-            android:text="Ejemplo"/>
+            android:text="@string/ejemplo"
+            android:visibility="invisible"/>
 
         <!-- Mensaje principal -->
         <TextView
@@ -41,7 +90,7 @@
             android:textSize="18sp"
             android:layout_marginBottom="4dp"
             android:maxWidth="250dp"
-            android:text="Ejemplo"/>
+            android:text="@string/ejemplo"/>
 
         <!-- Tiempos de enviado/recibido -->
         <TextView
@@ -49,22 +98,17 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="@color/blanco_texto"
-            android:textSize="10sp"
+            android:textSize="11sp"
             android:layout_marginTop="4dp"
-            android:text="Ejemplo"/>
+            android:text="@string/ejemplo"/>
         <TextView
-            android:id="@+id/timeReceived"
+            android:id="@+id/time"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="@color/blanco_texto"
-            android:textSize="10sp"
-            android:text="Ejemplo"/>
+            android:textSize="11sp"
+            android:text="@string/ejemplo"
+            android:visibility="invisible"/>
     </LinearLayout>
 
-    <!-- Espacio para alinear a derecha o izquierda -->
-    <View
-        android:id="@+id/spaceRight"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1" />
 </LinearLayout>

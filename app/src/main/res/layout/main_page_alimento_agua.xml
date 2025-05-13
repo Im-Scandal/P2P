@@ -42,6 +42,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="#00777777"
+                android:contentDescription="@string/boton_cerrar"
                 app:srcCompat="@drawable/closebutton"/>
 
         </LinearLayout>
@@ -66,6 +67,7 @@
                 android:id="@+id/prevButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:contentDescription="@string/prev_button"
                 app:srcCompat="@drawable/boton_pop_left"
                 android:background="#00777777"
                 android:visibility="invisible"/>
@@ -74,9 +76,10 @@
                 android:id="@+id/num_pag"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:contentDescription="@string/pages"
                 app:srcCompat="@drawable/barra_autoproteccion"
                 android:layout_marginStart="20dp"
-                android:layout_marginEnd="20sp"
+                android:layout_marginEnd="20dp"
                 android:visibility="visible"/>
 
             <ImageButton
@@ -84,6 +87,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="#00777777"
+                android:contentDescription="@string/next_button"
                 app:srcCompat="@drawable/boton_pop_up"
                 android:visibility="visible"/>
 
@@ -97,7 +101,7 @@
                 android:textSize="16sp"
                 android:textColor="@color/blanco_texto"
                 android:background="@drawable/main_button"
-                android:layout_marginStart="20sp"
+                android:layout_marginStart="20dp"
                 android:visibility="gone"/>
 
         </LinearLayout>

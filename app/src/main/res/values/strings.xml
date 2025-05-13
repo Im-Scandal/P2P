@@ -220,5 +220,12 @@ de emergencia.</string>
     <string name="a">""</string>
     <string name="mensaje">Mensaje</string>
     <string name="CEmergencia">CONTACTO EMERGENCIA</string>
+    <string name="ejemplo">Ejemplo</string>
+    <string name="boton_cerrar">boton_cerrar</string>
+    <string name="prev_button">prev_button</string>
+    <string name="pages">pages</string>
+    <string name="next_button">next_button</string>
+    <string name="habilitar_teclado">habilitar_teclado</string>
+    <string name="boton_de_enviar">Boton de enviar</string>
 
 </resources>

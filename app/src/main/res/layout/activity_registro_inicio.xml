@@ -60,7 +60,7 @@
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="left"
+                android:gravity="start"
                 android:orientation="vertical"
                 android:layout_marginStart="60dp"
                 android:layout_marginEnd="30dp">
@@ -106,13 +106,16 @@
                 android:id="@+id/nameWText"
                 android:layout_width="337dp"
                 android:layout_height="56dp"
+                android:autofillHints="name"
                 android:background="@drawable/registro_nombre"
+                android:inputType="text"
                 android:hint="@string/name_register"
                 android:padding="10dp"
                 android:textColor="@color/blanco_texto"
                 android:textColorHint="@color/hint"
                 android:textSize="14sp"
-                android:layout_margin="10dp"/>
+                android:layout_margin="10dp"
+                android:imeOptions="actionDone"/>
 
             <Button
                 android:id="@+id/nextButton"
