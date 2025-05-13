@@ -12,5 +12,7 @@
     <color name="pag_Nseleccionada">#888888</color>
     <color name="fondo_biblioteca">#CC000000</color>
     <color name="rojo_fondo">#80FF000E</color>
+    <color name="botton_original">#70B300</color>
+    <color name="botton_pressed">#D5AD00</color>
 
 </resources>

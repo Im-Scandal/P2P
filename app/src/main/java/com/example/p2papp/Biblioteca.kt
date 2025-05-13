@@ -275,31 +275,31 @@ class Biblioteca : AppCompatActivity() {
                     getString(R.string.danos_leves),
                     getString(R.string.leves_content),
                     imageRes1Id = R.drawable.curiosidades6,
-                    imageRes2Id = R.drawable.bibliotecageneral),
+                    imageRes2Id = R.drawable.curiosidades7),
                 PageContent(
                     PageType.NORMAL,
                     getString(R.string.danos),
                     getString(R.string.danos_content),
                     getString(R.string.danos_severos),
                     getString(R.string.severos_content),
-                    imageRes1Id = R.drawable.bibliotecageneral,
-                    imageRes2Id = R.drawable.bibliotecageneral),
+                    imageRes1Id = R.drawable.curiosidades8,
+                    imageRes2Id = R.drawable.curiosidades9),
                 PageContent(
                     PageType.NORMAL,
                     getString(R.string.destructivo),
                     getString(R.string.destructivo_content),
                     getString(R.string.muy_destructivo),
                     getString(R.string.muy_destructivo_content),
-                    imageRes1Id = R.drawable.bibliotecageneral,
-                    imageRes2Id = R.drawable.bibliotecageneral),
+                    imageRes1Id = R.drawable.curiosidades10,
+                    imageRes2Id = R.drawable.curiosidades11),
                 PageContent(
                     PageType.NORMAL,
                     getString(R.string.devastador),
                     getString(R.string.devastador_content),
                     getString(R.string.completo),
                     getString(R.string.completo_content),
-                    imageRes1Id = R.drawable.bibliotecageneral,
-                    imageRes2Id = R.drawable.bibliotecageneral))
+                    imageRes1Id = R.drawable.curiosidades12,
+                    imageRes2Id = R.drawable.curiosidades13))
             overlayManager.showOverlay7b(R.layout.main_page_category, R.id.close_button, pages)
         }
 

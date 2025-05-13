@@ -26,6 +26,7 @@ import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.example.p2papp.Constants.TAG
 import com.example.p2papp.Constants.TAG_WIFI
@@ -55,6 +56,8 @@ class MainChat : AppCompatActivity() {
     private lateinit var tecladoButton: ImageButton
     private lateinit var messageEditText: EditText
     private lateinit var sendButton: ImageButton
+    private var isSending = false
+
 
     //Variables para WiFi Direct
     private lateinit var wifiManager: WifiManager
@@ -186,6 +189,13 @@ class MainChat : AppCompatActivity() {
                 ).show()
 
             }else {
+                if (isSending) {
+                    Toast.makeText(this, "Espera antes de enviar otro mensaje", Toast.LENGTH_SHORT).show()
+                }else{
+
+                isSending = true
+                ceButton.background = ContextCompat.getDrawable(this, R.drawable.boton_pressed)
+
                 val msg = "Contacto de emergencia: $ceName\nTeléfono: $cePhone"
 
                 Toast.makeText(
@@ -223,7 +233,12 @@ class MainChat : AppCompatActivity() {
                 clearLocalServices {
                     startRegistration()
                 }
-            }
+
+                ceButton.postDelayed({
+                    isSending = false
+                    ceButton.background = ContextCompat.getDrawable(this, R.drawable.boton_respuestas) // Restaurar color original
+                }, 5000)
+            }}
         }
 
         puntosButton.setOnClickListener {
@@ -275,6 +290,14 @@ class MainChat : AppCompatActivity() {
     }
 
     private fun sendMessageButtons(opButton: Button) {
+        if (isSending) {
+            Toast.makeText(this, "Espera antes de enviar otro mensaje", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        isSending = true
+        opButton.background = ContextCompat.getDrawable(this, R.drawable.boton_pressed)
+
         val msg = opButton.text.toString()
 
         Toast.makeText(
@@ -310,30 +333,28 @@ class MainChat : AppCompatActivity() {
         clearLocalServices {
             startRegistration()
         }
+        // Espera de 5 segundos antes de volver a permitir enviar
+        opButton.postDelayed({
+            isSending = false
+            opButton.background = ContextCompat.getDrawable(this, R.drawable.boton_respuestas) // Restaurar color original
+        }, 5000)
     }
 
     private fun sendMessageEditText() {
         val msg = messageEditText.text.toString()
-        if (msg.isBlank()) {
-            Toast.makeText(applicationContext, "Escribe un mensaje", Toast.LENGTH_LONG).show()
-        } else {
-            messageEditText.text.clear()
-            Toast.makeText(applicationContext, "Mensaje enviado", Toast.LENGTH_LONG).show()
+        if (isSending) {
+            Toast.makeText(this, "Espera antes de enviar otro mensaje", Toast.LENGTH_SHORT).show()
+            return
+        }else{
+            if (msg.isBlank()) {
+                Toast.makeText(applicationContext, "Escribe un mensaje", Toast.LENGTH_LONG).show()
+            } else {
+                isSending = true
+                messageEditText.text.clear()
+                Toast.makeText(applicationContext, "Mensaje enviado", Toast.LENGTH_LONG).show()
 
-            messages.add(
-                ChatMessage(
-                    nameUser = userName,
-                    text = msg.trim(),
-                    timeSend = "Hora de envío: " + getFormattedDateTime(),
-                    timeReceived = "",
-                    isSentByMe = true
-                )
-            )
-
-            CoroutineScope(Dispatchers.IO).launch {
-                val db = AppDatabase.getDatabase(applicationContext)
-                db.chatMessageDao().insertMessage(
-                    ChatMessageEntity(
+                messages.add(
+                    ChatMessage(
                         nameUser = userName,
                         text = msg.trim(),
                         timeSend = "Hora de envío: " + getFormattedDateTime(),
@@ -341,13 +362,30 @@ class MainChat : AppCompatActivity() {
                         isSentByMe = true
                     )
                 )
-            }
 
-            saveMessage(msg)
-            messageAdapter.notifyDataSetChanged()
-            recyclerView.smoothScrollToPosition(messages.size - 1)
-            clearLocalServices {
-                startRegistration()
+                CoroutineScope(Dispatchers.IO).launch {
+                    val db = AppDatabase.getDatabase(applicationContext)
+                    db.chatMessageDao().insertMessage(
+                        ChatMessageEntity(
+                            nameUser = userName,
+                            text = msg.trim(),
+                            timeSend = "Hora de envío: " + getFormattedDateTime(),
+                            timeReceived = "",
+                            isSentByMe = true
+                        )
+                    )
+                }
+
+                saveMessage(msg)
+                messageAdapter.notifyDataSetChanged()
+                recyclerView.smoothScrollToPosition(messages.size - 1)
+                clearLocalServices {
+                    startRegistration()
+                }
+
+                sendButton.postDelayed({
+                    isSending = false
+                }, 5000)
             }
         }
     }
@@ -355,7 +393,6 @@ class MainChat : AppCompatActivity() {
 
     fun initialWork() {
         recyclerView = findViewById(R.id.messageRecyclerView)
-//        listView = findViewById(R.id.peerListView)
         op1Button = findViewById(R.id.op1Button)
         op2Button = findViewById(R.id.op2Button)
         op3Button = findViewById(R.id.op3Button)
