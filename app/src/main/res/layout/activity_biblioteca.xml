@@ -1,0 +1,306 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".Biblioteca"
+    android:gravity="center"
+    android:padding="20dp">
+
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center">
+
+        <ImageButton
+            android:id="@+id/homeButton"
+            android:layout_width="55dp"
+            android:layout_height="55dp"
+            android:layout_gravity="start"
+            android:background="#00777777"
+            android:contentDescription="Botón de configuración de perfil"
+            app:srcCompat="@drawable/vector" />
+
+        <TextView
+            android:id="@+id/textView17"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/Biblioteca"
+            android:textColor="@color/azul"
+            android:textAlignment="center"
+            android:fontFamily="@font/verdanabold"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:layout_marginHorizontal="40dp"/>
+
+        <ImageButton
+            android:id="@+id/perfilButton"
+            android:layout_width="55dp"
+            android:layout_height="55dp"
+            android:layout_gravity="end"
+            android:background="@drawable/boton_perfil"
+            android:contentDescription="Botón de configuración de perfil"
+            app:srcCompat="@drawable/icon_park_outline_user" />
+    </LinearLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_marginBottom="13dp"
+        android:layout_marginTop="32dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+
+            <TextView
+                android:id="@+id/textView20"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/Kit_Emergencia"
+                android:fontFamily="@font/verdanabold"
+                android:textStyle="bold"
+                android:textSize="16sp"
+                android:textColor="@color/blanco_texto" />
+
+            <HorizontalScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="18dp"
+                android:layout_marginBottom="32dp">
+
+                <LinearLayout
+                    style="?android:attr/buttonBarStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <FrameLayout
+                        android:id="@+id/alimentoButton"
+                        style="@style/CustomButtonFrame">
+                        
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:contentDescription="@string/Alimentos_agua"
+                            android:src="@drawable/alimentosyagua"
+                            android:layout_gravity="center"
+                            android:layout_marginBottom="15dp"/>
+                        
+                        <TextView
+                            style="@style/CustomButtonText"
+                            android:text="@string/Alimentos_agua"/>
+                    </FrameLayout>
+
+                    <FrameLayout
+                        android:id="@+id/auxilioButton"
+                        style="@style/CustomButtonFrame">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:contentDescription="@string/Primeros_auxilios"
+                            android:src="@drawable/primerosaauxilios"
+                            android:layout_gravity="center"
+                            android:layout_marginBottom="15dp"/>
+
+                        <TextView
+                            style="@style/CustomButtonText"
+                            android:text="@string/Primeros_auxilios"/>
+                    </FrameLayout>
+
+                    <FrameLayout
+                        android:id="@+id/equiposButton"
+                        style="@style/CustomButtonFrame">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:contentDescription="@string/Equipos"
+                            android:src="@drawable/equiposutiles"
+                            android:layout_gravity="center"
+                            android:layout_marginBottom="15dp"/>
+
+                        <TextView
+                            style="@style/CustomButtonText"
+                            android:text="@string/Equipos"/>
+                    </FrameLayout>
+
+                    <FrameLayout
+                        android:id="@+id/ropaButton"
+                        style="@style/CustomButtonFrame">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:contentDescription="@string/Ropa"
+                            android:src="@drawable/ropa"
+                            android:layout_gravity="center"
+                            android:layout_marginBottom="15dp"/>
+
+                        <TextView
+                            style="@style/CustomButtonText"
+                            android:text="@string/Ropa"/>
+                    </FrameLayout>
+
+                    <FrameLayout
+                        style="@style/CustomButtonFrame"
+                        android:id="@+id/docsButton">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:contentDescription="@string/Documentos"
+                            android:src="@drawable/documentos"
+                            android:layout_gravity="center"
+                            android:layout_marginBottom="15dp"/>
+
+                        <TextView
+                            style="@style/CustomButtonText"
+                            android:text="@string/Docs"/>
+                    </FrameLayout>
+
+                    <FrameLayout
+                        android:id="@+id/otrosButton"
+                        style="@style/CustomButtonFrame">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:contentDescription="@string/Otros"
+                            android:src="@drawable/otros"
+                            android:layout_gravity="center"
+                            android:layout_marginBottom="15dp"/>
+
+                        <TextView
+                            style="@style/CustomButtonText"
+                            android:text="@string/Otros"/>
+                    </FrameLayout>
+                </LinearLayout>
+            </HorizontalScrollView>
+
+            <TextView
+                android:id="@+id/textView21"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/Guia_Proc"
+                android:fontFamily="@font/verdanabold"
+                android:textStyle="bold"
+                android:textSize="16sp"
+                android:textColor="@color/blanco_texto"  />
+
+            <HorizontalScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="18dp"
+                android:layout_marginBottom="32dp">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal">
+
+                    <FrameLayout
+                        style="@style/CustomButtonFrame"
+                        android:id="@+id/qhButton">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:contentDescription="@string/Que_hacer"
+                            android:src="@drawable/quehacer"
+                            android:layout_gravity="center"
+                            android:layout_marginBottom="15dp"/>
+
+                        <TextView
+                            style="@style/CustomButtonText"
+                            android:text="@string/Que_hacer"/>
+                    </FrameLayout>
+                </LinearLayout>
+            </HorizontalScrollView>
+
+            <TextView
+                android:id="@+id/textView22"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/Sabias"
+                android:fontFamily="@font/verdanabold"
+                android:textStyle="bold"
+                android:textSize="16sp"
+                android:textColor="@color/blanco_texto" />
+
+            <HorizontalScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="18dp"
+                android:layout_marginBottom="32dp">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal">
+
+                    <FrameLayout
+                        android:id="@+id/catButton"
+                        style="@style/CustomButtonFrame">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:contentDescription="@string/Cat_sismos"
+                            android:src="@drawable/curiosidades"
+                            android:layout_gravity="center"
+                            android:layout_marginBottom="15dp"/>
+
+                        <TextView
+                            style="@style/CustomButtonText"
+                            android:text="@string/Cat_sismos"/>
+                    </FrameLayout>
+                </LinearLayout>
+            </HorizontalScrollView>
+
+        </LinearLayout>
+    </ScrollView>
+
+    <Button
+        android:id="@+id/helpButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginBottom="15sp"
+        android:background="@drawable/boton_rojo"
+        android:fontFamily="@font/verdanabold"
+        android:text="@string/pedir_ayuda"
+        android:textColor="@color/blanco_texto"
+        android:textSize="20sp"
+        android:textStyle="bold" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="@drawable/rounded_button"
+        android:layout_marginBottom="30sp"
+        android:layout_marginHorizontal="20dp">
+
+        <ImageButton
+            android:id="@+id/bibliotecaButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:contentDescription="Botón de biblioteca"
+            app:srcCompat="@drawable/biblio_selected"
+            android:background="#00777777"
+            android:paddingHorizontal="9dp"
+            android:paddingVertical="8dp"
+            android:layout_marginHorizontal="20dp"/>
+
+    </LinearLayout>
+</LinearLayout>

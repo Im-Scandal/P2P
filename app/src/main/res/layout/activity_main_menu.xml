@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/mainLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/black"
+    android:padding="16dp">
+
+        <!-- Botón de perfil arriba a la derecha -->
+        <ImageButton
+            android:id="@+id/perfilButton"
+            android:layout_width="55dp"
+            android:layout_height="55dp"
+            android:contentDescription="Botón de configuración de perfil"
+            app:srcCompat="@drawable/icon_park_outline_user"
+            android:background="@drawable/boton_perfil"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="20dp"/>
+
+        <!-- Imagen central -->
+        <ImageView
+            android:id="@+id/imageView2"
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"
+            app:srcCompat="@drawable/dispositivos"
+            app:layout_constraintTop_toBottomOf="@id/perfilButton"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="40dp" />
+
+        <!-- Texto "Multisaltos" -->
+        <TextView
+            android:id="@+id/textView11"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/multisaltos"
+            android:textColor="@color/verde"
+            android:textSize="30sp"
+            android:fontFamily="@font/verdanabold"
+            android:textStyle="bold"
+            app:layout_constraintTop_toBottomOf="@id/imageView2"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="16dp" />
+
+        <!-- Texto secundario -->
+        <TextView
+            android:id="@+id/textView12"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/companero_ideal"
+            android:textColor="@color/blanco_texto"
+            android:textSize="18sp"
+            android:fontFamily="@font/roboto"
+            android:textAlignment="center"
+            app:layout_constraintTop_toBottomOf="@id/textView11"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="8dp" />
+
+        <!-- Texto "Mantente a salvo" -->
+        <TextView
+            android:id="@+id/textView13"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/mantente_salvo"
+            android:textColor="@color/verde"
+            android:textSize="30sp"
+            android:fontFamily="@font/verdanabold"
+            android:textStyle="bold"
+            app:layout_constraintTop_toBottomOf="@id/textView12"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="20dp" />
+
+        <!-- Botón "Pedir ayuda" -->
+        <Button
+            android:id="@+id/helpButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/pedir_ayuda"
+            android:background="@drawable/boton_rojo"
+            android:textColor="@color/blanco_texto"
+            android:textSize="20sp"
+            android:fontFamily="@font/verdanabold"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@id/bibliotecaButton"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginBottom="12dp"/>
+
+        <!-- Botón Biblioteca -->
+        <ImageButton
+            android:id="@+id/bibliotecaButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:contentDescription="Botón de biblioteca"
+            app:srcCompat="@drawable/icono_biblioteca"
+            android:background="@drawable/rounded_button"
+            android:paddingHorizontal="9dp"
+            android:paddingVertical="8dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginBottom="30dp"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
