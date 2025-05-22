@@ -12,6 +12,8 @@ import android.net.wifi.p2p.nsd.WifiP2pDnsSdServiceInfo
 import android.net.wifi.p2p.nsd.WifiP2pDnsSdServiceRequest
 import android.os.Build
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -36,6 +38,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
+import androidx.core.view.isVisible
+import androidx.core.view.marginBottom
 
 
 class MainChat : AppCompatActivity() {
@@ -52,10 +56,15 @@ class MainChat : AppCompatActivity() {
     private lateinit var ceName: String
     private lateinit var cePhone: String
     private lateinit var aSalvoButton: Button
-    private lateinit var puntosButton: ImageButton
+    private lateinit var puntosButton1: ImageButton
+    private lateinit var puntosButton2: ImageButton
     private lateinit var tecladoButton: ImageButton
     private lateinit var messageEditText: EditText
-    private lateinit var sendButton: ImageButton
+
+    private lateinit var dividerButtonChat: View
+    private lateinit var linearLayoutTextoTresBtns: View
+    private lateinit var botonesMsgs: View
+
     private var isSending = false
 
 
@@ -241,8 +250,16 @@ class MainChat : AppCompatActivity() {
             }}
         }
 
-        puntosButton.setOnClickListener {
-            tecladoButton.visibility = if (tecladoButton.visibility == View.VISIBLE){
+        puntosButton1.setOnClickListener {
+            tecladoButton.visibility = if (tecladoButton.isVisible){
+                View.GONE
+            } else {
+                View.VISIBLE
+            }
+        }
+
+        puntosButton2.setOnClickListener {
+            tecladoButton.visibility = if (tecladoButton.isVisible){
                 View.GONE
             } else {
                 View.VISIBLE
@@ -250,32 +267,31 @@ class MainChat : AppCompatActivity() {
         }
 
         tecladoButton.setOnClickListener{
-            if (op1Button.visibility == View.VISIBLE) {
-                op1Button.visibility = View.GONE
-                op2Button.visibility = View.GONE
-                op3Button.visibility = View.GONE
-                op4Button.visibility = View.GONE
-                ceButton.visibility = View.GONE
+            if (botonesMsgs.isVisible) {
+                dividerButtonChat.visibility = View.GONE
+                linearLayoutTextoTresBtns.visibility = View.GONE
+                botonesMsgs.visibility = View.GONE
                 messageEditText.visibility = View.VISIBLE
-                sendButton.visibility = View.VISIBLE
+                puntosButton2.visibility = View.VISIBLE
+                aSalvoButton.setBottomMargin(12)
                 tecladoButton.setImageResource(R.drawable.group_72)
+
+                messageEditText.requestFocus()
+
+                val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                imm.showSoftInput(messageEditText, InputMethodManager.SHOW_IMPLICIT)
             }else{
-                op1Button.visibility = View.VISIBLE
-                op2Button.visibility = View.VISIBLE
-                op3Button.visibility = View.VISIBLE
-                op4Button.visibility = View.VISIBLE
-                ceButton.visibility = View.VISIBLE
+                dividerButtonChat.visibility = View.VISIBLE
+                linearLayoutTextoTresBtns.visibility = View.VISIBLE
+                botonesMsgs.visibility = View.VISIBLE
                 messageEditText.visibility = View.GONE
-                sendButton.visibility = View.GONE
+                puntosButton2.visibility = View.GONE
+                aSalvoButton.setBottomMargin(50)
                 tecladoButton.setImageResource(R.drawable.group_72__1_)
 
                 val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager  // Oculta el teclado
                 imm.hideSoftInputFromWindow(messageEditText.windowToken, 0)
             }
-        }
-
-        sendButton.setOnClickListener {
-           sendMessageEditText()
         }
 
         messageEditText.setOnEditorActionListener { _, actionId, _ ->
@@ -383,13 +399,19 @@ class MainChat : AppCompatActivity() {
                     startRegistration()
                 }
 
-                sendButton.postDelayed({
+                Handler(Looper.getMainLooper()).postDelayed({
                     isSending = false
                 }, 5000)
             }
         }
     }
 
+    fun View.setBottomMargin(marginInDp: Int) {
+        val params = layoutParams as ViewGroup.MarginLayoutParams
+        val scale = resources.displayMetrics.density
+        params.bottomMargin = (marginInDp * scale + 0.5f).toInt()
+        layoutParams = params
+    }
 
     fun initialWork() {
         recyclerView = findViewById(R.id.messageRecyclerView)
@@ -400,10 +422,13 @@ class MainChat : AppCompatActivity() {
         ceButton = findViewById(R.id.emergenciaButton)
         aSalvoButton = findViewById(R.id.estoyASalvoButton)
         messageEditText = findViewById(R.id.editTextText)
-        sendButton = findViewById(R.id.sendButton)
 
+        dividerButtonChat = findViewById(R.id.dividerBotonesChat)
+        linearLayoutTextoTresBtns = findViewById(R.id.linearLayoutTextoTresBtns)
+        botonesMsgs = findViewById(R.id.botonesMsgs)
 
-        puntosButton = findViewById(R.id.trespuntosButton)
+        puntosButton1 = findViewById(R.id.trespuntosButton1)
+        puntosButton2 = findViewById(R.id.trespuntosButton2)
         tecladoButton = findViewById(R.id.tecladoButton)
 
         wifiManager = this.applicationContext.getSystemService(WIFI_SERVICE) as WifiManager

@@ -48,16 +48,19 @@
     </FrameLayout>
 
     <View
-        android:id="@+id/divider2"
+        android:id="@+id/dividerBotonesChat"
         android:layout_width="match_parent"
         android:layout_height="2dp"
-        android:background="#2F2F2F" />
+        android:background="#2F2F2F"
+        android:visibility="visible" />
 
 
     <LinearLayout
+        android:id="@+id/linearLayoutTextoTresBtns"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:visibility="visible">
 
         <TextView
             android:id="@+id/textView18"
@@ -73,7 +76,7 @@
             android:layout_marginTop="5sp"/>
 
         <ImageButton
-            android:id="@+id/trespuntosButton"
+            android:id="@+id/trespuntosButton1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:contentDescription="@string/habilitar_teclado"
@@ -87,8 +90,10 @@
 
 
     <HorizontalScrollView
+        android:id="@+id/botonesMsgs"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:visibility="visible">
 
         <LinearLayout
             style="?android:attr/buttonBarStyle"
@@ -106,10 +111,10 @@
                 android:text="@string/CEmergencia"
                 android:background="@drawable/boton_respuestas"
                 android:textColor="@color/blanco_texto"
+                android:textAlignment="center"
                 android:fontFamily="@font/roboto"
-                android:textSize="10sp"
+                android:textSize="11sp"
                 android:textStyle="bold"
-                android:padding="10sp"
                 android:layout_marginHorizontal="3dp"
                 android:visibility="visible"/>
 
@@ -175,29 +180,6 @@
                 android:padding="10sp"
                 android:layout_marginHorizontal="3dp"
                 android:visibility="visible"/>
-
-            <EditText
-                android:id="@+id/editTextText"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:ems="15"
-                android:inputType="text"
-                android:hint="@string/mensaje"
-                android:textColor="@color/blanco_texto"
-                android:textColorHint="@color/hint"
-                android:fontFamily="@font/roboto"
-                android:visibility="gone"
-                android:imeOptions="actionDone"/>
-
-            <ImageButton
-                android:id="@+id/sendButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:contentDescription="@string/boton_de_enviar"
-                android:src="@drawable/send"
-                android:layout_gravity="end|center"
-                android:visibility="gone"/>
-
         </LinearLayout>
     </HorizontalScrollView>
 
@@ -207,21 +189,41 @@
         android:layout_height="2dp"
         android:background="#2F2F2F" />
 
-    <TextView
-        android:id="@+id/textView19"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/Si_ya_ra"
-        android:textColor="@color/blanco_texto"
-        android:textSize="12sp"
-        android:fontFamily="@font/roboto"
-        android:layout_marginTop="10sp"
-        android:layout_marginBottom="1dp"/>
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/textView19"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/Si_ya_ra"
+            android:textColor="@color/blanco_texto"
+            android:fontFamily="@font/roboto"
+            android:textSize="16sp"
+            android:textAlignment="textStart"
+            android:layout_marginBottom="5sp"
+            android:layout_weight="1"
+            android:layout_marginTop="5sp"/>
+
+        <ImageButton
+            android:id="@+id/trespuntosButton2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/habilitar_teclado"
+            app:srcCompat="@drawable/_puntos"
+            android:layout_gravity="center"
+            android:background="#00777777"
+            android:layout_marginEnd="15dp"
+            android:visibility="gone"/>
+
+    </LinearLayout>
 
     <Button
         android:id="@+id/estoyASalvoButton"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="62dp"
         android:text="@string/estoy_salvado"
         android:background="@drawable/main_button"
         android:textColor="@color/blanco_texto"
@@ -229,4 +231,19 @@
         android:textSize="20sp"
         android:textStyle="bold"
         android:layout_marginBottom="50dp"/>
+
+    <EditText
+        android:id="@+id/editTextText"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:ems="15"
+        android:inputType="text"
+        android:hint="@string/mensaje"
+        android:textColor="@color/blanco_texto"
+        android:background="@drawable/rounded_button"
+        android:padding="5dp"
+        android:textColorHint="@color/hint"
+        android:fontFamily="@font/roboto"
+        android:imeOptions="actionDone"
+        android:visibility="gone"/>
 </LinearLayout>
