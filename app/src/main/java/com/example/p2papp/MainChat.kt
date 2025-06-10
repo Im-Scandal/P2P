@@ -176,15 +176,12 @@ class MainChat : AppCompatActivity() {
         op1Button.setOnClickListener {
             sendMessageButtons(op1Button)
         }
-
         op2Button.setOnClickListener {
             sendMessageButtons(op2Button)
         }
-
         op3Button.setOnClickListener {
             sendMessageButtons(op3Button)
         }
-
         op4Button.setOnClickListener {
             sendMessageButtons(op4Button)
         }
