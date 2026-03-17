@@ -80,7 +80,7 @@
         <Button
             android:id="@+id/helpButton"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="62dp"
             android:text="@string/pedir_ayuda"
             android:background="@drawable/boton_rojo"
             android:textColor="@color/blanco_texto"

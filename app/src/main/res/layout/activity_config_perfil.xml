@@ -125,7 +125,7 @@
     <Button
         android:id="@+id/helpButton"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="62dp"
         android:layout_marginHorizontal="22dp"
         android:layout_marginTop="15dp"
         android:layout_marginBottom="15sp"
