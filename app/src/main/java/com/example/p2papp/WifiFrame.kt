@@ -6,11 +6,6 @@ class WifiFrame {
     var dateSend: String = "Fecha"
     var dateReceived: String = "FechaRecibida"
     var nameMultiHop: String = ""
-
-    fun getMessage() =
-        "\n ${nameUser}"+
-        "\n - Mensaje: ${sendMessage} ${if (nameMultiHop.isNotEmpty()) " (Retrasmitido por "+nameMultiHop+")" else ""}" +
-                "\n Hora de envio: ${dateSend}" +
-                "\n Hora de llegada: ${dateReceived}"
-
+    var latitude: Double? = null
+    var longitude: Double? = null
 }

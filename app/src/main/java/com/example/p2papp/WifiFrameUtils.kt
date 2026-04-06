@@ -27,6 +27,8 @@ class WifiFrameUtils {
             message["o"] = wifiFrame.sendMessage
             message["d"] = wifiFrame.dateSend
             message["h"] = idDevice
+            wifiFrame.latitude?.let { message["la"] = it.toString() }
+            wifiFrame.longitude?.let { message["lo"] = it.toString() }
 
             return message
         }
@@ -36,7 +38,9 @@ class WifiFrameUtils {
             messageMulti: String = "",
             id: String,
             dateSend: String,
-            nameUser: String
+            nameUser: String,
+            latitude: Double? = null,
+            longitude: Double? = null
         ): HashMap<String, String> {
             val message = HashMap<String, String>()
 
@@ -45,6 +49,8 @@ class WifiFrameUtils {
             message["g"] = deviceName.deviceName
             message["o"] = messageMulti
             message["h"] = id
+            latitude?.let { message["la"] = it.toString() }
+            longitude?.let { message["lo"] = it.toString() }
 
             return message
         }
@@ -57,6 +63,8 @@ class WifiFrameUtils {
                 dateReceived =  getFormattedDateTime()
                 deviceMultihop = message["g"]?: ""
                 deviceIdMultiHop = message["h"]?: ""
+                latitude = message["la"]?.toDoubleOrNull()
+                longitude = message["lo"]?.toDoubleOrNull()
             }
         }
 
@@ -71,6 +79,10 @@ class WifiFrameUtils {
                 sendMessage = sharedPreferences.getString(Constants.MESSAGE, "mensaje").toString()
                 dateSend = getFormattedDateTime()
 
+                val latStr = sharedPreferences.getString("LATITUDE", null)
+                val lonStr = sharedPreferences.getString("LONGITUDE", null)
+                latitude = latStr?.toDoubleOrNull()
+                longitude = lonStr?.toDoubleOrNull()
             }
         }
 

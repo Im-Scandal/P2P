@@ -10,5 +10,8 @@ data class ChatMessageEntity(
     val text: String,
     val timeSend: String,
     val timeReceived: String,
-    val isSentByMe: Boolean
+    val isSentByMe: Boolean,
+    val latitude: Double? = null,
+    val longitude: Double? = null,
+    val distance: String? = null
 )

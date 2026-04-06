@@ -6,7 +6,7 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 
 // Declara tu base de datos
-@Database(entities = [User::class, ChatMessageEntity::class], version = 2, exportSchema = false)
+@Database(entities = [User::class, ChatMessageEntity::class], version = 4, exportSchema = false)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun userDao(): UserDao
     abstract fun chatMessageDao(): MessagesDao

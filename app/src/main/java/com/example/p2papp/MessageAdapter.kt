@@ -18,6 +18,7 @@ class MessageAdapter(private val messages: MutableList<ChatMessage>) :
         val textRecieveMessage: TextView = view.findViewById(R.id.textRecieveMessage)
         val timeRecieveSend: TextView = view.findViewById(R.id.timeRecieveSend)
         val timeReceived: TextView = view.findViewById(R.id.timeReceived)
+        val distancia: TextView = view.findViewById(R.id.distancia)
 
         val textMessage: TextView = view.findViewById(R.id.textMessage)
         val timeSend: TextView = view.findViewById(R.id.timeSend)
@@ -50,6 +51,7 @@ class MessageAdapter(private val messages: MutableList<ChatMessage>) :
             holder.timeRecieveSend.text = message.timeSend
             holder.timeReceived.text = message.timeReceived
             holder.textRecieveName.text = message.nameUser
+            holder.distancia.text = message.distance
         }
     }
 

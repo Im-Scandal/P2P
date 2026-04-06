@@ -55,6 +55,13 @@
             android:textColor="@color/blanco_texto"
             android:textSize="11sp"
             android:text="@string/ejemplo"/>
+        <TextView
+            android:id="@+id/distancia"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/blanco_texto"
+            android:textSize="11sp"
+            android:text="@string/ejemplo"/>
     </LinearLayout>
 
     <!-- Espacio para alinear a derecha o izquierda -->
@@ -103,6 +110,14 @@
             android:text="@string/ejemplo"/>
         <TextView
             android:id="@+id/time"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/blanco_texto"
+            android:textSize="11sp"
+            android:text="@string/ejemplo"
+            android:visibility="invisible"/>
+        <TextView
+            android:id="@+id/distance"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="@color/blanco_texto"
