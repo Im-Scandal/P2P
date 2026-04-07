@@ -698,7 +698,7 @@ class MainChat : AppCompatActivity() {
                         isSentByMe = enviadoPorMi,
                         latitude = wifiFrame.latitude,
                         longitude = wifiFrame.longitude,
-                        distance = distanceResult
+                        distance = "Distancia: ${wifiFrame.distance}"
                     )
                 )
             }
