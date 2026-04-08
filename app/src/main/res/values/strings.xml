@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">Multisalto</string>
     <string name="multisaltos">Multisaltos</string>
+    <string name="Radar">Radar</string>
     <string name="welcome">"Bienvenido a Multisaltos"</string>
     <string name="resgister">"REGISTRARSE"</string>
     <string name="Prepare">¡Prepara tu comunicación en momentos críticos!</string>
