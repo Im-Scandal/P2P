@@ -137,23 +137,35 @@
         android:textStyle="bold" />
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="22dp"
+        android:id="@+id/linearLayout"
+        android:layout_width="350dp"
+        android:layout_height="74dp"
+        android:layout_marginBottom="30dp"
         android:background="@drawable/rounded_button"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:padding="5dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
 
+        <!-- Botón Biblioteca -->
+
+        <!-- Botón Radar -->
         <ImageButton
             android:id="@+id/bibliotecaButton"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="#00777777"
-            android:contentDescription="Botón de biblioteca"
-            android:paddingHorizontal="9dp"
-            android:paddingVertical="8dp"
-            app:srcCompat="@drawable/icono_biblioteca" />
+            android:layout_width="174dp"
+            android:layout_height="70dp"
+            android:background="@android:color/transparent"
+            android:contentDescription="Biblioteca"
+            android:src="@drawable/icono_biblioteca" />
+
+        <ImageButton
+            android:id="@+id/radarButton"
+            android:layout_width="174dp"
+            android:layout_height="70dp"
+            android:background="@android:color/transparent"
+            android:contentDescription="Radar"
+            android:src="@drawable/radaricon" />
 
     </LinearLayout>
-
 </LinearLayout>

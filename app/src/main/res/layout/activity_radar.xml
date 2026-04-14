@@ -65,30 +65,49 @@
             android:id="@+id/helpButton"
             android:layout_width="0dp"
             android:layout_height="62dp"
-            android:text="@string/pedir_ayuda"
             android:background="@drawable/boton_rojo"
+            android:fontFamily="@font/verdanabold"
+            android:text="@string/pedir_ayuda"
             android:textColor="@color/blanco_texto"
             android:textSize="20sp"
-            android:fontFamily="@font/verdanabold"
             android:textStyle="bold"
-            app:layout_constraintBottom_toTopOf="@id/bibliotecaButton"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/linearLayout"
             app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginBottom="12dp"/>
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView11"
+            app:layout_constraintVertical_bias="0.922" />
 
-        <!-- Botón Biblioteca -->
-        <ImageButton
-            android:id="@+id/bibliotecaButton"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:contentDescription="Botón de biblioteca"
-            app:srcCompat="@drawable/icono_biblioteca"
+        <LinearLayout
+            android:id="@+id/linearLayout"
+            android:layout_width="309dp"
+            android:layout_height="74dp"
+            android:layout_marginBottom="30dp"
             android:background="@drawable/rounded_button"
-            android:paddingHorizontal="9dp"
-            android:paddingVertical="8dp"
+            android:orientation="horizontal"
+            android:padding="5dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginBottom="30dp"/>
+            app:layout_constraintStart_toStartOf="parent">
 
+                <!-- Botón Biblioteca -->
+
+                <!-- Botón Radar -->
+                <ImageButton
+                    android:id="@+id/bibliotecaButton"
+                    android:layout_width="150dp"
+                    android:layout_height="70dp"
+                    android:background="@android:color/transparent"
+                    android:contentDescription="Biblioteca"
+                    android:src="@drawable/icono_biblioteca" />
+
+                <ImageButton
+                    android:id="@+id/radarButton"
+                    android:layout_width="150dp"
+                    android:layout_height="70dp"
+                    android:background="@android:color/transparent"
+                    android:contentDescription="Radar"
+                    android:src="@drawable/radaricon" />
+
+        </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
