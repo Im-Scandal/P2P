@@ -70,6 +70,7 @@ class MainChat : AppCompatActivity() {
     private lateinit var dividerButtonChat: View
     private lateinit var linearLayoutTextoTresBtns: View
     private lateinit var botonesMsgs: View
+    private lateinit var radarButton: ImageButton
 
     private var isSending = false
 
@@ -106,6 +107,7 @@ class MainChat : AppCompatActivity() {
     }
 
     fun initialWork() {
+        radarButton = findViewById(R.id.radarButton)
         recyclerView = findViewById(R.id.messageRecyclerView)
         op1Button = findViewById(R.id.op1Button)
         op2Button = findViewById(R.id.op2Button)
@@ -115,6 +117,7 @@ class MainChat : AppCompatActivity() {
         aSalvoButton = findViewById(R.id.estoyASalvoButton)
         messageEditText = findViewById(R.id.editTextText)
         borrarButton = findViewById(R.id.borrarButton)
+
 
         dividerButtonChat = findViewById(R.id.dividerBotonesChat)
         linearLayoutTextoTresBtns = findViewById(R.id.linearLayoutTextoTresBtns)
@@ -202,6 +205,10 @@ class MainChat : AppCompatActivity() {
             closeButton.setOnClickListener {
                 rootView.removeView(overlayView)
             }
+        }
+        radarButton.setOnClickListener {
+            val intent = Intent(this, RadarActivity::class.java)
+            startActivity(intent)
         }
 
         op1Button.setOnClickListener { sendMessageWithLocation(op1Button.text.toString(), op1Button) }
