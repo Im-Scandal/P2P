@@ -107,7 +107,7 @@
                     android:layout_height="70dp"
                     android:background="@android:color/transparent"
                     android:contentDescription="Radar"
-                    android:src="@drawable/radaricon" />
+                    android:src="@drawable/radar_selected" />
 
         </LinearLayout>
 
