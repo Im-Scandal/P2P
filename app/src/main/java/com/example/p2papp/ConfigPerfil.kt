@@ -29,6 +29,7 @@ class ConfigPerfil : AppCompatActivity() {
     private lateinit var contactButton: Button
     private lateinit var helpButton: Button
     private lateinit var bibliotecaButton: ImageButton
+    private lateinit var radarImageButton: ImageButton
 
     companion object {
         var optionCong: Boolean = false
@@ -77,6 +78,7 @@ class ConfigPerfil : AppCompatActivity() {
             val intent = Intent(this, Biblioteca::class.java)
             startActivity(intent)
         }
+
         helpButton.setOnClickListener{
             val overlayView = LayoutInflater.from(this@ConfigPerfil).inflate(R.layout.confirmacion_chat, null)
 
