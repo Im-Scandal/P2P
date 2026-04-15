@@ -14,6 +14,7 @@ class MainMenu : AppCompatActivity() {
     private lateinit var ayudaButton: Button
     private lateinit var perfilButton: ImageButton
     private lateinit var bibliotecaButton: ImageButton
+    private lateinit var radarButton: ImageButton
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -22,6 +23,7 @@ class MainMenu : AppCompatActivity() {
         ayudaButton = findViewById(R.id.helpButton)
         perfilButton = findViewById(R.id.perfilButton)
         bibliotecaButton = findViewById(R.id.bibliotecaButton)
+        radarButton = findViewById(R.id.radarButton)
 
         setOnListener()
 
@@ -72,6 +74,10 @@ class MainMenu : AppCompatActivity() {
         }
         bibliotecaButton.setOnClickListener{
             val intent = Intent(this, Biblioteca::class.java)
+            startActivity(intent)
+        }
+        radarButton.setOnClickListener {
+            val intent = Intent(this, RadarActivity::class.java)
             startActivity(intent)
         }
     }
