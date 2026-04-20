@@ -106,7 +106,8 @@
             android:padding="5dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent">
+            app:layout_constraintStart_toStartOf="parent"
+            android:gravity="center">
 
                 <!-- Botón Biblioteca -->
 
@@ -117,7 +118,8 @@
                     android:layout_height="70dp"
                     android:background="@android:color/transparent"
                     android:contentDescription="Biblioteca"
-                    android:src="@drawable/icono_biblioteca" />
+                    android:src="@drawable/icono_biblioteca"
+                    android:layout_gravity="center"/>
 
                 <ImageButton
                     android:id="@+id/radarButton"
@@ -125,7 +127,8 @@
                     android:layout_height="70dp"
                     android:background="@android:color/transparent"
                     android:contentDescription="Radar"
-                    android:src="@drawable/radaricon" />
+                    android:src="@drawable/radaricon"
+                    android:layout_gravity="center"/>
 
         </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
