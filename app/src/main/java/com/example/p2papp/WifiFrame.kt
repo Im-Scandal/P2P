@@ -9,4 +9,5 @@ class WifiFrame {
     var latitude: Double? = null
     var longitude: Double? = null
     var distance: String? = null
+    var type: String = "CHAT"
 }

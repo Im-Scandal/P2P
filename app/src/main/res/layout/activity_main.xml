@@ -11,7 +11,8 @@
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:layout_gravity="center">
 
         <ImageButton
             android:id="@+id/borrarButton"
@@ -274,5 +275,17 @@
         android:textColorHint="@color/hint"
         android:fontFamily="@font/roboto"
         android:imeOptions="actionDone"
+        android:maxLength="200"
+        android:visibility="gone"/>
+
+    <TextView
+        android:id="@+id/charCounter"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:paddingEnd="8dp"
+        android:text="0/200"
+        android:textSize="12sp"
+        android:textColor="@color/blanco_texto"
         android:visibility="gone"/>
 </LinearLayout>

@@ -40,11 +40,14 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
-import kotlin.math.atan2
+import kotlin.math .atan2
 import kotlin.math.cos
 import kotlin.math.pow
 import kotlin.math.sin
 import kotlin.math.sqrt
+import android.text.Editable
+import android.text.TextWatcher
+import android.graphics.Color
 
 
 class MainChat : AppCompatActivity() {
@@ -66,6 +69,7 @@ class MainChat : AppCompatActivity() {
     private lateinit var tecladoButton: ImageButton
     private lateinit var messageEditText: EditText
     private lateinit var borrarButton: ImageButton
+    private lateinit var charCounter: TextView
 
     private lateinit var dividerButtonChat: View
     private lateinit var linearLayoutTextoTresBtns: View
@@ -117,6 +121,7 @@ class MainChat : AppCompatActivity() {
         aSalvoButton = findViewById(R.id.estoyASalvoButton)
         messageEditText = findViewById(R.id.editTextText)
         borrarButton = findViewById(R.id.borrarButton)
+        charCounter = findViewById(R.id.charCounter)
 
 
         dividerButtonChat = findViewById(R.id.dividerBotonesChat)
@@ -132,6 +137,30 @@ class MainChat : AppCompatActivity() {
         channel = manager.initialize(this, mainLooper, null)
 
         WifiFrameUtils.getUUIDWiFiFrame(this)
+
+        messageEditText.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+                // No necesitamos hacer nada antes de que cambie
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                // Obtenemos la longitud actual
+                val currentLength = s?.length ?: 0
+
+                // Actualizamos el texto del contador
+                charCounter.text = "$currentLength/200"
+
+                // Pista visual de advertencia: se pone rojo al llegar a 200
+                if (currentLength >= 200) {
+                    charCounter.setTextColor(Color.RED)
+                } else {
+                    charCounter.setTextColor(Color.WHITE)
+                }
+            }
+
+            override fun afterTextChanged(s: Editable?) {
+            }
+        })
     }
 
     private fun loadUserNameFromDatabase(onLoaded: () -> Unit) {
@@ -253,6 +282,7 @@ class MainChat : AppCompatActivity() {
                 botonesMsgs.visibility = View.GONE
                 messageEditText.visibility = View.VISIBLE
                 puntosButton2.visibility = View.VISIBLE
+                charCounter.visibility = View.VISIBLE
                 aSalvoButton.setBottomMargin(12)
                 tecladoButton.setImageResource(R.drawable.group_72)
 
@@ -266,6 +296,7 @@ class MainChat : AppCompatActivity() {
                 botonesMsgs.visibility = View.VISIBLE
                 messageEditText.visibility = View.GONE
                 puntosButton2.visibility = View.GONE
+                charCounter.visibility = View.GONE
                 aSalvoButton.setBottomMargin(50)
                 tecladoButton.setImageResource(R.drawable.group_72__1_)
 
@@ -571,13 +602,13 @@ class MainChat : AppCompatActivity() {
 
             if (!messageExist){
                 deviceSame.message.add(wifiFrame)
-                addMessageToRecyclerView(wifiFrame)}
+                onWifiFrameReceived(wifiFrame)}
 
         } else {
             val message = MessageModel(record, mutableListOf(wifiFrame), WifiFrameUtils.deviceIdMultiHop)
             deviceArray.add(message)
 
-            addMessageToRecyclerView(wifiFrame)
+            onWifiFrameReceived(wifiFrame)
         }
 
         multihop(WifiFrameUtils.deviceIdMultiHop)
@@ -638,16 +669,27 @@ class MainChat : AppCompatActivity() {
 
             if (!messageExist) {
                 deviceSame.message.add(wifiFrame)
-                addMessageToRecyclerView(wifiFrame)
+                onWifiFrameReceived(wifiFrame)
             }
 
         } else {
             val device = MessageModel(record, mutableListOf(wifiFrame), WifiFrameUtils.deviceIdMultiHop)
             deviceArray.add(device)
 
-            addMessageToRecyclerView(wifiFrame)
+            onWifiFrameReceived(wifiFrame)
         }
 
+    }
+
+    fun onWifiFrameReceived(wifiFrame: WifiFrame) {
+        if (wifiFrame.type == "CHAT") {
+            // Es un mensaje normal. Lo muestras en pantalla y se guarda en Room.
+            addMessageToRecyclerView(wifiFrame)
+
+        } else if (wifiFrame.type == "RADAR") {
+            // Es un ping de ubicación.
+            //updateRadarWithNewLocation(wifiFrame)
+        }
     }
 
     private fun addMessageToRecyclerView(wifiFrame: WifiFrame) {
@@ -669,7 +711,8 @@ class MainChat : AppCompatActivity() {
 
             // Lógica de Umbral: Si está a menos de 50m, consideramos que está en el mismo lugar
             when {
-                distanceInMeters < 50 -> "Muy cerca (mismo lugar)"
+                distanceInMeters < 5 -> "Muy cerca (mismo lugar)"
+                distanceInMeters < 10 -> "Cerca"
                 distanceInMeters < 1000 -> "$distanceInMeters m"
                 else -> "%.2f km".format(d)
             }
@@ -745,6 +788,7 @@ class MainChat : AppCompatActivity() {
         }
     }
 
+    // Formula de Harvesine
     fun calculateDistance(lat1: Double, lon1: Double, lat2: Double, lon2: Double): Double {
         val earthRadius = 6371.0 // Radio de la Tierra en kilómetros
 
@@ -758,6 +802,22 @@ class MainChat : AppCompatActivity() {
         val c = 2 * atan2(sqrt(a), sqrt(1 - a))
 
         return earthRadius * c // Devuelve la distancia en kilómetros
+    }
+
+    // Retorna un Pair donde el primer valor es X (Este/Oeste) y el segundo es Y (Norte/Sur) en metros
+    fun getRelativeCartesian(myLat: Double, myLon: Double, targetLat: Double, targetLon: Double): Pair<Double, Double> {
+        val earthRadius = 6371000.0 // Radio de la Tierra en metros
+
+        // Convertir diferencias a radianes
+        val dLat = Math.toRadians(targetLat - myLat)
+        val dLon = Math.toRadians(targetLon - myLon)
+        val myLatRad = Math.toRadians(myLat)
+
+        // Cálculo de X e Y en metros
+        val x = earthRadius * dLon * cos(myLatRad)
+        val y = earthRadius * dLat
+
+        return Pair(x, y)
     }
 
 }
