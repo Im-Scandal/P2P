@@ -429,6 +429,19 @@ class MainChat : AppCompatActivity() {
 
         val record = WifiFrameUtils.wifiFrameToHashMap(info)
 
+        val payloadSize = calculatePayloadSizeBytes(record)
+
+        // Log de depuración (Debug) para registrar cada envío
+        Log.d("TEST_ESTABILIDAD", "Enviando paquete... Tamaño de carga útil: $payloadSize bytes")
+
+        // Validación del límite estricto de 255 bytes
+        if (payloadSize > 255) {
+            Log.e("TEST_ESTABILIDAD", "¡ERROR DE CASO DE BORDE! El paquete superó el límite: $payloadSize bytes")
+        } else {
+            Log.i("TEST_ESTABILIDAD", "Éxito: El paquete cumple con el protocolo de red.")
+        }
+
+
         // Service information.  Pass it an instance name, service type
         val serviceInfo =
             WifiP2pDnsSdServiceInfo.newInstance("_networkChat", "_chatApp._tcp", record)
@@ -629,6 +642,18 @@ class MainChat : AppCompatActivity() {
         )
 
 
+        val payloadSize = calculatePayloadSizeBytes(record)
+
+        // Log de depuración (Debug) para registrar cada envío
+        Log.d("TEST_ESTABILIDAD", "RE enviando paquete... Tamaño de carga útil: $payloadSize bytes")
+
+        // Validación del límite estricto de 255 bytes
+        if (payloadSize > 255) {
+            Log.e("TEST_ESTABILIDAD", "¡ERROR DE CASO DE BORDE! El paquete superó el límite: $payloadSize bytes")
+        } else {
+            Log.i("TEST_ESTABILIDAD", "Éxito: El paquete cumple con el protocolo de red.")
+        }
+
         // Service information.  Pass it an instance name, service type
         val serviceInfo =
             WifiP2pDnsSdServiceInfo.newInstance("_networkChat", "_chatApp._tcp", record)
@@ -711,8 +736,8 @@ class MainChat : AppCompatActivity() {
 
             // Lógica de Umbral: Si está a menos de 50m, consideramos que está en el mismo lugar
             when {
-                distanceInMeters < 5 -> "Muy cerca (mismo lugar)"
-                distanceInMeters < 10 -> "Cerca"
+                distanceInMeters < 5 -> "Muy cerca $distanceInMeters"
+                distanceInMeters < 10 -> "Cerca $distanceInMeters"
                 distanceInMeters < 1000 -> "$distanceInMeters m"
                 else -> "%.2f km".format(d)
             }
@@ -818,6 +843,30 @@ class MainChat : AppCompatActivity() {
         val y = earthRadius * dLat
 
         return Pair(x, y)
+    }
+
+    private fun calculatePayloadSizeBytes(record: HashMap<String, String>): Int {
+        var totalBytes = 0
+        Log.d("TEST_ESTABILIDAD", "--- Inicio de Desglose de Paquete DNS-SD ---")
+
+        for ((key, value) in record) {
+            val entryString = "$key=$value"
+            val entrySize = entryString.toByteArray(Charsets.UTF_8).size
+
+            // 1. Log del peso individual de cada campo
+            Log.d("TEST_ESTABILIDAD", "Campo: [$key] -> $entrySize bytes")
+
+            // 2. Validación estricta individual de cada par
+            if (entrySize > 255) {
+                Log.e("TEST_ESTABILIDAD", "¡ERROR! El campo [$key] tiene $entrySize bytes")
+            }
+
+            // Suma total del paquete
+            totalBytes += entrySize
+        }
+
+        Log.d("TEST_ESTABILIDAD", "--- Fin de Desglose ---")
+        return totalBytes
     }
 
 }

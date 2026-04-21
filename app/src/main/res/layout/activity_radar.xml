@@ -114,6 +114,7 @@
         </LinearLayout>
 
         <RelativeLayout
+            android:id="@+id/radarContainer"
             android:layout_width="412dp"
             android:layout_height="412dp"
             android:gravity="center"
@@ -159,8 +160,8 @@
 
                 <ImageView
                     android:id="@+id/circle4"
-                    android:layout_width="310dp"
-                    android:layout_height="307dp"
+                    android:layout_width="300dp"
+                    android:layout_height="300dp"
                     android:layout_centerInParent="true"
                     android:src="@drawable/ellipse_5" />
 
