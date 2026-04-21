@@ -708,12 +708,12 @@ class MainChat : AppCompatActivity() {
 
     fun onWifiFrameReceived(wifiFrame: WifiFrame) {
         if (wifiFrame.type == "CHAT") {
-            // Es un mensaje normal. Lo muestras en pantalla y se guarda en Room.
             addMessageToRecyclerView(wifiFrame)
 
         } else if (wifiFrame.type == "RADAR") {
-            // Es un ping de ubicación.
-            //updateRadarWithNewLocation(wifiFrame)
+            CoroutineScope(Dispatchers.IO).launch {
+                RadarEvent.emitRadarPing(wifiFrame)
+            }
         }
     }
 

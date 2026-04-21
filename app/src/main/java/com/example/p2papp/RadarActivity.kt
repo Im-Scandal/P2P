@@ -7,6 +7,10 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Location
 import android.location.LocationManager
+import android.net.wifi.WifiManager
+import android.net.wifi.p2p.WifiP2pManager
+import android.net.wifi.p2p.nsd.WifiP2pDnsSdServiceInfo
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.util.TypedValue
@@ -24,6 +28,9 @@ import androidx.lifecycle.lifecycleScope
 import com.example.p2papp.Constants.TAG_WIFI
 import kotlinx.coroutines.*
 import kotlin.math.cos
+import kotlinx.coroutines.flow.collectLatest
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.repeatOnLifecycle
 
 class RadarActivity : AppCompatActivity() {
 
@@ -37,6 +44,11 @@ class RadarActivity : AppCompatActivity() {
     private lateinit var radarContainer: RelativeLayout // Contenedor del radar
 
     private lateinit var overlayManager: OverlayManager
+    private var info: WifiFrame = WifiFrame()
+    private lateinit var wifiManager: WifiManager
+    private lateinit var manager: WifiP2pManager
+    private lateinit var channel: WifiP2pManager.Channel
+
 
     // Mapa para evitar duplicar iconos del mismo dispositivo. Clave: Nombre del usuario, Valor: ImageView
     private val activeDevicesOnRadar = mutableMapOf<String, ImageView>()
@@ -54,6 +66,14 @@ class RadarActivity : AppCompatActivity() {
         // Cargamos el usuario ANTES de empezar a transmitir
         loadUserNameFromDatabase {
             Log.d(TAG_WIFI, "Usuario cargado: $userName")
+        }
+
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                RadarEvent.radarPings.collect { wifiFrame ->
+                    handleIncomingRadarPing(wifiFrame)
+                }
+            }
         }
     }
 
@@ -101,14 +121,13 @@ class RadarActivity : AppCompatActivity() {
                             longitude = myLon
                         }
 
-                        // Llamas a tu función de red para enviar el paquete
                         sendWifiFrameOverNetwork(radarFrame)
                     }
                 } else {
                     Log.e(TAG_WIFI, "No se pudo obtener la ubicación (Permisos faltantes)")
                 }
 
-                // Intervalo de 60 segundos (ajustado según lo conversado para ahorrar batería)
+                // Intervalo de 60 segundos
                 delay(60000)
             }
         }
@@ -116,8 +135,6 @@ class RadarActivity : AppCompatActivity() {
 
     // --- LÓGICA DE DIBUJO DEL RADAR ---
 
-    // Esta es la función que debes llamar desde tu WifiP2pManager / Receiver
-    // cuando llegue un paquete de tipo "RADAR" o "CHAT" con coordenadas.
     fun handleIncomingRadarPing(wifiFrame: WifiFrame) {
         val targetLat = wifiFrame.latitude
         val targetLon = wifiFrame.longitude
@@ -135,7 +152,7 @@ class RadarActivity : AppCompatActivity() {
                 // 1. Calcular distancia en metros (X, Y)
                 val (xMeters, yMeters) = getRelativeCartesian(myLat, myLon, targetLat, targetLon)
 
-                // 2. Dibujar en la interfaz (debe ser en el hilo principal)
+                // 2. Dibujar en la interfaz
                 runOnUiThread {
                     addOrUpdateDeviceOnRadar(xMeters, yMeters, deviceName)
                 }
@@ -144,7 +161,7 @@ class RadarActivity : AppCompatActivity() {
     }
 
     private fun addOrUpdateDeviceOnRadar(xMeters: Double, yMeters: Double, deviceName: String) {
-        // Escala: 1 metro = 12 dp (basado en que 5m = 60dp de radio)
+        // Escala: 1 metro = 12 dp
         val scaleDpPerMeter = 12.0
         val xDp = xMeters * scaleDpPerMeter
         val yDp = yMeters * scaleDpPerMeter
@@ -216,7 +233,11 @@ class RadarActivity : AppCompatActivity() {
         helpButton = findViewById(R.id.helpButton)
         perfilButton = findViewById(R.id.perfilButton)
         bibliotecaButton = findViewById(R.id.bibliotecaButton)
-        radarContainer = findViewById(R.id.radarContainer) // Vinculado al XML
+        radarContainer = findViewById(R.id.radarContainer)
+
+        wifiManager = this.applicationContext.getSystemService(WIFI_SERVICE) as WifiManager
+        manager = getSystemService(WIFI_P2P_SERVICE) as WifiP2pManager
+        channel = manager.initialize(this, mainLooper, null)
     }
 
     private fun setOnListener() {
@@ -253,6 +274,38 @@ class RadarActivity : AppCompatActivity() {
 
     // Función temporal para que el código compile. Reemplázala con tu lógica real de envío WiFi Direct.
     private fun sendWifiFrameOverNetwork(frame: WifiFrame) {
-        Log.d(TAG_WIFI, "Simulando envío de paquete RADAR...")
+//        Log.d(TAG_WIFI, "Simulando envío de paquete RADAR...")
+        info = WifiFrameUtils.buildMyWiFiFrame(this, userName)
+
+        val record = WifiFrameUtils.wifiFrameToHashMap(info)
+
+        val serviceInfo =
+            WifiP2pDnsSdServiceInfo.newInstance("_networkChat", "_chatApp._tcp", record)
+
+        if (ActivityCompat.checkSelfPermission(
+                this,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED || (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU
+                    && ActivityCompat.checkSelfPermission(
+                this,
+                Manifest.permission.NEARBY_WIFI_DEVICES
+            ) != PackageManager.PERMISSION_GRANTED
+                    )
+        ) {
+
+            Toast.makeText(this, "Faltan pemisos 1", Toast.LENGTH_SHORT).show()
+            return
+        }
+        manager.addLocalService(channel, serviceInfo, object : WifiP2pManager.ActionListener {
+            override fun onSuccess() {
+                Log.d("TAG_RADAR", "Envio de paquete exitoso")
+            }
+
+            override fun onFailure(arg0: Int) {
+                // Command failed.  Check for P2P_UNSUPPORTED, ERROR, or BUSY
+                Log.e("TAG_RADAR", "Fallo en envio de paquete")
+                Toast.makeText(this@RadarActivity, "Fallo en envio de paquete", Toast.LENGTH_SHORT).show()
+            }
+        })
     }
 }

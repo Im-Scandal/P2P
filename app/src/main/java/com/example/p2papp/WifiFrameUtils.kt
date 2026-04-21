@@ -7,8 +7,6 @@ import java.util.UUID
 
 class WifiFrameUtils {
 
-
-
     companion object {
 
         var deviceMultihop = ""
