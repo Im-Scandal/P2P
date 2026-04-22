@@ -48,6 +48,10 @@ import kotlin.math.sqrt
 import android.text.Editable
 import android.text.TextWatcher
 import android.graphics.Color
+import androidx.annotation.RequiresPermission
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 
 
 class MainChat : AppCompatActivity() {
@@ -79,7 +83,6 @@ class MainChat : AppCompatActivity() {
     private var isSending = false
 
     //Variables para WiFi Direct
-    private lateinit var wifiManager: WifiManager
     private lateinit var manager: WifiP2pManager
     private lateinit var channel: WifiP2pManager.Channel
 
@@ -97,17 +100,30 @@ class MainChat : AppCompatActivity() {
 
         initialWork()
         loadUserNameFromDatabase{
-            addServiceRequest()
-            startDiscover()
+            NetworkManager.setup(this)
+            NetworkManager.addServiceRequest(this)
+            NetworkManager.startDiscover(this)
         }
 
-        sharedPreferences = getSharedPreferences(Constants.PREFERENCES_KEY, MODE_PRIVATE)
 
+//        NetworkManager.startDiscovery()
+
+        sharedPreferences = getSharedPreferences(Constants.PREFERENCES_KEY, MODE_PRIVATE)
 
         messageAdapter = MessageAdapter(messages)
 
         recyclerView.adapter = messageAdapter
         exqListener()
+
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                RadarEvent.radarPings.collect { wifiFrame ->
+                    if (wifiFrame.type == "CHAT") {
+                        addMessageToRecyclerView(wifiFrame)
+                    }
+                }
+            }
+        }
     }
 
     fun initialWork() {
@@ -132,7 +148,6 @@ class MainChat : AppCompatActivity() {
         puntosButton2 = findViewById(R.id.trespuntosButton2)
         tecladoButton = findViewById(R.id.tecladoButton)
 
-        wifiManager = this.applicationContext.getSystemService(WIFI_SERVICE) as WifiManager
         manager = getSystemService(WIFI_P2P_SERVICE) as WifiP2pManager
         channel = manager.initialize(this, mainLooper, null)
 
@@ -348,14 +363,17 @@ class MainChat : AppCompatActivity() {
                         if (location != null) {
                             executeSend(msg, location.latitude, location.longitude, button)
                         } else {
+                            Log.e("ERROR_LOLA", "No se pudo obtener la ubicación")
                             executeSend(msg, null, null, button) // Fallback sin ubicación
                         }
                     }
                 } else {
+                    Log.e("ERROR_LOLA", "No se pudo obtener la ubicación BuildVersion < VersionCodes")
                     executeSend(msg, null, null, button) // Fallback sin ubicación
                 }
             }
         } else {
+            Log.e("ERROR_LOLA", "No se pudo obtener la ubicación (Permisos faltantes)")
             executeSend(msg, null, null, button) // Envío normal si no hay permisos
         }
     }
@@ -385,7 +403,6 @@ class MainChat : AppCompatActivity() {
             messages.add(newMsg)
             messageAdapter.notifyDataSetChanged()
             recyclerView.smoothScrollToPosition(messages.size - 1)
-            Toast.makeText(applicationContext, "Mensaje enviado", Toast.LENGTH_SHORT).show()
         }
 
         // 3. Guardar en Room
@@ -405,9 +422,8 @@ class MainChat : AppCompatActivity() {
         }
 
         // 4. Reiniciar servicio WiFi Direct
-        clearLocalServices {
-            startRegistration()
-        }
+//        NetworkManager.clearLocalServices {
+        startRegistration()
 
         // 5. Restaurar botón
         Handler(Looper.getMainLooper()).postDelayed({
@@ -425,7 +441,7 @@ class MainChat : AppCompatActivity() {
 
     private fun startRegistration() {
 
-        info = WifiFrameUtils.buildMyWiFiFrame(this, userName)
+        info = WifiFrameUtils.buildMyWiFiFrame(this, userName, "CHAT")
 
         val record = WifiFrameUtils.wifiFrameToHashMap(info)
 
@@ -456,266 +472,21 @@ class MainChat : AppCompatActivity() {
             ) != PackageManager.PERMISSION_GRANTED
                     )
         ) {
-
-            Toast.makeText(this, "Faltan pemisos 1", Toast.LENGTH_SHORT).show()
+            Log.e("TEST_ESTABILIDAD", "Faltan permisos")
             return
         }
         manager.addLocalService(channel, serviceInfo, object : WifiP2pManager.ActionListener {
             override fun onSuccess() {
-
+                Toast.makeText(applicationContext, "Mensaje enviado", Toast.LENGTH_SHORT).show()
+                Log.d(TAG_WIFI, "Mensaje de chat publicado en DNS-SD")
             }
 
             override fun onFailure(arg0: Int) {
-                // Command failed.  Check for P2P_UNSUPPORTED, ERROR, or BUSY
-                Toast.makeText(this@MainChat, "Fail local service", Toast.LENGTH_SHORT).show()
+                Log.e(TAG_WIFI, "Fallo al publicar mensaje: $arg0")
             }
         })
     }
 
-    private fun addServiceRequest() {
-        val serviceRequest = WifiP2pDnsSdServiceRequest.newInstance(
-            "_networkChat",
-            "_chatApp._tcp"
-        )
-
-        manager.addServiceRequest(
-            channel,
-            serviceRequest,
-            object : WifiP2pManager.ActionListener {
-                override fun onSuccess() {
-                    discoverListener()
-                }
-
-                override fun onFailure(code: Int) {
-                    Toast.makeText(this@MainChat, "Failure addService", Toast.LENGTH_SHORT)
-                        .show()
-                    Log.e(TAG_WIFI, "Add service request has failed. $code")
-                }
-            }
-        )
-    }
-
-    private val executor = Executors.newSingleThreadScheduledExecutor()
-    private var task: Runnable? = null
-    private var interval: Long = 10000
-    private val devicesWithReceivedMessages: MutableSet<String> = mutableSetOf()
-
-
-    fun startDiscover() {
-        // Crea un nuevo Runnable que se ejecutará después de cada intervalo
-        task = Runnable {
-            discoverServices()
-            clearReceivedDevicesAfterDelay()
-
-        }
-        // Programa el primer ciclo del temporizador con un retraso inicial de 0 y un intervalo especificado
-        executor.scheduleWithFixedDelay(task!!, 0, interval, TimeUnit.MILLISECONDS)
-    }
-
-    private fun discoverServices() {
-        if (ActivityCompat.checkSelfPermission(
-                this,
-                Manifest.permission.ACCESS_FINE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED ||
-            (Build.VERSION.SDK_INT > Build.VERSION_CODES.S && ActivityCompat.checkSelfPermission(
-                this,
-                Manifest.permission.NEARBY_WIFI_DEVICES
-            ) != PackageManager.PERMISSION_GRANTED)
-        ) {
-
-            Toast.makeText(this, "Faltan pemisos 4", Toast.LENGTH_SHORT).show()
-            return
-        }
-        else { manager.discoverServices(
-            channel,
-            object : WifiP2pManager.ActionListener {
-                override fun onSuccess() {
-//                    Toast.makeText(this@MainChat, "success discover", Toast.LENGTH_SHORT).show()
-                }
-
-                override fun onFailure(code: Int) {
-//                    Toast.makeText(this@MainChat, "Failure discover", Toast.LENGTH_SHORT).show()
-                    Log.e(TAG_WIFI, "Discover services has failed. $code")
-                }
-            }
-        )}
-    }
-
-    private fun discoverListener() {
-
-        val txtListener = WifiP2pManager.DnsSdTxtRecordListener { fullDomain, record, srcDevice ->
-            Log.d(TAG, "DnsSdTxtRecord available -$record")
-            val wifiFrame = WifiFrameUtils.hashMapToWiFiFrame(record)
-            if (record.isEmpty() || srcDevice.deviceName == "" || WifiFrameUtils.deviceIdMultiHop == WifiFrameUtils.idDevice || wifiFrame.sendMessage.isEmpty()) return@DnsSdTxtRecordListener
-
-            if (WifiFrameUtils.deviceMultihop.isNotEmpty()) {
-                val deviceP2p = WifiP2pDevice().apply {
-                    deviceName = WifiFrameUtils.deviceMultihop
-                }
-                wifiFrame.apply {
-                    nameMultiHop = srcDevice.deviceName
-                }
-                addDeviceMultiHop(deviceP2p, wifiFrame)
-            } else {
-                addDeviceList(srcDevice, wifiFrame)
-            }
-
-        }
-
-        val servListener =
-            WifiP2pManager.DnsSdServiceResponseListener { instanceName, registrationType, resourceType ->
-                Log.d("chat", "BonjourService available! instanceName: $instanceName")
-                Log.d("chat", "BonjourService available! registrationType: $registrationType")
-                Log.d("chat", "BonjourService available! resourceType: $resourceType")
-            }
-
-
-        manager.setDnsSdResponseListeners(channel, servListener, txtListener)
-    }
-
-    private fun clearLocalServices(onSuccessCallback: () -> Unit) {
-        manager.clearLocalServices(channel,
-            object : WifiP2pManager.ActionListener {
-                override fun onSuccess() {
-                    Log.d("success", "clearLocalServices result: Success")
-//                    Toast.makeText(
-//                        this@MainChat,
-//                        "Success clear local services",
-//                        Toast.LENGTH_SHORT
-//                    ).show()
-                    onSuccessCallback.invoke()
-                }
-
-                override fun onFailure(code: Int) {
-                    Log.e("Failed", "clearLocalServices result:  Failure with code $code")
-                    Toast.makeText(
-                        this@MainChat,
-                        "Failed to clear local services: $code",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
-            })
-    }
-
-    private fun clearReceivedDevicesAfterDelay() {
-        // Limpia el conjunto de dispositivos después de cierto tiempo
-        executor.schedule({
-            devicesWithReceivedMessages.clear()
-        }, 500, TimeUnit.MILLISECONDS)
-    }
-
-    private fun addDeviceList(record: WifiP2pDevice, wifiFrame: WifiFrame) {
-
-        val deviceSame = deviceArray.firstOrNull { it.device.deviceName == record.deviceName }
-
-        if (deviceSame != null) {
-            val messageExist = deviceSame.message.any {
-                it.dateSend == wifiFrame.dateSend
-            }
-
-            if (!messageExist){
-                deviceSame.message.add(wifiFrame)
-                onWifiFrameReceived(wifiFrame)}
-
-        } else {
-            val message = MessageModel(record, mutableListOf(wifiFrame), WifiFrameUtils.deviceIdMultiHop)
-            deviceArray.add(message)
-
-            onWifiFrameReceived(wifiFrame)
-        }
-
-        multihop(WifiFrameUtils.deviceIdMultiHop)
-    }
-
-    private fun multihop(deviceId: String) {
-
-        val deviceMulti = deviceArray.first {
-            it.id == deviceId
-        }
-
-        val record = WifiFrameUtils.wifiFrameToHashMapMultihop(
-            deviceMulti.device,
-            deviceMulti.message.last().sendMessage,
-            deviceMulti.id,
-            deviceMulti.message.last().dateSend,
-            deviceMulti.message.last().nameUser // Aquí pasas el nombre del emisor original
-        )
-
-
-        val payloadSize = calculatePayloadSizeBytes(record)
-
-        // Log de depuración (Debug) para registrar cada envío
-        Log.d("TEST_ESTABILIDAD", "RE enviando paquete... Tamaño de carga útil: $payloadSize bytes")
-
-        // Validación del límite estricto de 255 bytes
-        if (payloadSize > 255) {
-            Log.e("TEST_ESTABILIDAD", "¡ERROR DE CASO DE BORDE! El paquete superó el límite: $payloadSize bytes")
-        } else {
-            Log.i("TEST_ESTABILIDAD", "Éxito: El paquete cumple con el protocolo de red.")
-        }
-
-        // Service information.  Pass it an instance name, service type
-        val serviceInfo =
-            WifiP2pDnsSdServiceInfo.newInstance("_networkChat", "_chatApp._tcp", record)
-
-        if (ActivityCompat.checkSelfPermission(
-                this,
-                Manifest.permission.ACCESS_FINE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED || (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU
-                    && ActivityCompat.checkSelfPermission(
-                this,
-                Manifest.permission.NEARBY_WIFI_DEVICES
-            ) != PackageManager.PERMISSION_GRANTED
-                    )
-        ) {
-
-            Toast.makeText(this, "Faltan pemisos 1", Toast.LENGTH_SHORT).show()
-            return
-        }
-        manager.addLocalService(channel, serviceInfo, object : WifiP2pManager.ActionListener {
-            override fun onSuccess() {
-
-            }
-
-            override fun onFailure(arg0: Int) {
-                // Command failed.  Check for P2P_UNSUPPORTED, ERROR, or BUSY
-                Toast.makeText(this@MainChat, "Fail local service", Toast.LENGTH_SHORT).show()
-            }
-        })
-    }
-
-    private fun addDeviceMultiHop(record: WifiP2pDevice, wifiFrame: WifiFrame) {
-
-        val deviceSame = deviceArray.firstOrNull { it.device.deviceName == record.deviceName }
-        if (deviceSame != null) {
-            val messageExist = deviceSame.message.any {
-                it.dateSend == wifiFrame.dateSend
-            }
-
-            if (!messageExist) {
-                deviceSame.message.add(wifiFrame)
-                onWifiFrameReceived(wifiFrame)
-            }
-
-        } else {
-            val device = MessageModel(record, mutableListOf(wifiFrame), WifiFrameUtils.deviceIdMultiHop)
-            deviceArray.add(device)
-
-            onWifiFrameReceived(wifiFrame)
-        }
-
-    }
-
-    fun onWifiFrameReceived(wifiFrame: WifiFrame) {
-        if (wifiFrame.type == "CHAT") {
-            addMessageToRecyclerView(wifiFrame)
-
-        } else if (wifiFrame.type == "RADAR") {
-            CoroutineScope(Dispatchers.IO).launch {
-                RadarEvent.emitRadarPing(wifiFrame)
-            }
-        }
-    }
 
     private fun addMessageToRecyclerView(wifiFrame: WifiFrame) {
         val enviadoPorMi = wifiFrame.nameUser == userName

@@ -4,6 +4,7 @@ import OverlayManager
 import android.Manifest
 import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.location.Location
 import android.location.LocationManager
@@ -24,6 +25,7 @@ import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.RelativeLayout
 import android.widget.Toast
+import androidx.annotation.RequiresPermission
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.lifecycle.lifecycleScope
@@ -34,9 +36,14 @@ import kotlinx.coroutines.flow.collectLatest
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.repeatOnLifecycle
 import com.example.p2papp.Constants.TAG
+import kotlin.math.atan2
+import kotlin.math.cos
+import kotlin.math.pow
+import kotlin.math.sin
+import kotlin.math.sqrt
 
 class RadarActivity : AppCompatActivity() {
-
+    private lateinit var sharedPreferences: SharedPreferences
     private var userName: String = "Usuario" // Valor por defecto
     private var radarJob: Job? = null
 
@@ -48,7 +55,6 @@ class RadarActivity : AppCompatActivity() {
 
     private lateinit var overlayManager: OverlayManager
     private var info: WifiFrame = WifiFrame()
-    private lateinit var wifiManager: WifiManager
     private lateinit var manager: WifiP2pManager
     private lateinit var channel: WifiP2pManager.Channel
 
@@ -68,12 +74,19 @@ class RadarActivity : AppCompatActivity() {
 
         // Cargamos el usuario ANTES de empezar a transmitir
         loadUserNameFromDatabase {
+            NetworkManager.setup(this)
+            NetworkManager.addServiceRequest(this)
+            NetworkManager.startDiscover(this)
         }
+
+        sharedPreferences = getSharedPreferences(Constants.PREFERENCES_KEY, MODE_PRIVATE)
 
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 RadarEvent.radarPings.collect { wifiFrame ->
-                    handleIncomingRadarPing(wifiFrame)
+                    if (wifiFrame.type == "RADAR") {
+                        handleIncomingRadarPing(wifiFrame)
+                    }
                 }
             }
         }
@@ -113,17 +126,16 @@ class RadarActivity : AppCompatActivity() {
                     val myLat = lastLocation?.latitude
                     val myLon = lastLocation?.longitude
 
+                    val editor = sharedPreferences.edit()
+                    editor.putString(Constants.MESSAGE, "RADAR")
+                    if (myLat != null) editor.putString("LATITUDE", myLat.toString()) else editor.remove("LATITUDE")
+                    if (myLon != null) editor.putString("LONGITUDE", myLon.toString()) else editor.remove("LONGITUDE")
+                    editor.apply()
+
                     Log.d(TAG_WIFI, "Mi latitud: $myLat, longitud: $myLon")
 
                     if (myLat != null && myLon != null) {
-                        val radarFrame = WifiFrame().apply {
-                            nameUser = userName
-                            type = "RADAR"
-                            latitude = myLat
-                            longitude = myLon
-                        }
-
-                        sendWifiFrameOverNetwork(radarFrame)
+                        sendWifiFrameOverNetwork()
                     }
                 } else {
                     Log.e(TAG_WIFI, "No se pudo obtener la ubicación (Permisos faltantes)")
@@ -162,27 +174,102 @@ class RadarActivity : AppCompatActivity() {
         }
     }
 
+//    private fun addOrUpdateDeviceOnRadar(xMeters: Double, yMeters: Double, deviceName: String) {
+//        val testXDp = 50f  // 50 dp a la derecha del centro
+//        val testYDp = -50f // 50 dp arriba del centro (Y es invertido)
+//
+//        val xPx = dpToPx(testXDp)
+//        val yPx = dpToPx(testYDp)
+//
+//        // Revisamos si el dispositivo ya está en el radar
+//        val existingIcon = activeDevicesOnRadar[deviceName]
+//
+//        if (existingIcon != null) {
+//            // Si ya existe, animamos a la posición de prueba
+//            existingIcon.animate()
+//                .translationX(xPx)
+//                .translationY(yPx)
+//                .setDuration(500)
+//                .start()
+//        } else {
+//            // Si es nuevo, creamos el ImageView
+//            val deviceIcon = ImageView(this).apply {
+//                setImageResource(R.drawable.dispositivoradar) // Tu icono
+//                contentDescription = deviceName
+//
+//                setOnClickListener {
+//                    Toast.makeText(this@RadarActivity, "Usuario: $deviceName", Toast.LENGTH_SHORT).show()
+//                }
+//            }
+//
+//            val iconSizePx = dpToPx(30f).toInt()
+//
+//            // Centramos el icono en el contenedor
+//            val params = RelativeLayout.LayoutParams(iconSizePx, iconSizePx).apply {
+//                addRule(RelativeLayout.CENTER_IN_PARENT, RelativeLayout.TRUE)
+//            }
+//
+//            deviceIcon.layoutParams = params
+//
+//            // Lo movemos a nuestra posición de prueba
+//            deviceIcon.translationX = xPx
+//            deviceIcon.translationY = yPx
+//
+//            radarContainer.addView(deviceIcon)
+//            activeDevicesOnRadar[deviceName] = deviceIcon // Lo guardamos en el mapa
+//
+//            Log.d("PRUEBA_UI_RADAR", "Icono creado y añadido al contenedor para $deviceName en X:$xPx, Y:$yPx")
+//        }
+//    }
+
     private fun addOrUpdateDeviceOnRadar(xMeters: Double, yMeters: Double, deviceName: String) {
-        // Escala: 1 metro = 12 dp
-        val scaleDpPerMeter = 12.0
-        val xDp = xMeters * scaleDpPerMeter
-        val yDp = yMeters * scaleDpPerMeter
+        // 1. Radio máximo del radar
+        val maxRadarRadiusMeters = 100.0
 
-        val xPx = dpToPx(xDp.toFloat())
-        val yPx = dpToPx(-yDp.toFloat()) // Invertimos Y para que el Norte sea hacia arriba
+        // 2. Obtenemos las dimensiones reales del contenedor en pantalla
+        val containerWidth = radarContainer.width
+        val containerHeight = radarContainer.height
 
-        // Revisamos si el dispositivo ya está en el radar
+        if (containerWidth == 0 || containerHeight == 0) {
+            Log.w("GEOMETRIA_RADAR", "El contenedor aún no tiene dimensiones, saltando frame.")
+            return
+        }
+
+        // El radio en píxeles es la mitad del ancho/alto del contenedor
+        val containerRadiusPx = (Math.min(containerWidth, containerHeight) / 2f).toDouble()
+
+        // 3. ¿Cuántos píxeles de pantalla equivalen a 1 metro real?
+        val pixelsPerMeter = containerRadiusPx / maxRadarRadiusMeters
+
+        // 4. Calculamos cuánto mover el icono desde el centro
+        val targetX = (xMeters * pixelsPerMeter).toFloat()
+        val targetY = (-yMeters * pixelsPerMeter).toFloat() // Invertimos Y (Norte arriba)
+
+        // 5. Validamos si el dispositivo está dentro de los 100 metros
+        val distanceFromCenter = Math.sqrt(xMeters * xMeters + yMeters * yMeters)
+
         val existingIcon = activeDevicesOnRadar[deviceName]
 
+        if (distanceFromCenter > maxRadarRadiusMeters) {
+            Log.d("GEOMETRIA_RADAR", "$deviceName está a ${distanceFromCenter.toInt()}m (Fuera de rango)")
+            // Ocultamos el icono si se sale del radar
+            existingIcon?.visibility = View.GONE
+            return
+        }
+
+        Log.d("GEOMETRIA_RADAR", "Dibujando $deviceName a ${distanceFromCenter.toInt()}m -> X: $targetX px, Y: $targetY px")
+
+        // 6. Dibujamos o actualizamos
         if (existingIcon != null) {
-            // Si ya existe, solo actualizamos su posición con una pequeña animación
+            // Aseguramos que sea visible si volvió a entrar al rango
+            existingIcon.visibility = View.VISIBLE
+
             existingIcon.animate()
-                .translationX(xPx)
-                .translationY(yPx)
+                .translationX(targetX)
+                .translationY(targetY)
                 .setDuration(500)
                 .start()
         } else {
-            // Si es nuevo, creamos el ImageView
             val deviceIcon = ImageView(this).apply {
                 setImageResource(R.drawable.dispositivoradar) // Tu icono
                 contentDescription = deviceName
@@ -194,15 +281,16 @@ class RadarActivity : AppCompatActivity() {
 
             val iconSizePx = dpToPx(30f).toInt()
             val params = RelativeLayout.LayoutParams(iconSizePx, iconSizePx).apply {
+                // Esto ancla el icono al centro del radar
                 addRule(RelativeLayout.CENTER_IN_PARENT, RelativeLayout.TRUE)
             }
 
             deviceIcon.layoutParams = params
-            deviceIcon.translationX = xPx
-            deviceIcon.translationY = yPx
+            deviceIcon.translationX = targetX
+            deviceIcon.translationY = targetY
 
             radarContainer.addView(deviceIcon)
-            activeDevicesOnRadar[deviceName] = deviceIcon // Lo guardamos en el mapa
+            activeDevicesOnRadar[deviceName] = deviceIcon
         }
     }
 
@@ -236,8 +324,6 @@ class RadarActivity : AppCompatActivity() {
         perfilButton = findViewById(R.id.perfilButton)
         bibliotecaButton = findViewById(R.id.bibliotecaButton)
         radarContainer = findViewById(R.id.radarContainer)
-
-        wifiManager = this.applicationContext.getSystemService(WIFI_SERVICE) as WifiManager
         manager = getSystemService(WIFI_P2P_SERVICE) as WifiP2pManager
         channel = manager.initialize(this, mainLooper, null)
     }
@@ -274,11 +360,10 @@ class RadarActivity : AppCompatActivity() {
         }
     }
 
-    private fun sendWifiFrameOverNetwork(frame: WifiFrame) {
-        info = WifiFrameUtils.buildMyWiFiFrame(this, userName)
+    private fun sendWifiFrameOverNetwork() {
+        info = WifiFrameUtils.buildMyWiFiFrame(this, userName, "RADAR")
 
         val record = WifiFrameUtils.wifiFrameToHashMap(info)
-
         val serviceInfo =
             WifiP2pDnsSdServiceInfo.newInstance("_networkChat", "_chatApp._tcp", record)
 
@@ -292,19 +377,17 @@ class RadarActivity : AppCompatActivity() {
             ) != PackageManager.PERMISSION_GRANTED
                     )
         ) {
-
-            Toast.makeText(this, "Faltan pemisos 1", Toast.LENGTH_SHORT).show()
+            Log.e("TEST_ESTABILIDAD", "Faltan permisos")
             return
         }
         manager.addLocalService(channel, serviceInfo, object : WifiP2pManager.ActionListener {
             override fun onSuccess() {
-                Log.d("TAG_RADAR", "Envio de paquete exitoso")
+                Toast.makeText(applicationContext, "Ubicación enviada", Toast.LENGTH_SHORT).show()
+                Log.d(TAG_WIFI, "tipo RADAR enviado en DNS-SD")
             }
 
             override fun onFailure(arg0: Int) {
-                // Command failed.  Check for P2P_UNSUPPORTED, ERROR, or BUSY
-                Log.e("TAG_RADAR", "Fallo en envio de paquete")
-                Toast.makeText(this@RadarActivity, "Fallo en envio de paquete", Toast.LENGTH_SHORT).show()
+                Log.e(TAG_WIFI, "Fallo al publicar mensaje: $arg0")
             }
         })
     }

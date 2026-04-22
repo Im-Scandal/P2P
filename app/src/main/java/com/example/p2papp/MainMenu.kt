@@ -9,6 +9,10 @@ import android.widget.ImageButton
 import android.widget.TextView
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class MainMenu : AppCompatActivity() {
     private lateinit var ayudaButton: Button
@@ -24,8 +28,6 @@ class MainMenu : AppCompatActivity() {
         perfilButton = findViewById(R.id.perfilButton)
         bibliotecaButton = findViewById(R.id.bibliotecaButton)
         radarButton = findViewById(R.id.radarButton)
-
-        NetworkManager.startDiscovery()
 
         setOnListener()
 
