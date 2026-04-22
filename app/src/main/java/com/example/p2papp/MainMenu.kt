@@ -25,6 +25,8 @@ class MainMenu : AppCompatActivity() {
         bibliotecaButton = findViewById(R.id.bibliotecaButton)
         radarButton = findViewById(R.id.radarButton)
 
+        NetworkManager.startDiscovery()
+
         setOnListener()
 
         onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {

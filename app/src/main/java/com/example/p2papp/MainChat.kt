@@ -726,7 +726,6 @@ class MainChat : AppCompatActivity() {
             locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
         } else null
 
-        // 2. Calcular distancia con validación de umbral (Opción A)
         val distanceResult: String = if (enviadoPorMi) {
             "" // No calculamos distancia para nuestros propios mensajes
         } else if (myLocation != null && wifiFrame.latitude != null && wifiFrame.longitude != null) {
@@ -734,7 +733,6 @@ class MainChat : AppCompatActivity() {
             val d = calculateDistance(myLocation.latitude, myLocation.longitude, wifiFrame.latitude!!, wifiFrame.longitude!!)
             val distanceInMeters = (d * 1000).toInt()
 
-            // Lógica de Umbral: Si está a menos de 50m, consideramos que está en el mismo lugar
             when {
                 distanceInMeters < 5 -> "Muy cerca $distanceInMeters"
                 distanceInMeters < 10 -> "Cerca $distanceInMeters"
@@ -827,22 +825,6 @@ class MainChat : AppCompatActivity() {
         val c = 2 * atan2(sqrt(a), sqrt(1 - a))
 
         return earthRadius * c // Devuelve la distancia en kilómetros
-    }
-
-    // Retorna un Pair donde el primer valor es X (Este/Oeste) y el segundo es Y (Norte/Sur) en metros
-    fun getRelativeCartesian(myLat: Double, myLon: Double, targetLat: Double, targetLon: Double): Pair<Double, Double> {
-        val earthRadius = 6371000.0 // Radio de la Tierra en metros
-
-        // Convertir diferencias a radianes
-        val dLat = Math.toRadians(targetLat - myLat)
-        val dLon = Math.toRadians(targetLon - myLon)
-        val myLatRad = Math.toRadians(myLat)
-
-        // Cálculo de X e Y en metros
-        val x = earthRadius * dLon * cos(myLatRad)
-        val y = earthRadius * dLat
-
-        return Pair(x, y)
     }
 
     private fun calculatePayloadSizeBytes(record: HashMap<String, String>): Int {

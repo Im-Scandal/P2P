@@ -8,8 +8,10 @@ import android.content.pm.PackageManager
 import android.location.Location
 import android.location.LocationManager
 import android.net.wifi.WifiManager
+import android.net.wifi.p2p.WifiP2pDevice
 import android.net.wifi.p2p.WifiP2pManager
 import android.net.wifi.p2p.nsd.WifiP2pDnsSdServiceInfo
+import android.net.wifi.p2p.nsd.WifiP2pDnsSdServiceRequest
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -31,6 +33,7 @@ import kotlin.math.cos
 import kotlinx.coroutines.flow.collectLatest
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.repeatOnLifecycle
+import com.example.p2papp.Constants.TAG
 
 class RadarActivity : AppCompatActivity() {
 
@@ -65,7 +68,6 @@ class RadarActivity : AppCompatActivity() {
 
         // Cargamos el usuario ANTES de empezar a transmitir
         loadUserNameFromDatabase {
-            Log.d(TAG_WIFI, "Usuario cargado: $userName")
         }
 
         lifecycleScope.launch {
@@ -272,9 +274,7 @@ class RadarActivity : AppCompatActivity() {
         }
     }
 
-    // Función temporal para que el código compile. Reemplázala con tu lógica real de envío WiFi Direct.
     private fun sendWifiFrameOverNetwork(frame: WifiFrame) {
-//        Log.d(TAG_WIFI, "Simulando envío de paquete RADAR...")
         info = WifiFrameUtils.buildMyWiFiFrame(this, userName)
 
         val record = WifiFrameUtils.wifiFrameToHashMap(info)
