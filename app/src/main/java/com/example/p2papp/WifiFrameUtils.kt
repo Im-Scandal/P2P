@@ -7,8 +7,6 @@ import java.util.UUID
 
 class WifiFrameUtils {
 
-
-
     companion object {
 
         var deviceMultihop = ""
@@ -27,6 +25,9 @@ class WifiFrameUtils {
             message["o"] = wifiFrame.sendMessage
             message["d"] = wifiFrame.dateSend
             message["h"] = idDevice
+            message["t"] = wifiFrame.type
+            wifiFrame.latitude?.let { message["la"] = it.toString() }
+            wifiFrame.longitude?.let { message["lo"] = it.toString() }
 
             return message
         }
@@ -36,7 +37,10 @@ class WifiFrameUtils {
             messageMulti: String = "",
             id: String,
             dateSend: String,
-            nameUser: String
+            nameUser: String,
+            latitude: Double? = null,
+            longitude: Double? = null,
+            type: String
         ): HashMap<String, String> {
             val message = HashMap<String, String>()
 
@@ -45,6 +49,9 @@ class WifiFrameUtils {
             message["g"] = deviceName.deviceName
             message["o"] = messageMulti
             message["h"] = id
+            latitude?.let { message["la"] = it.toString() }
+            longitude?.let { message["lo"] = it.toString() }
+            message["t"] = type
 
             return message
         }
@@ -57,10 +64,13 @@ class WifiFrameUtils {
                 dateReceived =  getFormattedDateTime()
                 deviceMultihop = message["g"]?: ""
                 deviceIdMultiHop = message["h"]?: ""
+                latitude = message["la"]?.toDoubleOrNull()
+                longitude = message["lo"]?.toDoubleOrNull()
+                type = message["t"]?: "CHAT"
             }
         }
 
-        fun buildMyWiFiFrame(context: Context, userName: String): WifiFrame {
+        fun buildMyWiFiFrame(context: Context, userName: String, typePackage: String): WifiFrame {
             val sharedPreferences = context.getSharedPreferences(
                 Constants.PREFERENCES_KEY,
                 AppCompatActivity.MODE_PRIVATE
@@ -71,6 +81,12 @@ class WifiFrameUtils {
                 sendMessage = sharedPreferences.getString(Constants.MESSAGE, "mensaje").toString()
                 dateSend = getFormattedDateTime()
 
+                val latStr = sharedPreferences.getString("LATITUDE", null)
+                val lonStr = sharedPreferences.getString("LONGITUDE", null)
+                latitude = latStr?.toDoubleOrNull()
+                longitude = lonStr?.toDoubleOrNull()
+
+                type = typePackage
             }
         }
 

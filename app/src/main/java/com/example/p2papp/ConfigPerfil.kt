@@ -29,6 +29,7 @@ class ConfigPerfil : AppCompatActivity() {
     private lateinit var contactButton: Button
     private lateinit var helpButton: Button
     private lateinit var bibliotecaButton: ImageButton
+    private lateinit var radarButton: ImageButton
 
     companion object {
         var optionCong: Boolean = false
@@ -63,6 +64,11 @@ class ConfigPerfil : AppCompatActivity() {
     }
 
     private fun setOnListener() {
+
+        radarButton.setOnClickListener {
+            val intent = Intent(this, RadarActivity::class.java)
+            startActivity(intent)
+        }
         personalButton.setOnClickListener{
             optionCong = true
             val intent = Intent(this, CamposConfig::class.java)
@@ -73,10 +79,14 @@ class ConfigPerfil : AppCompatActivity() {
             val intent = Intent(this, CamposConfig::class.java)
             startActivity(intent)
         }
+
         bibliotecaButton.setOnClickListener{
             val intent = Intent(this, Biblioteca::class.java)
             startActivity(intent)
         }
+
+
+
         helpButton.setOnClickListener{
             val overlayView = LayoutInflater.from(this@ConfigPerfil).inflate(R.layout.confirmacion_chat, null)
 
@@ -106,6 +116,7 @@ class ConfigPerfil : AppCompatActivity() {
         phoneCEUser = findViewById(R.id.phoneCEUserText)
         personalButton = findViewById(R.id.personalButton)
         bibliotecaButton = findViewById(R.id.bibliotecaButton)
+        radarButton = findViewById(R.id.radarButton)
     }
 
     private fun dataBase_EditText() {

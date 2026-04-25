@@ -8,18 +8,49 @@
     android:padding="20dp"
     tools:context=".MainChat">
 
-    <TextView
-        android:id="@+id/textView16"
-        android:layout_width="match_parent"
+    <LinearLayout
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/chat"
-        android:textColor="#37B2FF"
-        android:fontFamily="@font/verdanabold"
-        android:textStyle="bold"
-        android:textSize="16sp"
-        android:paddingTop="30dp"
-        android:textAlignment="center"
-        android:layout_gravity="center"/>
+        android:orientation="horizontal"
+        android:layout_gravity="center">
+
+        <ImageButton
+            android:id="@+id/borrarButton"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:contentDescription="borrar_chat"
+            app:srcCompat="@drawable/delete"
+            android:background="#00777777"
+            android:layout_gravity="center"
+            android:layout_weight="0.2"/>
+
+        <TextView
+            android:id="@+id/textView16"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:fontFamily="@font/verdanabold"
+            android:paddingTop="30dp"
+            android:text="@string/chat"
+            android:textAlignment="center"
+            android:textColor="#37B2FF"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:layout_weight="1"
+            android:paddingBottom="10dp"
+            android:paddingHorizontal="100dp"/>
+
+        <ImageButton
+            android:id="@+id/radarButton"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:contentDescription="radar"
+            android:src="@drawable/radaricon"
+            android:background="#00777777"
+            android:layout_gravity="center"
+            android:layout_weight="0.2"/>
+
+    </LinearLayout>
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -245,5 +276,17 @@
         android:textColorHint="@color/hint"
         android:fontFamily="@font/roboto"
         android:imeOptions="actionDone"
+        android:maxLength="200"
+        android:visibility="gone"/>
+
+    <TextView
+        android:id="@+id/charCounter"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:paddingEnd="8dp"
+        android:text="0/200"
+        android:textSize="12sp"
+        android:textColor="@color/blanco_texto"
         android:visibility="gone"/>
 </LinearLayout>

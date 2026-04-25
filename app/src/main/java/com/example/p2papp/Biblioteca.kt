@@ -1,6 +1,5 @@
 package com.example.p2papp
 
-import OverlayManager
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -17,6 +16,8 @@ class Biblioteca : AppCompatActivity() {
     private lateinit var  homeButton: ImageButton
     private lateinit var helpButton: Button
     private lateinit var perfilButton: ImageButton
+
+    private lateinit var radarButton: ImageButton
 
     //Botones información
     private lateinit var alimentoAguaButton: FrameLayout
@@ -47,6 +48,8 @@ class Biblioteca : AppCompatActivity() {
         homeButton = findViewById(R.id.homeButton)
         helpButton = findViewById(R.id.helpButton)
         perfilButton = findViewById(R.id.perfilButton)
+        radarButton = findViewById(R.id.radarButton)
+
 
 
         alimentoAguaButton = findViewById(R.id.alimentoButton)
@@ -89,10 +92,15 @@ class Biblioteca : AppCompatActivity() {
             val intent = Intent(this, MainMenu::class.java)
             startActivity(intent)
         }
-        perfilButton.setOnClickListener{
+        perfilButton.setOnClickListener {
             val intent = Intent(this, ConfigPerfil::class.java)
             startActivity(intent)
         }
+        radarButton.setOnClickListener{
+            val intent = Intent(this, RadarActivity::class.java)
+            startActivity(intent)
+        }
+
 
         alimentoAguaButton.setOnClickListener{
             val pages = listOf(
