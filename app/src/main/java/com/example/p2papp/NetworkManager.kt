@@ -9,10 +9,7 @@ import android.net.wifi.p2p.nsd.WifiP2pDnsSdServiceInfo
 import android.net.wifi.p2p.nsd.WifiP2pDnsSdServiceRequest
 import android.os.Build
 import android.util.Log
-import android.widget.Toast
-import androidx.annotation.RequiresPermission
 import androidx.core.app.ActivityCompat
-import com.example.p2papp.Constants.TAG
 import com.example.p2papp.Constants.TAG_WIFI
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

@@ -14,9 +14,9 @@ class MessageAdapter(private val messages: MutableList<ChatMessage>) :
         val messageContentLeft: LinearLayout = view.findViewById(R.id.messageContentLeft)
         val messageContentRight: LinearLayout = view.findViewById(R.id.messageContentRight)
 
-        val textRecieveName: TextView = view.findViewById(R.id.textRecieveName)
-        val textRecieveMessage: TextView = view.findViewById(R.id.textRecieveMessage)
-        val timeRecieveSend: TextView = view.findViewById(R.id.timeRecieveSend)
+        val textReceiveName: TextView = view.findViewById(R.id.textRecieveName)
+        val textReceiveMessage: TextView = view.findViewById(R.id.textRecieveMessage)
+        val timeReceiveSend: TextView = view.findViewById(R.id.timeRecieveSend)
         val timeReceived: TextView = view.findViewById(R.id.timeReceived)
         val distancia: TextView = view.findViewById(R.id.distancia)
 
@@ -47,10 +47,10 @@ class MessageAdapter(private val messages: MutableList<ChatMessage>) :
         } else {
             // Mostrar y llenar layout de mensaje recibido (izquierda)
             holder.messageContentLeft.visibility = View.VISIBLE
-            holder.textRecieveMessage.text = message.text
-            holder.timeRecieveSend.text = message.timeSend
+            holder.textReceiveMessage.text = message.text
+            holder.timeReceiveSend.text = message.timeSend
             holder.timeReceived.text = message.timeReceived
-            holder.textRecieveName.text = message.nameUser
+            holder.textReceiveName.text = message.nameUser
             holder.distancia.text = message.distance
         }
     }

@@ -79,8 +79,6 @@ class MainChat : AppCompatActivity() {
     private lateinit var manager: WifiP2pManager
     private lateinit var channel: WifiP2pManager.Channel
 
-    //Variables para agregar los dispositivos (peers) al listview
-    private var deviceArray: MutableList<MessageModel> = mutableListOf()
     private var info: WifiFrame = WifiFrame()
 
     //Variables para agregar mensajes a recyclerView
