@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">Multisalto</string>
     <string name="multisaltos">Multisalto</string>
     <string name="Radar">Radar</string>
@@ -26,7 +26,7 @@ Es importante tener en cuenta que Multisalto necesita acceso a estos datos para 
     <string name="limitaciones_titulo">"Limitaciones de Responsabilidad"</string>
     <string name="limitaciones_texto">"Multisalto no se hace responsable por los daños o pérdidas que puedan surgir debido al uso de la aplicación, incluyendo pero no limitado a la falta de cobertura, problemas técnicos o fallos de la red AdHoc. La app depende de la red de usuarios cercanos, lo que puede afectar su funcionamiento en ciertos contextos."</string>
     <string name="modificaciones_titulo">"Modificaciones de los Términos"</string>
-    <string name="modificaciones_texto">"Nos reservamos el derecho de modificar estos términos en cualquier momento. Las actualizaciones serán notificadas a través de la aplicación o mediante otros medios apropiados. Es responsabilidad del usuario revisar periódicamente los Términos y Condiciones para estar al tanto de cualquier cambio."</string>
+    <string name="modificaciones_texto" tools:ignore="Typos">"Nos reservamos el derecho de modificar estos términos en cualquier momento. Las actualizaciones serán notificadas a través de la aplicación o mediante otros medios apropiados. Es responsabilidad del usuario revisar periódicamente los Términos y Condiciones para estar al tanto de cualquier cambio."</string>
 
     MainMenu
     <string name="companero_ideal">"Tu acompañante ideal
@@ -228,5 +228,8 @@ de emergencia.</string>
     <string name="next_button">next_button</string>
     <string name="habilitar_teclado">habilitar_teclado</string>
     <string name="boton_de_enviar">Boton de enviar</string>
+    <string name="FlechaNorte">Flecha que indica el norte</string>
+    <string name="biblioteca">Biblioteca</string>
+    <string name="radar">Radar</string>
 
 </resources>

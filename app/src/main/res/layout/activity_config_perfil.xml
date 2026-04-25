@@ -138,8 +138,8 @@
 
     <LinearLayout
         android:id="@+id/linearLayout"
-        android:layout_width="350dp"
-        android:layout_height="74dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginBottom="30dp"
         android:background="@drawable/rounded_button"
         android:orientation="horizontal"
@@ -157,7 +157,7 @@
             android:layout_width="174dp"
             android:layout_height="70dp"
             android:background="@android:color/transparent"
-            android:contentDescription="Biblioteca"
+            android:contentDescription="@string/biblioteca"
             android:src="@drawable/icono_biblioteca"
             android:layout_gravity="center"/>
 
@@ -166,7 +166,7 @@
             android:layout_width="174dp"
             android:layout_height="70dp"
             android:background="@android:color/transparent"
-            android:contentDescription="Radar"
+            android:contentDescription="@string/radar"
             android:src="@drawable/radaricon"
             android:layout_gravity="center"/>
 

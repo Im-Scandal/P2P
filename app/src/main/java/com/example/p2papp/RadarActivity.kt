@@ -1,6 +1,5 @@
 package com.example.p2papp
 
-import OverlayManager
 import android.Manifest
 import android.content.Context
 import android.content.Intent
@@ -8,11 +7,8 @@ import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.location.Location
 import android.location.LocationManager
-import android.net.wifi.WifiManager
-import android.net.wifi.p2p.WifiP2pDevice
 import android.net.wifi.p2p.WifiP2pManager
 import android.net.wifi.p2p.nsd.WifiP2pDnsSdServiceInfo
-import android.net.wifi.p2p.nsd.WifiP2pDnsSdServiceRequest
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -25,22 +21,24 @@ import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.RelativeLayout
 import android.widget.Toast
-import androidx.annotation.RequiresPermission
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
-import androidx.lifecycle.lifecycleScope
-import com.example.p2papp.Constants.TAG_WIFI
-import kotlinx.coroutines.*
-import kotlin.math.cos
-import kotlinx.coroutines.flow.collectLatest
 import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import com.example.p2papp.Constants.TAG
-import kotlin.math.atan2
+import com.example.p2papp.Constants.TAG_WIFI
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.isActive
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import kotlin.math.cos
-import kotlin.math.pow
-import kotlin.math.sin
-import kotlin.math.sqrt
+import android.hardware.Sensor
+import android.hardware.SensorEvent
+import android.hardware.SensorEventListener
+import android.hardware.SensorManager
 
 class RadarActivity : AppCompatActivity() {
     private lateinit var sharedPreferences: SharedPreferences
@@ -52,6 +50,8 @@ class RadarActivity : AppCompatActivity() {
     private lateinit var perfilButton: ImageButton
     private lateinit var bibliotecaButton: ImageButton
     private lateinit var radarContainer: RelativeLayout // Contenedor del radar
+    private lateinit var sensorManager: SensorManager
+    private var rotationSensor: Sensor? = null
 
     private lateinit var overlayManager: OverlayManager
     private var info: WifiFrame = WifiFrame()
@@ -79,6 +79,9 @@ class RadarActivity : AppCompatActivity() {
             NetworkManager.startDiscover(this)
         }
 
+        sensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
+        rotationSensor = sensorManager.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR)
+
         sharedPreferences = getSharedPreferences(Constants.PREFERENCES_KEY, MODE_PRIVATE)
 
         lifecycleScope.launch {
@@ -95,11 +98,16 @@ class RadarActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         startTransmittingLocation()
+        rotationSensor?.let {
+            // SENSOR_DELAY_UI es un buen equilibrio entre fluidez y consumo de batería
+            sensorManager.registerListener(sensorEventListener, it, SensorManager.SENSOR_DELAY_UI)
+        }
     }
 
     override fun onPause() {
         super.onPause()
         radarJob?.cancel()
+        sensorManager.unregisterListener(sensorEventListener)
     }
 
     private fun loadUserNameFromDatabase(onLoaded: () -> Unit) {
@@ -174,57 +182,9 @@ class RadarActivity : AppCompatActivity() {
         }
     }
 
-//    private fun addOrUpdateDeviceOnRadar(xMeters: Double, yMeters: Double, deviceName: String) {
-//        val testXDp = 50f  // 50 dp a la derecha del centro
-//        val testYDp = -50f // 50 dp arriba del centro (Y es invertido)
-//
-//        val xPx = dpToPx(testXDp)
-//        val yPx = dpToPx(testYDp)
-//
-//        // Revisamos si el dispositivo ya está en el radar
-//        val existingIcon = activeDevicesOnRadar[deviceName]
-//
-//        if (existingIcon != null) {
-//            // Si ya existe, animamos a la posición de prueba
-//            existingIcon.animate()
-//                .translationX(xPx)
-//                .translationY(yPx)
-//                .setDuration(500)
-//                .start()
-//        } else {
-//            // Si es nuevo, creamos el ImageView
-//            val deviceIcon = ImageView(this).apply {
-//                setImageResource(R.drawable.dispositivoradar) // Tu icono
-//                contentDescription = deviceName
-//
-//                setOnClickListener {
-//                    Toast.makeText(this@RadarActivity, "Usuario: $deviceName", Toast.LENGTH_SHORT).show()
-//                }
-//            }
-//
-//            val iconSizePx = dpToPx(30f).toInt()
-//
-//            // Centramos el icono en el contenedor
-//            val params = RelativeLayout.LayoutParams(iconSizePx, iconSizePx).apply {
-//                addRule(RelativeLayout.CENTER_IN_PARENT, RelativeLayout.TRUE)
-//            }
-//
-//            deviceIcon.layoutParams = params
-//
-//            // Lo movemos a nuestra posición de prueba
-//            deviceIcon.translationX = xPx
-//            deviceIcon.translationY = yPx
-//
-//            radarContainer.addView(deviceIcon)
-//            activeDevicesOnRadar[deviceName] = deviceIcon // Lo guardamos en el mapa
-//
-//            Log.d("PRUEBA_UI_RADAR", "Icono creado y añadido al contenedor para $deviceName en X:$xPx, Y:$yPx")
-//        }
-//    }
-
     private fun addOrUpdateDeviceOnRadar(xMeters: Double, yMeters: Double, deviceName: String) {
         // 1. Radio máximo del radar
-        val maxRadarRadiusMeters = 100.0
+        val maxRadarRadiusMeters = 300.0
 
         // 2. Obtenemos las dimensiones reales del contenedor en pantalla
         val containerWidth = radarContainer.width
@@ -291,6 +251,38 @@ class RadarActivity : AppCompatActivity() {
 
             radarContainer.addView(deviceIcon)
             activeDevicesOnRadar[deviceName] = deviceIcon
+        }
+    }
+
+    // Funciones de la brujula (Compass)
+
+    private val sensorEventListener = object : SensorEventListener {
+        override fun onSensorChanged(event: SensorEvent) {
+            if (event.sensor.type == Sensor.TYPE_ROTATION_VECTOR) {
+                val rotationMatrix = FloatArray(9)
+                SensorManager.getRotationMatrixFromVector(rotationMatrix, event.values)
+
+                val orientationValues = FloatArray(3)
+                SensorManager.getOrientation(rotationMatrix, orientationValues)
+
+                val azimuthInRadians = orientationValues[0].toDouble()
+                val azimuthInDegrees = Math.toDegrees(azimuthInRadians).toFloat()
+
+                // 1. Rotamos SOLO la capa transparente (Flecha y dispositivos)
+                radarContainer.rotation = -azimuthInDegrees
+
+                // 2. DETALLE ESTÉTICO:
+                // Al girar la capa, los iconos de los dispositivos se pondrán "de cabeza".
+                // Esta línea hace que giren sobre su propio eje para que el dibujito
+                // del celular/usuario siempre se vea derecho frente a ti.
+                for (deviceIcon in activeDevicesOnRadar.values) {
+                    deviceIcon.rotation = azimuthInDegrees
+                }
+            }
+        }
+
+        override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {
+            // Nada que hacer aquí
         }
     }
 

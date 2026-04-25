@@ -1,3 +1,5 @@
+package com.example.p2papp
+
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
@@ -6,8 +8,6 @@ import android.widget.Button
 import android.widget.ImageButton
 import android.widget.ImageView
 import androidx.viewpager2.widget.ViewPager2
-import com.example.p2papp.PageContent
-import com.example.p2papp.R
 
 class OverlayManager(private val context: Context, private val rootView: ViewGroup) {
 

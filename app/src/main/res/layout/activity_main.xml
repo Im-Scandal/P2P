@@ -16,18 +16,18 @@
 
         <ImageButton
             android:id="@+id/borrarButton"
-            android:layout_width="0dp"
-            android:layout_height="40dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:contentDescription="borrar_chat"
-            app:srcCompat="@drawable/curiosidades1"
+            app:srcCompat="@drawable/delete"
             android:background="#00777777"
             android:layout_gravity="center"
             android:layout_weight="0.2"/>
 
         <TextView
             android:id="@+id/textView16"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
             android:layout_gravity="center"
             android:fontFamily="@font/verdanabold"
             android:paddingTop="30dp"
@@ -37,12 +37,13 @@
             android:textSize="16sp"
             android:textStyle="bold"
             android:layout_weight="1"
-            android:paddingBottom="10dp"/>
+            android:paddingBottom="10dp"
+            android:paddingHorizontal="100dp"/>
 
         <ImageButton
             android:id="@+id/radarButton"
-            android:layout_width="0dp"
-            android:layout_height="40dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:contentDescription="radar"
             android:src="@drawable/radaricon"
             android:background="#00777777"
