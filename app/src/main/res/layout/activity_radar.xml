@@ -27,7 +27,7 @@
             android:layout_marginTop="20dp"
             android:background="#00777777"
             android:contentDescription="Botón de configuración de perfil"
-            app:layout_constraintEnd_toStartOf="@+id/textView11"
+            app:layout_constraintEnd_toStartOf="@+id/textoRadar"
             app:layout_constraintHorizontal_bias="0.151"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -42,12 +42,12 @@
             android:contentDescription="Botón de configuración de perfil"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.822"
-            app:layout_constraintStart_toEndOf="@+id/textView11"
+            app:layout_constraintStart_toEndOf="@+id/textoRadar"
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/icon_park_outline_user" />
 
         <TextView
-            android:id="@+id/textView11"
+            android:id="@+id/textoRadar"
             android:layout_width="111dp"
             android:layout_height="38dp"
             android:layout_marginTop="36dp"
@@ -72,15 +72,14 @@
             android:textStyle="bold"
             app:layout_constraintBottom_toTopOf="@+id/linearLayout"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView11"
-            app:layout_constraintVertical_bias="0.922" />
+            app:layout_constraintTop_toBottomOf="@+id/cajonZoom"
+            android:paddingVertical="10dp"/>
 
         <LinearLayout
             android:id="@+id/linearLayout"
-            android:layout_width="309dp"
-            android:layout_height="74dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginBottom="30dp"
             android:background="@drawable/rounded_button"
             android:orientation="horizontal"
@@ -112,15 +111,60 @@
 
         </LinearLayout>
 
+
+        <LinearLayout
+            android:id="@+id/cajonZoom"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/rounded_button"
+            android:orientation="horizontal"
+            android:padding="5dp"
+            app:layout_constraintBottom_toTopOf="@+id/helpButton"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/radarArea">
+
+                <ImageButton
+                    android:id="@+id/lessZoom"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_gravity="center"
+                    android:background="@android:color/transparent"
+                    android:contentDescription="@string/disminuir_zoom"
+                    android:src="@drawable/minus" />
+
+                <TextView
+                    android:id="@+id/textZoom"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:fontFamily="@font/verdanabold"
+                    android:paddingHorizontal="30dp"
+                    android:text="100"
+                    android:textColor="@color/blanco_texto"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+
+                <ImageButton
+                    android:id="@+id/moreZoom"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_gravity="center"
+                    android:background="@android:color/transparent"
+                    android:contentDescription="@string/aumentar_zoom"
+                    android:src="@drawable/plus" />
+
+        </LinearLayout>
+
         <RelativeLayout
             android:id="@+id/radarArea"
             android:layout_width="412dp"
             android:layout_height="412dp"
-            app:layout_constraintBottom_toTopOf="@+id/helpButton"
+            app:layout_constraintBottom_toTopOf="@+id/cajonZoom"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.515"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView11">
+            app:layout_constraintTop_toBottomOf="@+id/textoRadar">
 
                 <ImageView
                     android:id="@+id/circle1"

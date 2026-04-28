@@ -231,5 +231,7 @@ de emergencia.</string>
     <string name="FlechaNorte">Flecha que indica el norte</string>
     <string name="biblioteca">Biblioteca</string>
     <string name="radar">Radar</string>
+    <string name="disminuir_zoom">Disminuir Zoom</string>
+    <string name="aumentar_zoom">Aumentar Zoom</string>
 
 </resources>

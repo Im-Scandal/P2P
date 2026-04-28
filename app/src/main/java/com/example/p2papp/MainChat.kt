@@ -37,6 +37,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.RecyclerView
 import com.example.p2papp.Constants.TAG_WIFI
+import com.example.p2papp.NetworkManager.Companion.lastBestLocation
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -106,6 +107,8 @@ class MainChat : AppCompatActivity() {
         recyclerView.adapter = messageAdapter
         exqListener()
 
+        startGpsTracking()
+
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 RadarEvent.radarPings.collect { wifiFrame ->
@@ -115,6 +118,11 @@ class MainChat : AppCompatActivity() {
                 }
             }
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        startGpsTracking()
     }
 
     fun initialWork() {
@@ -337,35 +345,13 @@ class MainChat : AppCompatActivity() {
         isSending = true
         button?.background = ContextCompat.getDrawable(this, R.drawable.boton_pressed)
 
-        val locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
-
         // Verificación de permisos
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            val lastLocation: Location? = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
-
-            if (lastLocation != null) {
-                executeSend(msg, lastLocation.latitude, lastLocation.longitude, button)
-            } else {
-                // Intento secundario si el caché de GPS está vacío
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                    locationManager.getCurrentLocation(
-                        LocationManager.GPS_PROVIDER, null, mainExecutor
-                    ) { location ->
-                        if (location != null) {
-                            executeSend(msg, location.latitude, location.longitude, button)
-                        } else {
-                            Log.e("ERROR_LOLA", "No se pudo obtener la ubicación")
-                            executeSend(msg, null, null, button) // Fallback sin ubicación
-                        }
-                    }
-                } else {
-                    Log.e("ERROR_LOLA", "No se pudo obtener la ubicación BuildVersion < VersionCodes")
-                    executeSend(msg, null, null, button) // Fallback sin ubicación
-                }
-            }
+        if (lastBestLocation != null) {
+            executeSend(msg, lastBestLocation?.latitude, lastBestLocation?.longitude, button)
+            isSending = false
         } else {
-            Log.e("ERROR_LOLA", "No se pudo obtener la ubicación (Permisos faltantes)")
-            executeSend(msg, null, null, button) // Envío normal si no hay permisos
+            Log.e("ERROR_LOLA", "No se pudo obtener la ubicación")
+            executeSend(msg, null, null, button)
         }
     }
 
@@ -496,8 +482,8 @@ class MainChat : AppCompatActivity() {
             val distanceInMeters = (d * 1000).toInt()
 
             when {
-                distanceInMeters < 5 -> "Muy cerca $distanceInMeters"
-                distanceInMeters < 10 -> "Cerca $distanceInMeters"
+                distanceInMeters < 5 -> "Muy cerca $distanceInMeters m"
+                distanceInMeters < 10 -> "Cerca $distanceInMeters m"
                 distanceInMeters < 1000 -> "$distanceInMeters m"
                 else -> "%.2f km".format(d)
             }
@@ -611,6 +597,21 @@ class MainChat : AppCompatActivity() {
 
         Log.d("TEST_ESTABILIDAD", "--- Fin de Desglose ---")
         return totalBytes
+    }
+
+    fun startGpsTracking() {
+        val locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+
+            locationManager.requestLocationUpdates(
+                LocationManager.GPS_PROVIDER,
+                2000L,
+                1f,
+                NetworkManager.locationListener
+            )
+
+            lastBestLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
+        }
     }
 
 }

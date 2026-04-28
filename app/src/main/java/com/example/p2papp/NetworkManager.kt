@@ -3,6 +3,8 @@ package com.example.p2papp
 import android.Manifest
 import android.content.Context
 import android.content.pm.PackageManager
+import android.location.Location
+import android.location.LocationListener
 import android.net.wifi.p2p.WifiP2pDevice
 import android.net.wifi.p2p.WifiP2pManager
 import android.net.wifi.p2p.nsd.WifiP2pDnsSdServiceInfo
@@ -283,6 +285,15 @@ class NetworkManager {
                     Math.sin(dLon / 2).pow(2.0)
             val c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))
             return (earthRadius * c * 1000).toInt() // Retorna metros
+        }
+
+        var lastBestLocation: Location? = null
+
+        val locationListener = object : LocationListener {
+            override fun onLocationChanged(location: Location) {
+                lastBestLocation = location
+                Log.i("GPS_DEBUG", "Ubicación actualizada: ${location.latitude}, ${location.longitude}")
+            }
         }
 
     }
