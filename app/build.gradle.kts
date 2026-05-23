@@ -5,7 +5,7 @@ plugins {
 
 android {
     namespace = "com.example.p2papp"
-    compileSdk = 36
+    compileSdk = 37
 
     defaultConfig {
         applicationId = "com.example.p2papp"

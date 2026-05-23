@@ -233,5 +233,11 @@ de emergencia.</string>
     <string name="radar">Radar</string>
     <string name="disminuir_zoom">Disminuir Zoom</string>
     <string name="aumentar_zoom">Aumentar Zoom</string>
+    <string name="primer_circulo_del_radar">Primer circulo del radar</string>
+    <string name="segundo_circulo_del_radar">Segundo circulo del radar</string>
+    <string name="tercer_circulo_del_radar">Tercer circulo del radar</string>
+    <string name="cuarto_circulo_del_radar">Cuarto circulo del radar</string>
+    <string name="ultimo_circulo_del_radar">Ultimo circulo del radar</string>
+    <string name="dispositivo_central">Dispositivo central</string>
 
 </resources>

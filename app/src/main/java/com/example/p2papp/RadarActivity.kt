@@ -43,6 +43,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.w3c.dom.Text
 import kotlin.math.cos
+import kotlin.math.sqrt
 
 class RadarActivity : AppCompatActivity() {
     private lateinit var sharedPreferences: SharedPreferences
@@ -158,7 +159,7 @@ class RadarActivity : AppCompatActivity() {
 
                     Log.d(TAG_WIFI, "Mi latitud: $myLat, longitud: $myLon")
 
-                    sendWifiFrameOverNetwork()
+                    sendWifiFrameOverNetwork(myLat, myLon)
                 } else {
                     Log.e(TAG_WIFI, "No se pudo obtener la ubicación")
                 }
@@ -201,31 +202,27 @@ class RadarActivity : AppCompatActivity() {
 
             if (myLat != null && myLon != null) {
                 // 1. Calcular distancia en metros (X, Y)
-                val (xMeters, yMeters) = getRelativeCartesian(myLat, myLon, targetLat, targetLon)
+                val (xMeters, yMeters) = getRelativeCartesian(myLat, myLon, targetLat as Double, targetLon as Double)
                 val distanciaMts = NetworkManager.calculateHaversine(targetLat, targetLon, this)
 
                 // 2. Dibujar en la interfaz
                 runOnUiThread {
-                    addOrUpdateDeviceOnRadar(xMeters, yMeters, distanciaMts, deviceName)
+                    addOrUpdateDeviceOnRadar(xMeters, yMeters, distanciaMts, deviceName, targetLat, targetLon)
                 }
             }
         }
     }
 
-    private fun addOrUpdateDeviceOnRadar(xMeters: Double, yMeters: Double, distancia: Int, deviceName: String) {
+    private fun addOrUpdateDeviceOnRadar(xMeters: Double, yMeters: Double, distancia: Int, deviceName: String, targetLat: Double, targetLon: Double) {
 
-        val containerWidth = radarContainer.width
-        val containerHeight = radarContainer.height
-
-        if (containerWidth == 0 || containerHeight == 0) return
-
-        val containerRadiusPx = (Math.min(containerWidth, containerHeight) / 2f).toDouble()
-        val pixelsPerMeter = containerRadiusPx / maxRadarRadiusMeters
+        val maxRadiusDp = 175f
+        val maxRadiusPx = (maxRadiusDp * resources.displayMetrics.density).toDouble()
+        val pixelsPerMeter = maxRadiusPx / maxRadarRadiusMeters
 
         val targetX = (xMeters * pixelsPerMeter).toFloat()
         val targetY = (-yMeters * pixelsPerMeter).toFloat()
 
-        val distanceFromCenter = Math.sqrt(xMeters * xMeters + yMeters * yMeters)
+        val distanceFromCenter = sqrt(xMeters * xMeters + yMeters * yMeters)
 
         val existingDevice = activeDevicesOnRadar[deviceName]
 
@@ -243,6 +240,7 @@ class RadarActivity : AppCompatActivity() {
             // 2. Actualizamos el clic para que el Toast muestre la nueva distancia
             existingDevice.icon.setOnClickListener {
                 Toast.makeText(this@RadarActivity, "Usuario: $deviceName - Distancia: ${existingDevice.distancia} mts.", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@RadarActivity, "Usuario: $deviceName - latitud: $targetLat, longitud: $targetLon", Toast.LENGTH_SHORT).show()
             }
 
             // 3. Movemos el icono
@@ -271,6 +269,7 @@ class RadarActivity : AppCompatActivity() {
             // Al crearlo por primera vez, referenciamos la variable temporal 'distancia'
             deviceIcon.setOnClickListener {
                 Toast.makeText(this@RadarActivity, "Usuario: $deviceName - Distancia: ${activeDevicesOnRadar[deviceName]?.distancia ?: distancia} mts.", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@RadarActivity, "Usuario: $deviceName - latitud: $targetLat, longitud: $targetLon", Toast.LENGTH_SHORT).show()
             }
 
             radarContainer.addView(deviceIcon)
@@ -411,24 +410,18 @@ class RadarActivity : AppCompatActivity() {
     }
 
     private fun refreshRadarScale() {
-        val containerWidth = radarContainer.width
-        val containerHeight = radarContainer.height
+        val maxRadiusDp = 175f
 
-        if (containerWidth == 0 || containerHeight == 0) return
+        val maxRadiusPx = (maxRadiusDp * resources.displayMetrics.density).toDouble()
 
-        val containerRadiusPx = (Math.min(containerWidth, containerHeight) / 2f).toDouble()
+        val pixelsPerMeter = maxRadiusPx / maxRadarRadiusMeters
 
-        // 1. Calculo de la nueva escala en base al zoom
-        val pixelsPerMeter = containerRadiusPx / maxRadarRadiusMeters
-
-        // 2. Reposición de todos los puntos en el radar
         for ((_, device) in activeDevicesOnRadar) {
             val targetX = (device.xMeters * pixelsPerMeter).toFloat()
             val targetY = (-device.yMeters * pixelsPerMeter).toFloat()
 
-            val distanceFromCenter = Math.sqrt(device.xMeters * device.xMeters + device.yMeters * device.yMeters)
+            val distanceFromCenter = sqrt(device.xMeters * device.xMeters + device.yMeters * device.yMeters)
 
-            // 3. Ocultamos los que queden fuera del nuevo límite, o animamos los que estén dentro
             if (distanceFromCenter > maxRadarRadiusMeters) {
                 device.icon.visibility = View.GONE
             } else {
@@ -442,7 +435,7 @@ class RadarActivity : AppCompatActivity() {
         }
     }
 
-    private fun sendWifiFrameOverNetwork() {
+    private fun sendWifiFrameOverNetwork(myLat: Double, myLon: Double) {
         info = WifiFrameUtils.buildMyWiFiFrame(this, userName, "RADAR")
 
         val record = WifiFrameUtils.wifiFrameToHashMap(info)
@@ -464,11 +457,13 @@ class RadarActivity : AppCompatActivity() {
         }
         manager.addLocalService(channel, serviceInfo, object : WifiP2pManager.ActionListener {
             override fun onSuccess() {
-                Toast.makeText(applicationContext, "Ubicación enviada", Toast.LENGTH_SHORT).show()
+                Toast.makeText(applicationContext, "Ubicación enviada", Toast.LENGTH_LONG).show()
+                Toast.makeText(applicationContext, "mi latitud: $myLat, mi longitud: $myLon", Toast.LENGTH_LONG).show()
                 Log.d(TAG_WIFI, "tipo RADAR enviado en DNS-SD")
             }
 
             override fun onFailure(arg0: Int) {
+                Toast.makeText(applicationContext, "No se pudo obtener la ubicación", Toast.LENGTH_SHORT).show()
                 Log.e(TAG_WIFI, "Fallo al publicar mensaje: $arg0")
             }
         })

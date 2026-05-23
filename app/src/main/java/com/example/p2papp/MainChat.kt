@@ -427,14 +427,6 @@ class MainChat : AppCompatActivity() {
         // Log de depuración (Debug) para registrar cada envío
         Log.d("TEST_ESTABILIDAD", "Enviando paquete... Tamaño de carga útil: $payloadSize bytes")
 
-        // Validación del límite estricto de 255 bytes
-        if (payloadSize > 255) {
-            Log.e("TEST_ESTABILIDAD", "¡ERROR DE CASO DE BORDE! El paquete superó el límite: $payloadSize bytes")
-        } else {
-            Log.i("TEST_ESTABILIDAD", "Éxito: El paquete cumple con el protocolo de red.")
-        }
-
-
         // Service information.  Pass it an instance name, service type
         val serviceInfo =
             WifiP2pDnsSdServiceInfo.newInstance("_networkChat", "_chatApp._tcp", record)
