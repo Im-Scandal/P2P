@@ -52,6 +52,7 @@ en momentos de postdesastre"</string>
     <string name="boton_ayuda">Necesito Ayuda</string>
     <string name="boton_moverse">No puedo Moverme</string>
     <string name="boton_atrapado">Estoy Atrapado</string>
+    <string name="mensaje_prueba">Este es un mensaje de prueba diseñado para verificar el correcto funcionamiento del chat. Se valida la recepción, el formato de los caracteres y la fluidez en tiempo real. Fin del test. El número total de caracteres enviados es de exactamente 253!</string>
 
     Biblioteca
     <string name="Biblioteca">BIBLIOTECA</string>
@@ -239,5 +240,6 @@ de emergencia.</string>
     <string name="cuarto_circulo_del_radar">Cuarto circulo del radar</string>
     <string name="ultimo_circulo_del_radar">Ultimo circulo del radar</string>
     <string name="dispositivo_central">Dispositivo central</string>
+    <string name="prueba">PRUEBA</string>
 
 </resources>

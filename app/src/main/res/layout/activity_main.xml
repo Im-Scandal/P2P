@@ -211,6 +211,22 @@
                 android:padding="10sp"
                 android:layout_marginHorizontal="3dp"
                 android:visibility="visible"/>
+
+            <Button
+                android:id="@+id/pruebaButton"
+                style="?android:attr/buttonBarButtonStyle"
+                android:layout_width="140dp"
+                android:layout_height="50dp"
+                android:layout_weight="1"
+                android:text="@string/prueba"
+                android:background="@drawable/boton_respuestas"
+                android:textColor="@color/blanco_texto"
+                android:fontFamily="@font/roboto"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:padding="10sp"
+                android:layout_marginHorizontal="3dp"
+                android:visibility="visible"/>
         </LinearLayout>
     </HorizontalScrollView>
 
@@ -276,7 +292,6 @@
         android:textColorHint="@color/hint"
         android:fontFamily="@font/roboto"
         android:imeOptions="actionDone"
-        android:maxLength="200"
         android:visibility="gone"/>
 
     <TextView
@@ -285,7 +300,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="end"
         android:paddingEnd="8dp"
-        android:text="0/200"
+        android:text="0/250"
         android:textSize="12sp"
         android:textColor="@color/blanco_texto"
         android:visibility="gone"/>

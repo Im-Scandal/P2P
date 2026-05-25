@@ -10,4 +10,9 @@ class WifiFrame {
     var longitude: Double? = null
     var distance: String? = null
     var type: String = "CHAT"
+    var pruebaI: String = "Prueba 1"
+    var pruebaII: String = "Prueba 2"
+    var pruebaIII: String = "Prueba 3"
+    var pruebaIV: String = "Prueba 4"
+    var pruebaV: String = "Prueba 5"
 }

@@ -151,11 +151,6 @@ class NetworkManager {
                 object : WifiP2pManager.ActionListener {
                     override fun onSuccess() {
                         Log.d("success", "clearLocalServices result: Success")
-        //                    Toast.makeText(
-        //                        this@MainChat,
-        //                        "Success clear local services",
-        //                        Toast.LENGTH_SHORT
-        //                    ).show()
                         onSuccessCallback.invoke()
                     }
 
@@ -215,7 +210,12 @@ class NetworkManager {
                 deviceMulti.message.last().nameUser,
                 deviceMulti.message.last().latitude,
                 deviceMulti.message.last().longitude,
-                deviceMulti.message.last().type
+                deviceMulti.message.last().type,
+                deviceMulti.message.last().pruebaI,
+                deviceMulti.message.last().pruebaII,
+                deviceMulti.message.last().pruebaIII,
+                deviceMulti.message.last().pruebaIV,
+                deviceMulti.message.last().pruebaV
             )
 
             // Service information.  Pass it an instance name, service type

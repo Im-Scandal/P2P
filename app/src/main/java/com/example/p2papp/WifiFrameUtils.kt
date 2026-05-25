@@ -28,6 +28,11 @@ class WifiFrameUtils {
             message["t"] = wifiFrame.type
             wifiFrame.latitude?.let { message["la"] = it.toString() }
             wifiFrame.longitude?.let { message["lo"] = it.toString() }
+            message["x"] = wifiFrame.pruebaI
+            message["y"] = wifiFrame.pruebaII
+            message["z"] = wifiFrame.pruebaIII
+            message["a"] = wifiFrame.pruebaIV
+            message["b"] = wifiFrame.pruebaV
 
             return message
         }
@@ -40,7 +45,12 @@ class WifiFrameUtils {
             nameUser: String,
             latitude: Double? = null,
             longitude: Double? = null,
-            type: String
+            type: String,
+            pruebaI: String,
+            pruebaII: String,
+            pruebaIII: String,
+            pruebaIV: String,
+            pruebaV: String,
         ): HashMap<String, String> {
             val message = HashMap<String, String>()
 
@@ -52,6 +62,11 @@ class WifiFrameUtils {
             latitude?.let { message["la"] = it.toString() }
             longitude?.let { message["lo"] = it.toString() }
             message["t"] = type
+            message["x"] = pruebaI
+            message["y"] = pruebaII
+            message["z"] = pruebaIII
+            message["a"] = pruebaIV
+            message["b"] = pruebaV
 
             return message
         }
@@ -67,6 +82,11 @@ class WifiFrameUtils {
                 latitude = message["la"]?.toDoubleOrNull()
                 longitude = message["lo"]?.toDoubleOrNull()
                 type = message["t"]?: "CHAT"
+                pruebaI = message["x"]?: "Prueba 1"
+                pruebaII = message["y"]?: "Prueba 2"
+                pruebaIII = message["z"]?: "Prueba 3"
+                pruebaIV = message["a"]?: "Prueba 4"
+                pruebaV = message["b"]?: "Prueba 5"
             }
         }
 
@@ -87,6 +107,12 @@ class WifiFrameUtils {
                 longitude = lonStr?.toDoubleOrNull()
 
                 type = typePackage
+
+                pruebaI = sharedPreferences.getString("pruebaI", null).toString()
+                pruebaII = sharedPreferences.getString("pruebaII", null).toString()
+                pruebaIII = sharedPreferences.getString("pruebaIII", null).toString()
+                pruebaIV = sharedPreferences.getString("pruebaIV", null).toString()
+                pruebaV = sharedPreferences.getString("pruebaV", null).toString()
             }
         }
 

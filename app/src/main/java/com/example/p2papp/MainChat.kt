@@ -15,6 +15,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.text.Editable
+import android.text.InputFilter
 import android.text.TextWatcher
 import android.util.Log
 import android.view.LayoutInflater
@@ -28,6 +29,7 @@ import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
+import androidx.annotation.RequiresPermission
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -41,6 +43,7 @@ import com.example.p2papp.NetworkManager.Companion.lastBestLocation
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.lang.StringBuilder
 import kotlin.math.atan2
 import kotlin.math.cos
 import kotlin.math.pow
@@ -56,6 +59,7 @@ class MainChat : AppCompatActivity() {
     private lateinit var op2Button: Button
     private lateinit var op3Button: Button
     private lateinit var op4Button: Button
+    private lateinit var pruebaButton: Button
     private lateinit var ceButton: Button
     private lateinit var recyclerView: RecyclerView
     private lateinit var userName: String
@@ -91,7 +95,7 @@ class MainChat : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         initialWork()
-        loadUserNameFromDatabase{
+        loadUserNameFromDatabase {
             NetworkManager.setup(this)
             NetworkManager.addServiceRequest(this)
             NetworkManager.startDiscover(this)
@@ -132,6 +136,7 @@ class MainChat : AppCompatActivity() {
         op2Button = findViewById(R.id.op2Button)
         op3Button = findViewById(R.id.op3Button)
         op4Button = findViewById(R.id.op4Button)
+        pruebaButton = findViewById(R.id.pruebaButton)
         ceButton = findViewById(R.id.emergenciaButton)
         aSalvoButton = findViewById(R.id.estoyASalvoButton)
         messageEditText = findViewById(R.id.editTextText)
@@ -152,20 +157,55 @@ class MainChat : AppCompatActivity() {
 
         WifiFrameUtils.getUUIDWiFiFrame(this)
 
+        val byteLimitFilter = InputFilter { source, start, end, dest, dstart, dend ->
+            val destText = dest.toString()
+            val textBase = destText.substring(0, dstart) + destText.substring(dend)
+            val currentBytes = textBase.toByteArray(Charsets.UTF_8).size
+
+            if (currentBytes >= 250 && source.isNotEmpty()) {
+                return@InputFilter ""
+            }
+
+            val allowedText = StringBuilder()
+            var tempBytes = currentBytes
+            var i = start
+
+            while (i < end) {
+                val codePoint = Character.codePointAt(source, i)
+                val charCount = Character.charCount(codePoint)
+                val charStr = source.subSequence(i, i + charCount).toString()
+                val charByteSize = charStr.toByteArray(Charsets.UTF_8).size
+
+                if (tempBytes + charByteSize <= 250) {
+                    allowedText.append(charStr)
+                    tempBytes += charByteSize
+                    i += charCount
+                } else {
+                    break
+                }
+            }
+
+            if (i == end) {
+                return@InputFilter null
+            }
+
+            allowedText.toString()
+        }
+
+        messageEditText.filters = arrayOf(byteLimitFilter)
+
         messageEditText.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-                // No necesitamos hacer nada antes de que cambie
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                // Obtenemos la longitud actual
-                val currentLength = s?.length ?: 0
+                val currentText = s?.toString() ?: ""
 
-                // Actualizamos el texto del contador
-                charCounter.text = "$currentLength/200"
+                val byteCount = currentText.toByteArray(Charsets.UTF_8).size
 
-                // Pista visual de advertencia: se pone rojo al llegar a 200
-                if (currentLength >= 200) {
+                charCounter.text = "$byteCount/250"
+
+                if (byteCount >= 250) {
                     charCounter.setTextColor(Color.RED)
                 } else {
                     charCounter.setTextColor(Color.WHITE)
@@ -211,14 +251,15 @@ class MainChat : AppCompatActivity() {
     private fun exqListener() {
         onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-                val overlayView = LayoutInflater.from(this@MainChat).inflate(R.layout.confirmacion_chat, null)
+                val overlayView =
+                    LayoutInflater.from(this@MainChat).inflate(R.layout.confirmacion_chat, null)
                 val texto = overlayView.findViewById<TextView>(R.id.texto)
                 texto.text = getString(R.string.salir_chat)
                 val rootView = findViewById<ViewGroup>(android.R.id.content)
                 rootView.addView(overlayView)
 
                 val closeApp = overlayView.findViewById<Button>(R.id.siButton)
-                closeApp.setOnClickListener{
+                closeApp.setOnClickListener {
                     rootView.removeView(overlayView)
                     val intent = Intent(this@MainChat, MainMenu::class.java)
                     startActivity(intent)
@@ -230,15 +271,16 @@ class MainChat : AppCompatActivity() {
                 }
             }
         })
-        aSalvoButton.setOnClickListener{
-            val overlayView = LayoutInflater.from(this@MainChat).inflate(R.layout.confirmacion_chat, null)
+        aSalvoButton.setOnClickListener {
+            val overlayView =
+                LayoutInflater.from(this@MainChat).inflate(R.layout.confirmacion_chat, null)
             val texto = overlayView.findViewById<TextView>(R.id.texto)
             texto.text = getString(R.string.salir_chat)
             val rootView = findViewById<ViewGroup>(android.R.id.content)
             rootView.addView(overlayView)
 
             val closeApp = overlayView.findViewById<Button>(R.id.siButton)
-            closeApp.setOnClickListener{
+            closeApp.setOnClickListener {
                 rootView.removeView(overlayView)
                 val intent = Intent(this, MainMenu::class.java)
                 startActivity(intent)
@@ -254,10 +296,84 @@ class MainChat : AppCompatActivity() {
             startActivity(intent)
         }
 
-        op1Button.setOnClickListener { sendMessageWithLocation(op1Button.text.toString(), op1Button) }
-        op2Button.setOnClickListener { sendMessageWithLocation(op2Button.text.toString(), op2Button) }
-        op3Button.setOnClickListener { sendMessageWithLocation(op3Button.text.toString(), op3Button) }
-        op4Button.setOnClickListener { sendMessageWithLocation(op4Button.text.toString(), op4Button) }
+        op1Button.setOnClickListener {
+            sendMessageWithLocation(
+                op1Button.text.toString(),
+                op1Button
+            )
+        }
+        op2Button.setOnClickListener {
+            sendMessageWithLocation(
+                op2Button.text.toString(),
+                op2Button
+            )
+        }
+        op3Button.setOnClickListener {
+            sendMessageWithLocation(
+                op3Button.text.toString(),
+                op3Button
+            )
+        }
+        op4Button.setOnClickListener {
+            sendMessageWithLocation(
+                op4Button.text.toString(),
+                op4Button
+            )
+        }
+
+        pruebaButton.setOnClickListener {
+            if (isSending) {
+                Toast.makeText(this, "Espera antes de enviar otro mensaje", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+            isSending = true
+            pruebaButton.background = ContextCompat.getDrawable(this, R.drawable.boton_pressed)
+
+            val maxString = "X".repeat(106)
+
+            if (lastBestLocation != null) {
+                val editor = sharedPreferences.edit()
+
+                editor.putString(Constants.MESSAGE, maxString)
+                editor.putString("pruebaI", maxString)
+                editor.putString("pruebaII", maxString)
+                editor.putString("pruebaIII", maxString)
+                editor.putString("pruebaIV", maxString)
+                editor.putString("pruebaV", maxString)
+
+                if (lastBestLocation?.latitude != null) editor.putString("LATITUDE", lastBestLocation?.latitude.toString()) else editor.remove("LATITUDE")
+                if (lastBestLocation?.longitude != null) editor.putString("LONGITUDE", lastBestLocation?.longitude.toString()) else editor.remove("LONGITUDE")
+
+                editor.apply()
+
+                val newMsg = ChatMessage(
+                    nameUser = maxString,
+                    text = maxString,
+                    timeSend = "Hora de envío: " + getFormattedDateTime(),
+                    timeReceived = "",
+                    isSentByMe = true,
+                    latitude = lastBestLocation?.latitude,
+                    longitude = lastBestLocation?.longitude
+                )
+
+                runOnUiThread {
+                    messages.add(newMsg)
+                    messageAdapter.notifyDataSetChanged()
+                    recyclerView.smoothScrollToPosition(messages.size - 1)
+                }
+
+                startRegistration()
+
+            } else {
+                Log.e("ERROR_LOLA", "No se pudo obtener la ubicación")
+            }
+
+            Handler(Looper.getMainLooper()).postDelayed({
+                isSending = false
+                pruebaButton.background = ContextCompat.getDrawable(this@MainChat, R.drawable.boton_respuestas)
+            }, 5000)
+        }
 
         ceButton.setOnClickListener {
             if (ceName.isEmpty() || cePhone.isEmpty()) {
@@ -267,14 +383,14 @@ class MainChat : AppCompatActivity() {
                     Toast.LENGTH_LONG
                 ).show()
 
-            }else {
+            } else {
                 val msg = "Contacto de emergencia: $ceName\nTeléfono: $cePhone"
                 sendMessageWithLocation(msg, ceButton)
             }
         }
 
         puntosButton1.setOnClickListener {
-            tecladoButton.visibility = if (tecladoButton.isVisible){
+            tecladoButton.visibility = if (tecladoButton.isVisible) {
                 View.GONE
             } else {
                 View.VISIBLE
@@ -282,14 +398,14 @@ class MainChat : AppCompatActivity() {
         }
 
         puntosButton2.setOnClickListener {
-            tecladoButton.visibility = if (tecladoButton.isVisible){
+            tecladoButton.visibility = if (tecladoButton.isVisible) {
                 View.GONE
             } else {
                 View.VISIBLE
             }
         }
 
-        tecladoButton.setOnClickListener{
+        tecladoButton.setOnClickListener {
             if (botonesMsgs.isVisible) {
                 dividerButtonChat.visibility = View.GONE
                 linearLayoutTextoTresBtns.visibility = View.GONE
@@ -304,7 +420,7 @@ class MainChat : AppCompatActivity() {
 
                 val imm = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
                 imm.showSoftInput(messageEditText, InputMethodManager.SHOW_IMPLICIT)
-            }else{
+            } else {
                 dividerButtonChat.visibility = View.VISIBLE
                 linearLayoutTextoTresBtns.visibility = View.VISIBLE
                 botonesMsgs.visibility = View.VISIBLE
@@ -314,7 +430,8 @@ class MainChat : AppCompatActivity() {
                 aSalvoButton.setBottomMargin(50)
                 tecladoButton.setImageResource(R.drawable.group_72__1_)
 
-                val imm = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager  // Oculta el teclado
+                val imm =
+                    getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager  // Oculta el teclado
                 imm.hideSoftInputFromWindow(messageEditText.windowToken, 0)
             }
         }
@@ -362,7 +479,10 @@ class MainChat : AppCompatActivity() {
         val editor = sharedPreferences.edit()
         editor.putString(Constants.MESSAGE, msg.trim())
         if (lat != null) editor.putString("LATITUDE", lat.toString()) else editor.remove("LATITUDE")
-        if (lon != null) editor.putString("LONGITUDE", lon.toString()) else editor.remove("LONGITUDE")
+        if (lon != null) editor.putString(
+            "LONGITUDE",
+            lon.toString()
+        ) else editor.remove("LONGITUDE")
         editor.apply()
 
         // 2. Actualizar UI
@@ -398,14 +518,13 @@ class MainChat : AppCompatActivity() {
             )
         }
 
-        // 4. Reiniciar servicio WiFi Direct
-//        NetworkManager.clearLocalServices {
         startRegistration()
 
         // 5. Restaurar botón
         Handler(Looper.getMainLooper()).postDelayed({
             isSending = false
-            button?.background = ContextCompat.getDrawable(this@MainChat, R.drawable.boton_respuestas)
+            button?.background =
+                ContextCompat.getDrawable(this@MainChat, R.drawable.boton_respuestas)
         }, 5000)
     }
 
@@ -418,7 +537,7 @@ class MainChat : AppCompatActivity() {
 
     private fun startRegistration() {
 
-        info = WifiFrameUtils.buildMyWiFiFrame(this, userName, "CHAT")
+        info = WifiFrameUtils.buildMyWiFiFrame(this, getString(R.string.mensaje_prueba), "CHAT")
 
         val record = WifiFrameUtils.wifiFrameToHashMap(info)
 
@@ -462,7 +581,11 @@ class MainChat : AppCompatActivity() {
 
         // 1. Obtener mi ubicación actual solo para el cálculo inicial
         val locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
-        val myLocation = if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+        val myLocation = if (ActivityCompat.checkSelfPermission(
+                this,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) == PackageManager.PERMISSION_GRANTED
+        ) {
             locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
         } else null
 
@@ -470,7 +593,12 @@ class MainChat : AppCompatActivity() {
             "" // No calculamos distancia para nuestros propios mensajes
         } else if (myLocation != null && wifiFrame.latitude != null && wifiFrame.longitude != null) {
 
-            val d = calculateDistance(myLocation.latitude, myLocation.longitude, wifiFrame.latitude!!, wifiFrame.longitude!!)
+            val d = calculateDistance(
+                myLocation.latitude,
+                myLocation.longitude,
+                wifiFrame.latitude!!,
+                wifiFrame.longitude!!
+            )
             val distanceInMeters = (d * 1000).toInt()
 
             when {
