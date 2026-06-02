@@ -15,6 +15,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.text.Editable
+import android.text.InputFilter
 import android.text.TextWatcher
 import android.util.Log
 import android.view.LayoutInflater
@@ -41,6 +42,7 @@ import com.example.p2papp.NetworkManager.Companion.lastBestLocation
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.lang.StringBuilder
 import kotlin.math.atan2
 import kotlin.math.cos
 import kotlin.math.pow
@@ -152,20 +154,55 @@ class MainChat : AppCompatActivity() {
 
         WifiFrameUtils.getUUIDWiFiFrame(this)
 
+        val byteLimitFilter = InputFilter { source, start, end, dest, dstart, dend ->
+            val destText = dest.toString()
+            val textBase = destText.substring(0, dstart) + destText.substring(dend)
+            val currentBytes = textBase.toByteArray(Charsets.UTF_8).size
+
+            if (currentBytes >= 250 && source.isNotEmpty()) {
+                return@InputFilter ""
+            }
+
+            val allowedText = StringBuilder()
+            var tempBytes = currentBytes
+            var i = start
+
+            while (i < end) {
+                val codePoint = Character.codePointAt(source, i)
+                val charCount = Character.charCount(codePoint)
+                val charStr = source.subSequence(i, i + charCount).toString()
+                val charByteSize = charStr.toByteArray(Charsets.UTF_8).size
+
+                if (tempBytes + charByteSize <= 250) {
+                    allowedText.append(charStr)
+                    tempBytes += charByteSize
+                    i += charCount
+                } else {
+                    break
+                }
+            }
+
+            if (i == end) {
+                return@InputFilter null
+            }
+
+            allowedText.toString()
+        }
+
+        messageEditText.filters = arrayOf(byteLimitFilter)
+
         messageEditText.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-                // No necesitamos hacer nada antes de que cambie
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                // Obtenemos la longitud actual
-                val currentLength = s?.length ?: 0
+                val currentText = s?.toString() ?: ""
 
-                // Actualizamos el texto del contador
-                charCounter.text = "$currentLength/200"
+                val byteCount = currentText.toByteArray(Charsets.UTF_8).size
 
-                // Pista visual de advertencia: se pone rojo al llegar a 200
-                if (currentLength >= 200) {
+                charCounter.text = "$byteCount/250"
+
+                if (byteCount >= 250) {
                     charCounter.setTextColor(Color.RED)
                 } else {
                     charCounter.setTextColor(Color.WHITE)
