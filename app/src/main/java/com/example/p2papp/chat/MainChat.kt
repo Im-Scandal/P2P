@@ -1,12 +1,10 @@
-package com.example.p2papp
+package com.example.p2papp.chat
 
 import android.Manifest
-import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.graphics.Color
-import android.location.Location
 import android.location.LocationManager
 import android.net.wifi.p2p.WifiP2pManager
 import android.net.wifi.p2p.nsd.WifiP2pDnsSdServiceInfo
@@ -37,18 +35,29 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.RecyclerView
-import com.example.p2papp.Constants.TAG_WIFI
-import com.example.p2papp.NetworkManager.Companion.lastBestLocation
+import com.example.p2papp.Constants
+import com.example.p2papp.start.MainMenu
+import com.example.p2papp.chat.MessageAdapter
+import com.example.p2papp.NetworkManager
+import com.example.p2papp.R
+import com.example.p2papp.radar.RadarActivity
+import com.example.p2papp.radar.RadarEvent
+import com.example.p2papp.WifiFrame
+import com.example.p2papp.WifiFrameUtils
+import com.example.p2papp.getFormattedDateTime
+import com.example.p2papp.room.AppDatabase
+import com.example.p2papp.room.ChatMessage
+import com.example.p2papp.room.ChatMessageEntity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.lang.StringBuilder
+import kotlin.collections.iterator
 import kotlin.math.atan2
 import kotlin.math.cos
 import kotlin.math.pow
 import kotlin.math.sin
 import kotlin.math.sqrt
-
 
 class MainChat : AppCompatActivity() {
     private lateinit var sharedPreferences: SharedPreferences
@@ -94,9 +103,9 @@ class MainChat : AppCompatActivity() {
 
         initialWork()
         loadUserNameFromDatabase{
-            NetworkManager.setup(this)
-            NetworkManager.addServiceRequest(this)
-            NetworkManager.startDiscover(this)
+            NetworkManager.Companion.setup(this)
+            NetworkManager.Companion.addServiceRequest(this)
+            NetworkManager.Companion.startDiscover(this)
         }
 
 
@@ -152,7 +161,7 @@ class MainChat : AppCompatActivity() {
         manager = getSystemService(WIFI_P2P_SERVICE) as WifiP2pManager
         channel = manager.initialize(this, mainLooper, null)
 
-        WifiFrameUtils.getUUIDWiFiFrame(this)
+        WifiFrameUtils.Companion.getUUIDWiFiFrame(this)
 
         val byteLimitFilter = InputFilter { source, start, end, dest, dstart, dend ->
             val destText = dest.toString()
@@ -215,7 +224,7 @@ class MainChat : AppCompatActivity() {
     }
 
     private fun loadUserNameFromDatabase(onLoaded: () -> Unit) {
-        val db = AppDatabase.getDatabase(this)
+        val db = AppDatabase.Companion.getDatabase(this)
         val userDao = db.userDao()
         CoroutineScope(Dispatchers.IO).launch {
             val savedUser = userDao.getUser()
@@ -383,8 +392,8 @@ class MainChat : AppCompatActivity() {
         button?.background = ContextCompat.getDrawable(this, R.drawable.boton_pressed)
 
         // Verificación de permisos
-        if (lastBestLocation != null) {
-            executeSend(msg, lastBestLocation?.latitude, lastBestLocation?.longitude, button)
+        if (NetworkManager.Companion.lastBestLocation != null) {
+            executeSend(msg, NetworkManager.Companion.lastBestLocation?.latitude, NetworkManager.Companion.lastBestLocation?.longitude, button)
             isSending = false
         } else {
             Log.e("ERROR_LOLA", "No se pudo obtener la ubicación")
@@ -394,7 +403,7 @@ class MainChat : AppCompatActivity() {
 
     private fun executeSend(msg: String, lat: Double?, lon: Double?, button: Button?) {
 
-        Log.e(TAG_WIFI, "latitud: $lat, longitud: $lon")
+        Log.e(Constants.TAG_WIFI, "latitud: $lat, longitud: $lon")
         // 1. Guardar en SharedPreferences (Para que buildMyWiFiFrame lo lea)
         val editor = sharedPreferences.edit()
         editor.putString(Constants.MESSAGE, msg.trim())
@@ -421,7 +430,7 @@ class MainChat : AppCompatActivity() {
 
         // 3. Guardar en Room
         CoroutineScope(Dispatchers.IO).launch {
-            val db = AppDatabase.getDatabase(applicationContext)
+            val db = AppDatabase.Companion.getDatabase(applicationContext)
             db.chatMessageDao().insertMessage(
                 ChatMessageEntity(
                     nameUser = userName,
@@ -455,9 +464,9 @@ class MainChat : AppCompatActivity() {
 
     private fun startRegistration() {
 
-        info = WifiFrameUtils.buildMyWiFiFrame(this, userName, "CHAT")
+        info = WifiFrameUtils.Companion.buildMyWiFiFrame(this, userName, "CHAT")
 
-        val record = WifiFrameUtils.wifiFrameToHashMap(info)
+        val record = WifiFrameUtils.Companion.wifiFrameToHashMap(info)
 
         val payloadSize = calculatePayloadSizeBytes(record)
 
@@ -484,11 +493,11 @@ class MainChat : AppCompatActivity() {
         manager.addLocalService(channel, serviceInfo, object : WifiP2pManager.ActionListener {
             override fun onSuccess() {
                 Toast.makeText(applicationContext, "Mensaje enviado", Toast.LENGTH_SHORT).show()
-                Log.d(TAG_WIFI, "Mensaje de chat publicado en DNS-SD")
+                Log.d(Constants.TAG_WIFI, "Mensaje de chat publicado en DNS-SD")
             }
 
             override fun onFailure(arg0: Int) {
-                Log.e(TAG_WIFI, "Fallo al publicar mensaje: $arg0")
+                Log.e(Constants.TAG_WIFI, "Fallo al publicar mensaje: $arg0")
             }
         })
     }
@@ -498,7 +507,7 @@ class MainChat : AppCompatActivity() {
         val enviadoPorMi = wifiFrame.nameUser == userName
 
         // 1. Obtener mi ubicación actual solo para el cálculo inicial
-        val locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
+        val locationManager = getSystemService(LOCATION_SERVICE) as LocationManager
         val myLocation = if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
         } else null
@@ -538,7 +547,7 @@ class MainChat : AppCompatActivity() {
             recyclerView.smoothScrollToPosition(messages.size - 1)
 
             CoroutineScope(Dispatchers.IO).launch {
-                val db = AppDatabase.getDatabase(applicationContext)
+                val db = AppDatabase.Companion.getDatabase(applicationContext)
                 db.chatMessageDao().insertMessage(
                     ChatMessageEntity(
                         nameUser = wifiFrame.nameUser,
@@ -577,7 +586,7 @@ class MainChat : AppCompatActivity() {
 
     private fun executeDeleteAll() {
         CoroutineScope(Dispatchers.IO).launch {
-            val db = AppDatabase.getDatabase(applicationContext)
+            val db = AppDatabase.Companion.getDatabase(applicationContext)
             db.chatMessageDao().clearMessages()
 
             runOnUiThread {
@@ -629,21 +638,19 @@ class MainChat : AppCompatActivity() {
     }
 
     fun startGpsTracking() {
-        val locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
+        val locationManager = getSystemService(LOCATION_SERVICE) as LocationManager
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
 
             locationManager.requestLocationUpdates(
                 LocationManager.GPS_PROVIDER,
                 2000L,
                 1f,
-                NetworkManager.locationListener
+                NetworkManager.Companion.locationListener
             )
 
-            lastBestLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
+            NetworkManager.Companion.lastBestLocation = locationManager.getLastKnownLocation(
+                LocationManager.GPS_PROVIDER)
         }
     }
 
 }
-
-
-

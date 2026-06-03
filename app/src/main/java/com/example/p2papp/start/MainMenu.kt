@@ -1,7 +1,6 @@
-package com.example.p2papp
+package com.example.p2papp.start
 
 import android.Manifest
-import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.LocationManager
@@ -15,7 +14,12 @@ import android.widget.TextView
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
-import com.example.p2papp.NetworkManager.Companion.lastBestLocation
+import com.example.p2papp.NetworkManager
+import com.example.p2papp.R
+import com.example.p2papp.biblioteca.Biblioteca
+import com.example.p2papp.chat.animacionChat
+import com.example.p2papp.configperfil.ConfigPerfil
+import com.example.p2papp.radar.RadarActivity
 
 class MainMenu : AppCompatActivity() {
     private lateinit var ayudaButton: Button
@@ -91,18 +95,19 @@ class MainMenu : AppCompatActivity() {
     }
 
     fun startGpsTracking() {
-        val locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
+        val locationManager = getSystemService(LOCATION_SERVICE) as LocationManager
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
 
             locationManager.requestLocationUpdates(
                 LocationManager.GPS_PROVIDER,
                 2000L,
                 1f,
-                NetworkManager.locationListener
+                NetworkManager.Companion.locationListener
             )
 
-            lastBestLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
-            Log.i("Obteniendo GPS", "GPS ACTUALIZADO EN MAIN MENU ${lastBestLocation?.latitude}, ${lastBestLocation?.longitude}")
+            NetworkManager.Companion.lastBestLocation = locationManager.getLastKnownLocation(
+                LocationManager.GPS_PROVIDER)
+            Log.i("Obteniendo GPS", "GPS ACTUALIZADO EN MAIN MENU ${NetworkManager.Companion.lastBestLocation?.latitude}, ${NetworkManager.Companion.lastBestLocation?.longitude}")
         }
     }
 }

@@ -1,4 +1,4 @@
-package com.example.p2papp
+package com.example.p2papp.biblioteca
 
 import android.view.LayoutInflater
 import android.view.View
@@ -7,6 +7,7 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.example.p2papp.R
 
 class ViewPagerAdapter(private val pages: List<PageContent>) :
     RecyclerView.Adapter<ViewPagerAdapter.PageViewHolder>() {
@@ -72,4 +73,3 @@ class ViewPagerAdapter(private val pages: List<PageContent>) :
 
     override fun getItemCount(): Int = pages.size
 }
-

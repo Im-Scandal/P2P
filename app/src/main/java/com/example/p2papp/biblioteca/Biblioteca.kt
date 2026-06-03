@@ -1,4 +1,4 @@
-package com.example.p2papp
+package com.example.p2papp.biblioteca
 
 import android.content.Intent
 import android.os.Bundle
@@ -10,6 +10,14 @@ import android.widget.FrameLayout
 import android.widget.ImageButton
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
+import com.example.p2papp.configperfil.ConfigPerfil
+import com.example.p2papp.start.MainMenu
+import com.example.p2papp.OverlayManager
+import com.example.p2papp.biblioteca.PageContent
+import com.example.p2papp.biblioteca.PageType
+import com.example.p2papp.R
+import com.example.p2papp.radar.RadarActivity
+import com.example.p2papp.chat.animacionChat
 
 class Biblioteca : AppCompatActivity() {
 
@@ -108,7 +116,8 @@ class Biblioteca : AppCompatActivity() {
                     PageType.TEXT_IMAGE,
                     "",
                     getString(R.string.es_clave_contar),
-                    imageRes1Id = R.drawable.alimentos1),
+                    imageRes1Id = R.drawable.alimentos1
+                ),
                 PageContent(
                     PageType.NORMAL,
                     getString(R.string.Alimentos),
@@ -116,7 +125,8 @@ class Biblioteca : AppCompatActivity() {
                     getString(R.string.Agua_botella),
                     getString(R.string.es_esencial),
                     imageRes1Id = R.drawable.alimentos2,
-                    imageRes2Id = R.drawable.alimentos3),
+                    imageRes2Id = R.drawable.alimentos3
+                ),
                 PageContent(
                     PageType.NORMAL,
                     getString(R.string.Abrelatas_manual),
@@ -124,12 +134,15 @@ class Biblioteca : AppCompatActivity() {
                     getString(R.string.Parrilla),
                     getString(R.string.Parrilla_contenido),
                     imageRes1Id = R.drawable.alimentos4,
-                    imageRes2Id = R.drawable.alimentos5),
+                    imageRes2Id = R.drawable.alimentos5
+                ),
                 PageContent(
                     PageType.TEXT_IMAGE,
                     "",
                     getString(R.string.En_resumen),
-                    imageRes1Id = R.drawable.alimentos6))
+                    imageRes1Id = R.drawable.alimentos6
+                )
+            )
             overlayManager.showOverlay(R.layout.main_page_alimento_agua, R.id.close_button, pages )
         }
         primerosAuxButton.setOnClickListener{
@@ -138,7 +151,8 @@ class Biblioteca : AppCompatActivity() {
                     PageType.TEXT_IMAGE,
                     "",
                     getString(R.string.kit_pa),
-                    imageRes1Id = R.drawable.primeros1),
+                    imageRes1Id = R.drawable.primeros1
+                ),
                 PageContent(
                     PageType.NORMAL,
                     getString(R.string.Vendas),
@@ -146,7 +160,8 @@ class Biblioteca : AppCompatActivity() {
                     getString(R.string.mascarillas),
                     getString(R.string.mascarilla_content),
                     imageRes1Id = R.drawable.primeros2,
-                    imageRes2Id = R.drawable.primeros3),
+                    imageRes2Id = R.drawable.primeros3
+                ),
                 PageContent(
                     PageType.NORMAL,
                     getString(R.string.agua_ox),
@@ -154,12 +169,15 @@ class Biblioteca : AppCompatActivity() {
                     getString(R.string.crema_top),
                     getString(R.string.crema_content),
                     imageRes1Id = R.drawable.primeros4,
-                    imageRes2Id = R.drawable.primeros5),
+                    imageRes2Id = R.drawable.primeros5
+                ),
                 PageContent(
                     PageType.NORMAL,
                     getString(R.string.analgesico),
                     getString(R.string.analgesico_content),
-                    imageRes1Id = R.drawable.primeros6))
+                    imageRes1Id = R.drawable.primeros6
+                )
+            )
             overlayManager.showOverlay(R.layout.main_page_primerosauxilios, R.id.close_button, pages)
         }
         equipoButton.setOnClickListener{
@@ -171,7 +189,9 @@ class Biblioteca : AppCompatActivity() {
                     getString(R.string.tijeras),
                     getString(R.string.tijeras_content),
                     imageRes1Id = R.drawable.herramientas1,
-                    imageRes2Id = R.drawable.herramientas2))
+                    imageRes2Id = R.drawable.herramientas2
+                )
+            )
             overlayManager.showOverlay(R.layout.main_page_equipos, R.id.close_button, pages)
         }
         ropaButton.setOnClickListener{
@@ -183,12 +203,15 @@ class Biblioteca : AppCompatActivity() {
                     getString(R.string.guantes),
                     getString(R.string.guantes_content),
                     imageRes1Id = R.drawable.ropa1,
-                    imageRes2Id = R.drawable.ropa2),
+                    imageRes2Id = R.drawable.ropa2
+                ),
                 PageContent(
                     PageType.NORMAL,
                     getString(R.string.impermeable),
                     getString(R.string.impermeable_content),
-                    imageRes1Id = R.drawable.ropa3))
+                    imageRes1Id = R.drawable.ropa3
+                )
+            )
             overlayManager.showOverlay2b(R.layout.main_page_ropa, R.id.close_button, pages)
         }
         docsButton.setOnClickListener{
@@ -200,12 +223,15 @@ class Biblioteca : AppCompatActivity() {
                     getString(R.string.llaves),
                     getString(R.string.llaves_content),
                     imageRes1Id = R.drawable.documentos1,
-                    imageRes2Id = R.drawable.documentos2),
+                    imageRes2Id = R.drawable.documentos2
+                ),
                 PageContent(
                     PageType.NORMAL,
                     getString(R.string.propios),
                     getString(R.string.propios_content),
-                    imageRes1Id = R.drawable.documentos3))
+                    imageRes1Id = R.drawable.documentos3
+                )
+            )
             overlayManager.showOverlay2b(R.layout.main_page_documentos, R.id.close_button, pages)
         }
         otrosButton.setOnClickListener{
@@ -217,7 +243,8 @@ class Biblioteca : AppCompatActivity() {
                     getString(R.string.repelente),
                     getString(R.string.repelente_content),
                     imageRes1Id = R.drawable.otros1,
-                    imageRes2Id = R.drawable.otros2),
+                    imageRes2Id = R.drawable.otros2
+                ),
                 PageContent(
                     PageType.NORMAL,
                     getString(R.string.toallas),
@@ -225,7 +252,8 @@ class Biblioteca : AppCompatActivity() {
                     getString(R.string.bolsas),
                     getString(R.string.bolsas_content),
                     imageRes1Id = R.drawable.otros3,
-                    imageRes2Id = R.drawable.otros4),
+                    imageRes2Id = R.drawable.otros4
+                ),
                 PageContent(
                     PageType.NORMAL,
                     getString(R.string.ataduras),
@@ -233,7 +261,9 @@ class Biblioteca : AppCompatActivity() {
                     getString(R.string.elementos),
                     getString(R.string.elementos_content),
                     imageRes1Id = R.drawable.otros5,
-                    imageRes2Id = R.drawable.otros6))
+                    imageRes2Id = R.drawable.otros6
+                )
+            )
             overlayManager.showOverlay3b(R.layout.main_page_otros, R.id.close_button, pages)
         }
         queHacerButton.setOnClickListener{
@@ -242,7 +272,8 @@ class Biblioteca : AppCompatActivity() {
                     PageType.TEXT_IMAGE,
                     getString(R.string.guia_pratica),
                     "",
-                    imageRes1Id = R.drawable.quehacer1),
+                    imageRes1Id = R.drawable.quehacer1
+                ),
                 PageContent(
                     PageType.NORMAL,
                     getString(R.string.manten),
@@ -250,7 +281,8 @@ class Biblioteca : AppCompatActivity() {
                     getString(R.string.desarrolla),
                     getString(R.string.desarrolla_content),
                     imageRes1Id = R.drawable.quehacer2,
-                    imageRes2Id = R.drawable.quehacer3),)
+                    imageRes2Id = R.drawable.quehacer3
+                ),)
             overlayManager.showOverlay2b(R.layout.main_page_quehacer, R.id.close_button, pages)
         }
         categorySismoButton.setOnClickListener{
@@ -259,7 +291,8 @@ class Biblioteca : AppCompatActivity() {
                     PageType.TEXT_IMAGE,
                     getString(R.string.sabias_content),
                     "",
-                    imageRes1Id = R.drawable.curiosidades1),
+                    imageRes1Id = R.drawable.curiosidades1
+                ),
                 PageContent(
                     PageType.NORMAL,
                     getString(R.string.no_sensible),
@@ -267,7 +300,8 @@ class Biblioteca : AppCompatActivity() {
                     getString(R.string.sentido),
                     getString(R.string.sentido_content),
                     imageRes1Id = R.drawable.curiosidades2,
-                    imageRes2Id = R.drawable.curiosidades3),
+                    imageRes2Id = R.drawable.curiosidades3
+                ),
                 PageContent(
                     PageType.NORMAL,
                     getString(R.string.debil),
@@ -275,7 +309,8 @@ class Biblioteca : AppCompatActivity() {
                     getString(R.string.observado),
                     getString(R.string.observado_content),
                     imageRes1Id = R.drawable.curiosidades4,
-                    imageRes2Id = R.drawable.curiosidades5),
+                    imageRes2Id = R.drawable.curiosidades5
+                ),
                 PageContent(
                     PageType.NORMAL,
                     getString(R.string.fuerte),
@@ -283,7 +318,8 @@ class Biblioteca : AppCompatActivity() {
                     getString(R.string.danos_leves),
                     getString(R.string.leves_content),
                     imageRes1Id = R.drawable.curiosidades6,
-                    imageRes2Id = R.drawable.curiosidades7),
+                    imageRes2Id = R.drawable.curiosidades7
+                ),
                 PageContent(
                     PageType.NORMAL,
                     getString(R.string.danos),
@@ -291,7 +327,8 @@ class Biblioteca : AppCompatActivity() {
                     getString(R.string.danos_severos),
                     getString(R.string.severos_content),
                     imageRes1Id = R.drawable.curiosidades8,
-                    imageRes2Id = R.drawable.curiosidades9),
+                    imageRes2Id = R.drawable.curiosidades9
+                ),
                 PageContent(
                     PageType.NORMAL,
                     getString(R.string.destructivo),
@@ -299,7 +336,8 @@ class Biblioteca : AppCompatActivity() {
                     getString(R.string.muy_destructivo),
                     getString(R.string.muy_destructivo_content),
                     imageRes1Id = R.drawable.curiosidades10,
-                    imageRes2Id = R.drawable.curiosidades11),
+                    imageRes2Id = R.drawable.curiosidades11
+                ),
                 PageContent(
                     PageType.NORMAL,
                     getString(R.string.devastador),
@@ -307,7 +345,9 @@ class Biblioteca : AppCompatActivity() {
                     getString(R.string.completo),
                     getString(R.string.completo_content),
                     imageRes1Id = R.drawable.curiosidades12,
-                    imageRes2Id = R.drawable.curiosidades13))
+                    imageRes2Id = R.drawable.curiosidades13
+                )
+            )
             overlayManager.showOverlay7b(R.layout.main_page_category, R.id.close_button, pages)
         }
 

@@ -1,4 +1,4 @@
-package com.example.p2papp
+package com.example.p2papp.configperfil
 
 import android.content.Intent
 import android.content.SharedPreferences
@@ -10,6 +10,14 @@ import android.widget.ImageButton
 import android.widget.TextView
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
+import com.example.p2papp.Constants
+import com.example.p2papp.start.MainMenu
+import com.example.p2papp.R
+import com.example.p2papp.biblioteca.Biblioteca
+import com.example.p2papp.chat.animacionChat
+import com.example.p2papp.radar.RadarActivity
+import com.example.p2papp.room.AppDatabase
+import com.example.p2papp.room.UserDao
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -40,7 +48,7 @@ class ConfigPerfil : AppCompatActivity() {
         setContentView(R.layout.activity_config_perfil)
         sharedPreferences = getSharedPreferences(Constants.PREFERENCES_KEY, MODE_PRIVATE)
 
-        val db = AppDatabase.getDatabase(applicationContext)
+        val db = AppDatabase.Companion.getDatabase(applicationContext)
         userDao = db.userDao()
 
         initial_work()

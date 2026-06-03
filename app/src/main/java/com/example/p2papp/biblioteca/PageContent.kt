@@ -1,4 +1,4 @@
-package com.example.p2papp
+package com.example.p2papp.biblioteca
 
 enum class PageType {
     NORMAL,       // 1 o 2 bloques de texto
@@ -14,4 +14,3 @@ data class PageContent(
     val imageRes1Id: Int? = null,
     val imageRes2Id: Int? = null
 )
-

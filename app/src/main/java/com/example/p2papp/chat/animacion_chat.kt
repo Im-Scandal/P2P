@@ -1,18 +1,19 @@
-package com.example.p2papp
+package com.example.p2papp.chat
 
-import android.content.Context
 import android.content.Intent
 import android.net.wifi.WifiManager
+import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.widget.ImageView
-import androidx.appcompat.app.AppCompatActivity
-import android.os.Build
 import android.provider.Settings
+import android.widget.ImageView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
+import com.example.p2papp.chat.MainChat
+import com.example.p2papp.R
 
 class animacionChat : AppCompatActivity() {
 
@@ -49,7 +50,7 @@ class animacionChat : AppCompatActivity() {
         setContentView(R.layout.activity_animacion_chat)
 
         imageView = findViewById(R.id.animacionImage)
-        wifiManager = applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager
+        wifiManager = applicationContext.getSystemService(WIFI_SERVICE) as WifiManager
 
         mostrarImagenesSecuencialmente()
     }

@@ -22,9 +22,9 @@ class WifiFrameUtils {
             }
 
             message["n"] = wifiFrame.nameUser
-            message["o"] = wifiFrame.sendMessage
+            message["m"] = wifiFrame.sendMessage
             message["d"] = wifiFrame.dateSend
-            message["h"] = idDevice
+            message["id"] = idDevice
             message["t"] = wifiFrame.type
             wifiFrame.latitude?.let { message["la"] = it.toString() }
             wifiFrame.longitude?.let { message["lo"] = it.toString() }
@@ -46,9 +46,9 @@ class WifiFrameUtils {
 
             message["n"] = nameUser
             message["d"] = dateSend
-            message["g"] = deviceName.deviceName
-            message["o"] = messageMulti
-            message["h"] = id
+            message["mh"] = deviceName.deviceName
+            message["m"] = messageMulti
+            message["id"] = id
             latitude?.let { message["la"] = it.toString() }
             longitude?.let { message["lo"] = it.toString() }
             message["t"] = type
@@ -59,11 +59,11 @@ class WifiFrameUtils {
         fun hashMapToWiFiFrame(message: MutableMap<String, String>): WifiFrame {
             return WifiFrame().apply {
                 nameUser = message["n"] ?: "Desconocido"
-                sendMessage = message["o"]?: ""
+                sendMessage = message["m"]?: ""
                 dateSend = message["d"]?: "0L"
                 dateReceived =  getFormattedDateTime()
-                deviceMultihop = message["g"]?: ""
-                deviceIdMultiHop = message["h"]?: ""
+                deviceMultihop = message["mh"]?: ""
+                deviceIdMultiHop = message["id"]?: ""
                 latitude = message["la"]?.toDoubleOrNull()
                 longitude = message["lo"]?.toDoubleOrNull()
                 type = message["t"]?: "CHAT"

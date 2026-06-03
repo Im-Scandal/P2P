@@ -1,4 +1,4 @@
-package com.example.p2papp
+package com.example.p2papp.room
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey

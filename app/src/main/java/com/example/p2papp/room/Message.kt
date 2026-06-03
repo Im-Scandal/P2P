@@ -1,4 +1,4 @@
-package com.example.p2papp
+package com.example.p2papp.room
 
 data class ChatMessage(
     val nameUser: String,
@@ -10,4 +10,3 @@ data class ChatMessage(
     val longitude: Double? = null,
     val distance: String? = null
 )
-

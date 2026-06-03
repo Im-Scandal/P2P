@@ -1,8 +1,9 @@
-package com.example.p2papp
+package com.example.p2papp.room
 
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
+import com.example.p2papp.room.ChatMessageEntity
 
 @Dao
 interface MessagesDao {

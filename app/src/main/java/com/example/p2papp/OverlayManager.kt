@@ -8,6 +8,8 @@ import android.widget.Button
 import android.widget.ImageButton
 import android.widget.ImageView
 import androidx.viewpager2.widget.ViewPager2
+import com.example.p2papp.biblioteca.PageContent
+import com.example.p2papp.biblioteca.ViewPagerAdapter
 
 class OverlayManager(private val context: Context, private val rootView: ViewGroup) {
 

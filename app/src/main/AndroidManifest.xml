@@ -35,40 +35,40 @@
         android:theme="@style/P2Papp"
         tools:targetApi="31">
         <activity
-            android:name=".animacionChat"
+            android:name=".chat.animacionChat"
             android:exported="true" />
         <activity
-            android:name=".Biblioteca"
+            android:name=".biblioteca.Biblioteca"
             android:exported="true"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".CamposConfig"
+            android:name=".configperfil.CamposConfig"
             android:exported="true"
             android:screenOrientation="portrait"
             android:theme="@style/P2Papp" />
         <activity
-            android:name=".ConfigPerfil"
+            android:name=".configperfil.ConfigPerfil"
             android:exported="true"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".MainMenu"
+            android:name=".start.MainMenu"
             android:exported="true"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".TerminosCondiciones"
+            android:name=".start.TerminosCondiciones"
             android:exported="true"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".MainChat"
+            android:name=".chat.MainChat"
             android:exported="true"
             android:screenOrientation="portrait" />
 
         <activity
-            android:name=".RadarActivity"
+            android:name=".radar.RadarActivity"
             android:exported="true"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".SolicitedName"
+            android:name=".start.SolicitedName"
             android:exported="true"
             android:screenOrientation="portrait">
             <intent-filter>

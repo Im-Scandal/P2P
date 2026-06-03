@@ -1,4 +1,4 @@
-package com.example.p2papp
+package com.example.p2papp.configperfil
 
 import android.content.Intent
 import android.os.Bundle
@@ -9,6 +9,11 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import com.example.p2papp.configperfil.ConfigPerfil
+import com.example.p2papp.R
+import com.example.p2papp.room.AppDatabase
+import com.example.p2papp.room.User
+import com.example.p2papp.room.UserDao
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -16,7 +21,7 @@ import kotlinx.coroutines.withContext
 
 class CamposConfig : AppCompatActivity() {
 
-    var optConfig: Boolean = ConfigPerfil.optionCong
+    var optConfig: Boolean = ConfigPerfil.Companion.optionCong
     private lateinit var userDao: UserDao
 
     private lateinit var titularDates: TextView
@@ -38,7 +43,7 @@ class CamposConfig : AppCompatActivity() {
         phoneEditText = findViewById(R.id.phoneText)
         saveButton = findViewById(R.id.saveButton)
 
-        val db = AppDatabase.getDatabase(applicationContext)
+        val db = AppDatabase.Companion.getDatabase(applicationContext)
         userDao = db.userDao()
 
         nameEditText.setOnFocusChangeListener { _, hasFocus ->
@@ -65,8 +70,10 @@ class CamposConfig : AppCompatActivity() {
                 val savedUser = userDao.getUser()
                 if (savedUser != null) {
                     withContext(Dispatchers.Main) {
-                        nameEditText.text = Editable.Factory.getInstance().newEditable(savedUser.name)
-                        phoneEditText.text = Editable.Factory.getInstance().newEditable(savedUser.phone)
+                        nameEditText.text =
+                            Editable.Factory.getInstance().newEditable(savedUser.name)
+                        phoneEditText.text =
+                            Editable.Factory.getInstance().newEditable(savedUser.phone)
                         nombreCEUser = savedUser.nameCE
                         telefonoCEUser = savedUser.phoneCE
                     }
@@ -119,8 +126,10 @@ class CamposConfig : AppCompatActivity() {
                     withContext(Dispatchers.Main) {
                         nombreUser = savedUser.name
                         telefonoUser = savedUser.phone
-                        nameEditText.text = Editable.Factory.getInstance().newEditable(savedUser.nameCE)
-                        phoneEditText.text = Editable.Factory.getInstance().newEditable(savedUser.phoneCE)
+                        nameEditText.text =
+                            Editable.Factory.getInstance().newEditable(savedUser.nameCE)
+                        phoneEditText.text =
+                            Editable.Factory.getInstance().newEditable(savedUser.phoneCE)
                     }
                 }
             }
@@ -144,7 +153,7 @@ class CamposConfig : AppCompatActivity() {
                             val user = User(
                                 id = 1,
                                 name = nombreUser,
-                                phone =telefonoUser,
+                                phone = telefonoUser,
                                 nameCE = nameEditText.text.toString(),
                                 phoneCE = phoneEditText.text.toString()
                             )

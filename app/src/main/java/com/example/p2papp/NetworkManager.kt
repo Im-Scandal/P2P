@@ -13,6 +13,7 @@ import android.os.Build
 import android.util.Log
 import androidx.core.app.ActivityCompat
 import com.example.p2papp.Constants.TAG_WIFI
+import com.example.p2papp.radar.RadarEvent
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

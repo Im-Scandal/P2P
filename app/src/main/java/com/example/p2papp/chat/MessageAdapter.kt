@@ -1,4 +1,4 @@
-package com.example.p2papp
+package com.example.p2papp.chat
 
 import android.view.LayoutInflater
 import android.view.View
@@ -6,6 +6,8 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.example.p2papp.R
+import com.example.p2papp.room.ChatMessage
 
 class MessageAdapter(private val messages: MutableList<ChatMessage>) :
     RecyclerView.Adapter<MessageAdapter.MessageViewHolder>() {

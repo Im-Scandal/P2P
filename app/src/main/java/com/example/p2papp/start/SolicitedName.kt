@@ -1,4 +1,4 @@
-package com.example.p2papp
+package com.example.p2papp.start
 
 import android.Manifest
 import android.content.Intent
@@ -17,10 +17,14 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import com.example.p2papp.R
+import com.example.p2papp.start.TerminosCondiciones
+import com.example.p2papp.room.AppDatabase
+import com.example.p2papp.room.User
+import com.example.p2papp.room.UserDao
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-
 
 class SolicitedName: AppCompatActivity() {
     private lateinit var nextButton: Button
@@ -48,7 +52,7 @@ class SolicitedName: AppCompatActivity() {
             nameText = findViewById(R.id.nameWText)
             infoButton = findViewById(R.id.infoView)
 
-            val db = AppDatabase.getDatabase(applicationContext)
+            val db = AppDatabase.Companion.getDatabase(applicationContext)
             userDao = db.userDao()
 
             nameText.setOnFocusChangeListener { _, hasFocus ->
@@ -115,7 +119,8 @@ class SolicitedName: AppCompatActivity() {
 
                 // Llamar al insertUser desde una corrutina
                 CoroutineScope(Dispatchers.IO).launch {
-                    val user = User(id = 1, name = nombre.trim(), phone = "", nameCE = "", phoneCE = "")
+                    val user =
+                        User(id = 1, name = nombre.trim(), phone = "", nameCE = "", phoneCE = "")
                     userDao.insertUser(user)
                 }
 

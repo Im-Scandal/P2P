@@ -1,4 +1,4 @@
-package com.example.p2papp
+package com.example.p2papp.room
 
 import android.content.Context
 import androidx.room.Database
@@ -6,6 +6,7 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
+import com.example.p2papp.room.User
 
 @Database(entities = [User::class, ChatMessageEntity::class], version = 5, exportSchema = false)
 abstract class AppDatabase : RoomDatabase() {
