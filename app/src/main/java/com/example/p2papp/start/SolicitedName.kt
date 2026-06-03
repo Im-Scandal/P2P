@@ -18,7 +18,6 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import com.example.p2papp.R
-import com.example.p2papp.start.TerminosCondiciones
 import com.example.p2papp.room.AppDatabase
 import com.example.p2papp.room.User
 import com.example.p2papp.room.UserDao
@@ -52,7 +51,7 @@ class SolicitedName: AppCompatActivity() {
             nameText = findViewById(R.id.nameWText)
             infoButton = findViewById(R.id.infoView)
 
-            val db = AppDatabase.Companion.getDatabase(applicationContext)
+            val db = AppDatabase.getDatabase(applicationContext)
             userDao = db.userDao()
 
             nameText.setOnFocusChangeListener { _, hasFocus ->

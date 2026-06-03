@@ -2,7 +2,6 @@ package com.example.p2papp.chat
 
 import android.content.Intent
 import android.net.wifi.WifiManager
-import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -12,7 +11,6 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import com.example.p2papp.chat.MainChat
 import com.example.p2papp.R
 
 class animacionChat : AppCompatActivity() {
@@ -90,10 +88,8 @@ class animacionChat : AppCompatActivity() {
 
         private fun activarWifi() {
             // For Android 10 (Q) and above, use the Settings Panel
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                val intent = Intent(Settings.Panel.ACTION_WIFI)
-                settingsPanelLauncher.launch(intent)
-            }
+            val intent = Intent(Settings.Panel.ACTION_WIFI)
+            settingsPanelLauncher.launch(intent)
         }
 
     private fun mostrarDialogoWifiRequerido() {

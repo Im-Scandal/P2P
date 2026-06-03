@@ -6,7 +6,6 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
-import com.example.p2papp.room.User
 
 @Database(entities = [User::class, ChatMessageEntity::class], version = 5, exportSchema = false)
 abstract class AppDatabase : RoomDatabase() {
@@ -35,7 +34,7 @@ abstract class AppDatabase : RoomDatabase() {
                     // Puedes dejar fallbackToDestructiveMigration() como un "paracaídas"
                     // para versiones muy antiguas, pero al tener addMigrations, Room
                     // priorizará salvar tus datos ejecutando el SQL que definiste arriba.
-                    .fallbackToDestructiveMigration()
+                    .fallbackToDestructiveMigration(false)
                     .build()
                 INSTANCE = instance
                 instance

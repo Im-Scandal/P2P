@@ -23,7 +23,7 @@
             android:layout_height="55dp"
             android:layout_gravity="start"
             android:background="#00777777"
-            android:contentDescription="Botón de configuración de perfil"
+            android:contentDescription="@string/boton_para_volver_al_inicio"
             app:srcCompat="@drawable/vector" />
 
         <TextView
@@ -44,7 +44,7 @@
             android:layout_height="55dp"
             android:layout_gravity="end"
             android:background="@drawable/boton_perfil"
-            android:contentDescription="Botón de configuración de perfil"
+            android:contentDescription="@string/bot_n_de_configuraci_n_de_perfil"
             app:srcCompat="@drawable/icon_park_outline_user" />
     </LinearLayout>
 
@@ -303,7 +303,7 @@
             android:layout_width="150dp"
             android:layout_height="70dp"
             android:background="@android:color/transparent"
-            android:contentDescription="Biblioteca"
+            android:contentDescription="@string/icon_biblioteca"
             app:srcCompat="@drawable/biblio_selected"
             android:layout_gravity="center"/>
 
@@ -312,7 +312,7 @@
             android:layout_width="150dp"
             android:layout_height="70dp"
             android:background="@android:color/transparent"
-            android:contentDescription="Radar"
+            android:contentDescription="@string/just_radar"
             android:src="@drawable/radaricon"
             android:layout_gravity="center"/>
 

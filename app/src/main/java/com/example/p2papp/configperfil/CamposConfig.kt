@@ -9,7 +9,6 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import com.example.p2papp.configperfil.ConfigPerfil
 import com.example.p2papp.R
 import com.example.p2papp.room.AppDatabase
 import com.example.p2papp.room.User
@@ -21,7 +20,7 @@ import kotlinx.coroutines.withContext
 
 class CamposConfig : AppCompatActivity() {
 
-    var optConfig: Boolean = ConfigPerfil.Companion.optionCong
+    var optConfig: Boolean = ConfigPerfil.optionCong
     private lateinit var userDao: UserDao
 
     private lateinit var titularDates: TextView
@@ -43,7 +42,7 @@ class CamposConfig : AppCompatActivity() {
         phoneEditText = findViewById(R.id.phoneText)
         saveButton = findViewById(R.id.saveButton)
 
-        val db = AppDatabase.Companion.getDatabase(applicationContext)
+        val db = AppDatabase.getDatabase(applicationContext)
         userDao = db.userDao()
 
         nameEditText.setOnFocusChangeListener { _, hasFocus ->

@@ -30,18 +30,17 @@ import androidx.core.app.ActivityCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import com.example.p2papp.configperfil.ConfigPerfil
 import com.example.p2papp.Constants
-import com.example.p2papp.start.MainMenu
 import com.example.p2papp.NetworkManager
 import com.example.p2papp.OverlayManager
 import com.example.p2papp.R
-import com.example.p2papp.radar.RadarEvent
 import com.example.p2papp.WifiFrame
 import com.example.p2papp.WifiFrameUtils
 import com.example.p2papp.biblioteca.Biblioteca
 import com.example.p2papp.chat.animacionChat
+import com.example.p2papp.configperfil.ConfigPerfil
 import com.example.p2papp.room.AppDatabase
+import com.example.p2papp.start.MainMenu
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -49,7 +48,6 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import kotlin.collections.iterator
 import kotlin.math.cos
 import kotlin.math.sqrt
 
@@ -97,9 +95,9 @@ class RadarActivity : AppCompatActivity() {
 
         // Cargamos el usuario ANTES de empezar a transmitir
         loadUserNameFromDatabase {
-            NetworkManager.Companion.setup(this)
-            NetworkManager.Companion.addServiceRequest(this)
-            NetworkManager.Companion.startDiscover(this)
+            NetworkManager.setup(this)
+            NetworkManager.addServiceRequest(this)
+            NetworkManager.startDiscover(this)
         }
 
         sensorManager = getSystemService(SENSOR_SERVICE) as SensorManager
@@ -121,8 +119,8 @@ class RadarActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         startTransmittingLocation()
-        NetworkManager.Companion.addServiceRequest(this)
-        NetworkManager.Companion.startDiscover(this)
+        NetworkManager.addServiceRequest(this)
+        NetworkManager.startDiscover(this)
         startGpsTracking()
         rotationSensor?.let {
             // SENSOR_DELAY_UI es un buen equilibrio entre fluidez y consumo de batería
@@ -137,7 +135,7 @@ class RadarActivity : AppCompatActivity() {
     }
 
     private fun loadUserNameFromDatabase(onLoaded: () -> Unit) {
-        val db = AppDatabase.Companion.getDatabase(this)
+        val db = AppDatabase.getDatabase(this)
         val userDao = db.userDao()
         CoroutineScope(Dispatchers.IO).launch {
             val savedUser = userDao.getUser()
@@ -154,10 +152,10 @@ class RadarActivity : AppCompatActivity() {
     private fun startTransmittingLocation() {
         radarJob = lifecycleScope.launch(Dispatchers.IO) {
             while (isActive) {
-                val locationManager = getSystemService(LOCATION_SERVICE) as LocationManager
-                if (NetworkManager.Companion.lastBestLocation != null) {
-                    val myLat = NetworkManager.Companion.lastBestLocation!!.latitude
-                    val myLon = NetworkManager.Companion.lastBestLocation!!.longitude
+                getSystemService(LOCATION_SERVICE) as LocationManager
+                if (NetworkManager.lastBestLocation != null) {
+                    val myLat = NetworkManager.lastBestLocation!!.latitude
+                    val myLon = NetworkManager.lastBestLocation!!.longitude
 
                     val editor = sharedPreferences.edit()
                     editor.putString(Constants.MESSAGE, "RADAR")
@@ -186,10 +184,10 @@ class RadarActivity : AppCompatActivity() {
                 LocationManager.GPS_PROVIDER,
                 2000L,
                 1f,
-                NetworkManager.Companion.locationListener
+                NetworkManager.locationListener
             )
 
-            NetworkManager.Companion.lastBestLocation = locationManager.getLastKnownLocation(
+            NetworkManager.lastBestLocation = locationManager.getLastKnownLocation(
                 LocationManager.GPS_PROVIDER)
         }
     }
@@ -211,8 +209,8 @@ class RadarActivity : AppCompatActivity() {
 
             if (myLat != null && myLon != null) {
                 // 1. Calcular distancia en metros (X, Y)
-                val (xMeters, yMeters) = getRelativeCartesian(myLat, myLon, targetLat as Double, targetLon as Double)
-                val distanciaMts = NetworkManager.Companion.calculateHaversine(targetLat, targetLon, this)
+                val (xMeters, yMeters) = getRelativeCartesian(myLat, myLon, targetLat, targetLon)
+                val distanciaMts = NetworkManager.calculateHaversine(targetLat, targetLon, this)
 
                 // 2. Dibujar en la interfaz
                 runOnUiThread {
@@ -447,9 +445,9 @@ class RadarActivity : AppCompatActivity() {
     }
 
     private fun sendWifiFrameOverNetwork(myLat: Double, myLon: Double) {
-        info = WifiFrameUtils.Companion.buildMyWiFiFrame(this, userName, "RADAR")
+        info = WifiFrameUtils.buildMyWiFiFrame(this, userName, "RADAR")
 
-        val record = WifiFrameUtils.Companion.wifiFrameToHashMap(info)
+        val record = WifiFrameUtils.wifiFrameToHashMap(info)
         val serviceInfo =
             WifiP2pDnsSdServiceInfo.newInstance("_networkChat", "_chatApp._tcp", record)
 

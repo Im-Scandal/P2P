@@ -239,5 +239,12 @@ de emergencia.</string>
     <string name="cuarto_circulo_del_radar">Cuarto circulo del radar</string>
     <string name="ultimo_circulo_del_radar">Ultimo circulo del radar</string>
     <string name="dispositivo_central">Dispositivo central</string>
+    <string name="just_radar">radar</string>
+    <string name="borrar_chat">borrar mensajes del chat</string>
+    <string name="_0_250">0/250</string>
+    <string name="bot_n_de_configuraci_n_de_perfil">Botón de configuración de perfil</string>
+    <string name="boton_de_configuraci_n_de_perfil">Botón de configuración de perfil</string>
+    <string name="boton_para_volver_al_inicio">boton para volver al inicio</string>
+    <string name="icon_biblioteca">Biblioteca</string>
 
 </resources>

@@ -10,14 +10,12 @@ import android.widget.FrameLayout
 import android.widget.ImageButton
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
-import com.example.p2papp.configperfil.ConfigPerfil
-import com.example.p2papp.start.MainMenu
 import com.example.p2papp.OverlayManager
-import com.example.p2papp.biblioteca.PageContent
-import com.example.p2papp.biblioteca.PageType
 import com.example.p2papp.R
-import com.example.p2papp.radar.RadarActivity
 import com.example.p2papp.chat.animacionChat
+import com.example.p2papp.configperfil.ConfigPerfil
+import com.example.p2papp.radar.RadarActivity
+import com.example.p2papp.start.MainMenu
 
 class Biblioteca : AppCompatActivity() {
 
